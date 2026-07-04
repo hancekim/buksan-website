@@ -331,6 +331,30 @@ def explore_pages(page, out_dir, raw_dir, menus, date_str):
         log(f"── '{child}' 페이지 구조 ──")
         nav = collect_navigation(page)   # select 옵션(센터 목록 등) 로그 포함
         enumerate_fields(page)           # input/버튼 로그
+
+        # 활성 탭에서 북청라센터(IC02) 선택 + (LOC는 피킹) 후 조회 → 목록 API 캡처
+        try:
+            page.locator("#whCd:visible").first.select_option("IC02", timeout=4000)
+            log("  whCd=IC02(북청라) 선택")
+        except Exception as e:
+            log(f"  whCd 선택 실패: {e}")
+        if child == "LOC재고현황":
+            try:
+                page.locator("#locDiv:visible").first.select_option("01", timeout=4000)
+                log("  locDiv=01(피킹) 선택")
+            except Exception as e:
+                log(f"  locDiv 선택 실패: {e}")
+        try:
+            page.locator("#btnSearch:visible").first.click(timeout=4000)
+            log("  조회(btnSearch) 클릭")
+            page.wait_for_timeout(6000)
+            try:
+                page.wait_for_load_state("networkidle", timeout=15000)
+            except PWTimeout:
+                pass
+        except Exception as e:
+            log(f"  조회 클릭 실패: {e}")
+
         explored[child] = {"opened": True, "navigation": nav}
         dump_frames_html(page, raw_dir, prefix=f"{key}__")
         try:
@@ -423,9 +447,18 @@ def main():
 
     captured = []   # 모든 JSON 응답 메타
     target_payloads = []  # target_keyword 매칭된 응답 본문
+    discovery = []  # 관심 API(출고/재고 목록 등)의 요청 파라미터+응답 샘플
     tables = []
     nav = {"links": [], "selects": []}
     explored = {}
+
+    # 관심 API 판별: classic 경로의 목록/조회성 엔드포인트 (노이즈 제외)
+    def _is_interesting(url):
+        if "channel.io" in url or "/cmn/" in url:
+            return False
+        return "/classic/" in url and any(
+            k in url for k in ("otb", "stk", "pic", "dlv", "out", "loc", "List", "list", "Sch")
+        )
 
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=CFG["headless"])
@@ -468,6 +501,19 @@ def main():
                 if CFG["target_keyword"] and CFG["target_keyword"] in url:
                     target_payloads.append({"url": url, "data": data})
                     log(f"  ★ 타겟 API 캡처: {url}")
+                # 관심 API 는 요청 파라미터 + 응답 샘플을 결과에 담는다(엔드포인트 확정용)
+                if _is_interesting(url) and len(discovery) < 25:
+                    try:
+                        req = resp.request
+                        post = req.post_data
+                    except Exception:
+                        post = None
+                    body_head = json.dumps(data, ensure_ascii=False)[:6000]
+                    discovery.append({
+                        "url": url, "method": getattr(resp.request, "method", ""),
+                        "post_data": (post or "")[:1500], "body_head": body_head,
+                    })
+                    log(f"  ◆ 관심 API 캡처: {url}")
             except Exception:
                 pass
 
@@ -520,6 +566,7 @@ def main():
         "html_tables": tables,
         "navigation": nav,                      # LNB 메뉴/센터 드롭다운 (경로 파악용)
         "explored": explored,                   # 택배출고신청/LOC재고현황 페이지 구조
+        "discovery": discovery,                 # 목록 API 요청 파라미터 + 응답 샘플
     }
     json_path = out_dir / f"fassto_{date_str}.json"
     json_path.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
