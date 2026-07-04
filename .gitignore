@@ -1,0 +1,12 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# 크롤러 비밀/임시
+crawler/.env
+
+# 분석용 원본 캡처 & 스크린샷 (저장소에 커밋하지 않음; Actions 아티팩트로 보관)
+data/raw/
+data/screenshot_*.png

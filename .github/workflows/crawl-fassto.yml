@@ -1,0 +1,76 @@
+name: Crawl Fassto FMS
+
+# 매일 01:30 KST 에 실행.
+# GitHub Actions cron 은 UTC 기준이므로 01:30 KST = 전날 16:30 UTC.
+# (수동 실행도 가능 — workflow_dispatch)
+on:
+  schedule:
+    - cron: "30 16 * * *"
+  workflow_dispatch:
+
+# 수집한 데이터 파일을 저장소에 커밋하기 위해 쓰기 권한 필요
+permissions:
+  contents: write
+
+concurrency:
+  group: crawl-fassto
+  cancel-in-progress: false
+
+jobs:
+  crawl:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r crawler/requirements.txt
+          python -m playwright install --with-deps chromium
+
+      - name: Run crawler
+        env:
+          FASSTO_ID: ${{ secrets.FASSTO_ID }}
+          FASSTO_PW: ${{ secrets.FASSTO_PW }}
+          # 필요 시 아래 Secrets/변수도 등록해 사용
+          FASSTO_LOGIN_URL: ${{ vars.FASSTO_LOGIN_URL }}
+          FASSTO_MAIN_URL: ${{ vars.FASSTO_MAIN_URL }}
+          FASSTO_ID_SELECTOR: ${{ vars.FASSTO_ID_SELECTOR }}
+          FASSTO_PW_SELECTOR: ${{ vars.FASSTO_PW_SELECTOR }}
+          FASSTO_SUBMIT_SELECTOR: ${{ vars.FASSTO_SUBMIT_SELECTOR }}
+          TARGET_API_KEYWORD: ${{ vars.TARGET_API_KEYWORD }}
+          HEADLESS: "true"
+        run: python crawler/crawl_fassto.py
+
+      # raw 응답/스크린샷은 저장소에 커밋하지 않고 아티팩트로만 보관
+      # (셀렉터·엔드포인트 확정용 분석 자료. 90일 후 자동 삭제)
+      - name: Upload raw captures (for analysis)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fassto-raw-${{ github.run_id }}
+          path: |
+            data/raw/**
+            data/screenshot_*.png
+          retention-days: 90
+          if-no-files-found: ignore
+
+      - name: Commit collected data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          # 정제된 결과만 커밋 (raw 와 스크린샷은 제외)
+          git add data/fassto_*.csv data/fassto_*.json 2>/dev/null || true
+          if git diff --cached --quiet; then
+            echo "변경된 데이터 없음 — 커밋 생략"
+          else
+            git commit -m "data: ${{ github.run_id }} Fassto 일일 수집 ($(TZ=Asia/Seoul date +%F))"
+            git push origin HEAD:${{ github.ref_name }}
+          fi
