@@ -1,5 +1,5 @@
 {
-  "collected_at": "2026-07-05T01:31:05.894609+09:00",
+  "collected_at": "2026-07-05T02:56:32.593187+09:00",
   "date": "2026-07-05",
   "main_url": "https://fms.fassto.ai/classic/cmn/main/main.do",
   "captured_api_count": 15,
@@ -65,12 +65,12 @@
       "content_type": "application/json"
     },
     {
-      "url": "https://api.channel.io/front/v8/channels/50875/operations?",
+      "url": "https://api.channel.io/front/v8/managers/operators?",
       "status": 200,
       "content_type": "application/json"
     },
     {
-      "url": "https://api.channel.io/front/v8/managers/operators?",
+      "url": "https://api.channel.io/front/v8/channels/50875/operations?",
       "status": 200,
       "content_type": "application/json"
     },
@@ -83,16 +83,33 @@
   "target_payloads": [],
   "report_source": {
     "date_range": [
-      "2026-06-27",
-      "2026-07-04"
+      "2026-06-28",
+      "2026-07-05"
     ],
+    "outbound_status": 200,
+    "outbound_head": "",
+    "outbound_top_keys": null,
     "outbound_count": 0,
     "outbound_keys": [],
     "outbound_sample": [],
+    "loc_status": 200,
+    "loc_head": "",
+    "loc_top_keys": null,
     "loc_count": 0,
     "loc_keys": [],
     "loc_sample": []
   },
   "discovery": [],
-  "requests_log": []
+  "requests_log": [
+    {
+      "method": "POST",
+      "url": "https://fms.fassto.ai/classic/pic/pic12/mainList.json",
+      "post": "custNmValue=&whCd=IC02&ordDt1_pic12=2026-06-28&ordDt2_pic12=2026-07-05&cstCd=&cstNm=&groupcstCd=&ordNo=&ordDiv=&wrkStat=&salChanel=&custNm=&custTelNo=&fileDownloadYn=0&searchType=slipNo&slipNo=&labelNo="
+    },
+    {
+      "method": "POST",
+      "url": "https://fms.fassto.ai/classic/stk/stk06/mainList.json",
+      "post": "schParam=%7B%22cateCd%22%3A+%22%22%2C+%22whCd%22%3A+%22IC02%22%2C+%22cstCd%22%3A+%22%22%2C+%22cstNm%22%3A+%22%22%2C+%22groupcstCd%22%3A+null%2C+%22godCd%22%3A+%22%22%2C+%22cstGodCd%22%3A+%22%22%2C+%22godNm%22%3A+%22%22%2C+%22inBoxBarcd%22%3A+%22%22%2C+%22lCate%22%3A+%22%22%2C+%22mCate%22%3A+%22%22%2C+%22sCate%22%3A+%22%22%2C+%22productsBeyondExpirationDate%22%3A+%22%22%2C+%22seasonCd%22%3A+%22%22%2C+%22genderCd%22%3A+%22%22%2C+%22makeYr%22%3A+%22%22%2C+%22boxInCntYn%22%3A+%22N%22%2C+%22zone%22%3A+%22%22%2C+%22locX%22%3A+%22%22%2C+%22locY%22%3A+%22%22%2C+%22locZ%22%3A+%22%22%2C+%22locD%22%3A+%22%22%2C+%22locDiv%22%3A+%2201%22%2C+%22boxCountYn%22%3A+%22N%22%2C+%22equipType%22%3A+%22%22%2C+%22keepWay%22%3A+%22%22%2C+%22dealTemp%22%3A+%22%22%7D"
+    }
+  ]
 }
