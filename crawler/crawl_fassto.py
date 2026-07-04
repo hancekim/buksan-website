@@ -46,6 +46,7 @@ import sys
 import csv
 import json
 import datetime
+import urllib.parse
 from pathlib import Path
 
 from playwright.sync_api import sync_playwright, TimeoutError as PWTimeout
@@ -458,15 +459,28 @@ def business_date_range(now):
 
 
 def api_post(page, url, form):
-    """로그인 세션 쿠키로 폼 POST 후 JSON 반환."""
-    r = page.request.post(
-        url, form=form,
-        headers={"X-Requested-With": "XMLHttpRequest", "Referer": API_BASE + "/cmn/main/main.do"},
-    )
-    try:
-        return r.json()
-    except Exception:
-        return {"_status": r.status, "_text": (r.text() or "")[:1500]}
+    """페이지 내부에서 fetch 로 폼 POST (앱과 동일한 쿠키·오리진·세션).
+    반환: {status, parsed, json, head}"""
+    body = urllib.parse.urlencode(form)
+    js = """async ([url, body]) => {
+        try {
+            const r = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body, credentials: 'include'
+            });
+            const t = await r.text();
+            let j = null, parsed = false;
+            try { j = JSON.parse(t); parsed = true; } catch (e) {}
+            return { status: r.status, parsed, json: j, head: parsed ? null : t.slice(0, 800) };
+        } catch (e) {
+            return { status: -1, parsed: false, json: null, head: String(e) };
+        }
+    }"""
+    return page.evaluate(js, [url, body])
 
 
 def fetch_outbound(page, center, start, end):
@@ -632,20 +646,29 @@ def main():
             # 리포트 소스: 출고/재고 API 직접 호출 (북청라센터=IC02)
             start, end = business_date_range(now)
             log(f"요청일자 범위: {start} ~ {end} (센터 IC02)")
-            outbound = fetch_outbound(page, "IC02", start, end)
-            loc_stock = fetch_loc_stock(page, "IC02")
+            out_res = fetch_outbound(page, "IC02", start, end)
+            loc_res = fetch_loc_stock(page, "IC02")
+            outbound = out_res.get("json")
+            loc_stock = loc_res.get("json")
             (raw_dir / "outbound_pic12.json").write_text(
-                json.dumps(outbound, ensure_ascii=False, indent=2), encoding="utf-8")
+                json.dumps(out_res, ensure_ascii=False, indent=2), encoding="utf-8")
             (raw_dir / "loc_stk06.json").write_text(
-                json.dumps(loc_stock, ensure_ascii=False, indent=2), encoding="utf-8")
+                json.dumps(loc_res, ensure_ascii=False, indent=2), encoding="utf-8")
             out_rows = _rows_of(outbound)
             loc_rows = _rows_of(loc_stock)
-            log(f"출고 {len(out_rows)}건, LOC재고 {len(loc_rows)}건")
+            log(f"출고 {len(out_rows)}건(status {out_res.get('status')}), "
+                f"LOC재고 {len(loc_rows)}건(status {loc_res.get('status')})")
             report_source = {
                 "date_range": [start, end],
+                "outbound_status": out_res.get("status"),
+                "outbound_head": out_res.get("head"),
+                "outbound_top_keys": (sorted(outbound.keys()) if isinstance(outbound, dict) else None),
                 "outbound_count": len(out_rows),
                 "outbound_keys": sorted(out_rows[0].keys()) if out_rows else [],
                 "outbound_sample": out_rows[:3],
+                "loc_status": loc_res.get("status"),
+                "loc_head": loc_res.get("head"),
+                "loc_top_keys": (sorted(loc_stock.keys()) if isinstance(loc_stock, dict) else None),
                 "loc_count": len(loc_rows),
                 "loc_keys": sorted(loc_rows[0].keys()) if loc_rows else [],
                 "loc_sample": loc_rows[:2],
