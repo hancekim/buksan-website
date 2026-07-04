@@ -139,23 +139,107 @@ def try_click(page, candidates, override):
     return False
 
 
+_ENUM_JS = """() => {
+    const pick = (e) => ({
+        tag: e.tagName.toLowerCase(),
+        type: (e.getAttribute('type') || '').toLowerCase(),
+        name: e.getAttribute('name') || '',
+        id: e.id || '',
+        placeholder: e.getAttribute('placeholder') || '',
+        text: (e.innerText || e.value || '').trim().slice(0, 30),
+    });
+    return {
+        title: document.title,
+        inputs: [...document.querySelectorAll('input, select, textarea')].map(pick),
+        buttons: [...document.querySelectorAll(
+            "button, a[onclick], input[type=submit], input[type=button], [role=button]")].map(pick),
+    };
+}"""
+
+
+def enumerate_fields(page):
+    """모든 프레임(iframe 포함)의 input/button 요소를 로그로 찍고 구조를 반환한다.
+    파스토 classic 화면이 프레임 기반일 수 있어, 프레임별로 훑는다.
+    이 로그만 보면 로그인 폼의 정확한 name/id 를 알 수 있다."""
+    out = []
+    log("=== 페이지 요소 진단 (프레임별) ===")
+    for fr in page.frames:
+        try:
+            data = fr.evaluate(_ENUM_JS)
+        except Exception as e:
+            data = {"error": str(e)}
+        out.append({"frame_url": fr.url, "data": data})
+        log(f"[frame] url={fr.url}  title={data.get('title', '')!r}")
+        for i in data.get("inputs", []):
+            log(f"    input  type={i['type']!r} name={i['name']!r} "
+                f"id={i['id']!r} ph={i['placeholder']!r}")
+        for b in data.get("buttons", []):
+            log(f"    button text={b['text']!r} id={b['id']!r} type={b['type']!r}")
+    return out
+
+
+def _login_in_frame(fr):
+    """비밀번호 input 이 있는 프레임에서 아이디/비번을 채우고 제출을 시도한다."""
+    pw = fr.locator("input[type='password']").first
+    if pw.count() == 0:
+        return False
+    # 아이디: 같은 프레임의 첫 text/무타입 input
+    id_input = fr.locator(
+        "input[type='text'], input[type='email'], input:not([type])"
+    ).first
+    try:
+        if id_input.count() > 0:
+            id_input.fill(CFG["id"], timeout=3000)
+        pw.fill(CFG["pw"], timeout=3000)
+        log(f"  로그인 폼 입력 완료 (frame: {fr.url})")
+    except Exception as e:
+        log(f"  입력 실패: {e}")
+        return False
+    # 제출: 프레임 내 로그인 버튼 → 없으면 Enter
+    for sel in SUBMIT_CANDIDATES:
+        try:
+            b = fr.locator(sel).first
+            if b.count() > 0:
+                b.click(timeout=3000)
+                log(f"  버튼 클릭: {sel}")
+                return True
+        except Exception:
+            continue
+    try:
+        pw.press("Enter")
+        log("  Enter 로 제출")
+        return True
+    except Exception:
+        return False
+
+
 def do_login(page):
     log(f"로그인 페이지 접속: {CFG['login_url']}")
     page.goto(CFG["login_url"], wait_until="domcontentloaded", timeout=60000)
-    page.wait_for_timeout(2000)
+    page.wait_for_timeout(3000)
 
-    if not try_fill(page, ID_CANDIDATES, CFG["id"], CFG["id_selector"]):
-        log("⚠️  아이디 입력칸을 못 찾음. FASSTO_ID_SELECTOR 로 지정 필요할 수 있음.")
-    if not try_fill(page, PW_CANDIDATES, CFG["pw"], CFG["pw_selector"]):
-        log("⚠️  비밀번호 입력칸을 못 찾음. FASSTO_PW_SELECTOR 로 지정 필요할 수 있음.")
+    # 먼저 구조를 로그로 남긴다 (셀렉터 확정용)
+    enumerate_fields(page)
 
-    clicked = try_click(page, SUBMIT_CANDIDATES, CFG["submit_selector"])
-    if not clicked:
-        log("로그인 버튼을 못 찾아 Enter 로 제출 시도")
-        try:
-            page.keyboard.press("Enter")
-        except Exception:
-            pass
+    # 1) 셀렉터가 명시됐으면 메인 페이지 우선 시도
+    done = False
+    if CFG["id_selector"] or CFG["pw_selector"]:
+        ok_id = try_fill(page, ID_CANDIDATES, CFG["id"], CFG["id_selector"])
+        ok_pw = try_fill(page, PW_CANDIDATES, CFG["pw"], CFG["pw_selector"])
+        if ok_id or ok_pw:
+            try_click(page, SUBMIT_CANDIDATES, CFG["submit_selector"]) or page.keyboard.press("Enter")
+            done = True
+
+    # 2) 자동: 비번 input 이 있는 프레임을 찾아 로그인
+    if not done:
+        for fr in page.frames:
+            if _login_in_frame(fr):
+                done = True
+                break
+
+    if not done:
+        log("⚠️  로그인 폼을 어떤 프레임에서도 못 찾음. 위 '요소 진단' 로그를 보고 "
+            "FASSTO_ID_SELECTOR / FASSTO_PW_SELECTOR 를 지정해야 함.")
 
     try:
         page.wait_for_load_state("networkidle", timeout=30000)
@@ -163,6 +247,20 @@ def do_login(page):
         pass
     page.wait_for_timeout(2000)
     log(f"로그인 후 현재 URL: {page.url}")
+    # 로그인 성공 여부 판단용: 로그인 후 다시 한 번 진단
+    enumerate_fields(page)
+
+
+def dump_frames_html(page, raw_dir):
+    """각 프레임의 HTML 을 raw 에 저장 (아티팩트로 받아 구조 분석용)."""
+    for idx, fr in enumerate(page.frames):
+        try:
+            html = fr.content()
+        except Exception:
+            continue
+        (raw_dir / f"frame_{idx:02d}_{safe_name(fr.url)}.html").write_text(
+            html, encoding="utf-8"
+        )
 
 
 def extract_html_tables(page):
@@ -256,7 +354,8 @@ def main():
             tables = extract_html_tables(page)
             log(f"HTML <table> {len(tables)}개 발견, JSON 응답 {len(captured)}개 캡처")
 
-            # 스크린샷(디버깅/확인용)
+            # 프레임 HTML 덤프 + 스크린샷(구조 분석/확인용)
+            dump_frames_html(page, raw_dir)
             page.screenshot(path=str(out_dir / f"screenshot_{date_str}.png"), full_page=True)
 
         finally:
