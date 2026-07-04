@@ -1,0 +1,1323 @@
+{
+  "collected_at": "2026-07-05T00:09:21.139478+09:00",
+  "date": "2026-07-05",
+  "main_url": "https://fms.fassto.ai/classic/cmn/main/main.do",
+  "captured_api_count": 15,
+  "captured_api_index": [
+    {
+      "url": "https://fms.fassto.ai/classic/cmn/popup/checkServerMaintenance.json",
+      "status": 200,
+      "content_type": "application/json;charset=utf-8"
+    },
+    {
+      "url": "https://fms.fassto.ai/classic/cmn/main/lnbBannerList.json",
+      "status": 200,
+      "content_type": "application/json;charset=utf-8"
+    },
+    {
+      "url": "https://fms.fassto.ai/classic/cmn/main/channelIOList.json",
+      "status": 200,
+      "content_type": "application/json;charset=utf-8"
+    },
+    {
+      "url": "https://fms.fassto.ai/modern/cmn/login/checkFeeSheetFee.json",
+      "status": 200,
+      "content_type": "application/json;charset=utf-8"
+    },
+    {
+      "url": "https://api.channel.io/front/v8/elastic/plugins/f20a0013-e3de-4e0e-882e-3fef2e802f53?",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "url": "https://fms.fassto.ai/classic/cmn/main/ribbonBannerInfo.json",
+      "status": 200,
+      "content_type": "application/json;charset=utf-8"
+    },
+    {
+      "url": "https://fms.fassto.ai/classic/cmn/main/mainInSch.json",
+      "status": 200,
+      "content_type": "application/json;charset=utf-8"
+    },
+    {
+      "url": "https://fms.fassto.ai/classic/cmn/main/mainInSch.json",
+      "status": 200,
+      "content_type": "application/json;charset=utf-8"
+    },
+    {
+      "url": "https://fms.fassto.ai/classic/cmn/main/mainInSch.json",
+      "status": 200,
+      "content_type": "application/json;charset=utf-8"
+    },
+    {
+      "url": "https://api.channel.io/front/v8/elastic/plugins/f20a0013-e3de-4e0e-882e-3fef2e802f53/boot",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "url": "https://fms.fassto.ai/classic/cmn/main/getExpirationDateManagementStatus.json",
+      "status": 200,
+      "content_type": "application/json;charset=utf-8"
+    },
+    {
+      "url": "https://fms.fassto.ai/classic/cmn/main/mainInSch.json",
+      "status": 200,
+      "content_type": "application/json;charset=utf-8"
+    },
+    {
+      "url": "https://api.channel.io/front/v8/managers/operators?",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "url": "https://api.channel.io/front/v8/channels/50875/operations?",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "url": "https://api.channel.io/front/v8/channels/50875/events",
+      "status": 200,
+      "content_type": "application/json"
+    }
+  ],
+  "target_payloads": [],
+  "html_tables": [
+    {
+      "index": 2,
+      "rows": [
+        [
+          "▨ 전체공지\tmore\n이벤트 사은품 출고 프로세스 변경 안내\t2026-06-25\n원부자재 가격 급등에 따른 부자재 가격 인상 안내\t2026-06-02\n상품 리뉴얼에 따른 입고 기준 및 바코드 운영 가이드 안내..\t2026-05-29\n국제 유가 급등 및 원유 수급 불안에 따른 원가 동향 안내..\t2026-03-23\n[필독] 스마트스토어 반품 연동 설정 안내\t2025-03-31",
+          "▨ 전체공지",
+          "more",
+          "이벤트 사은품 출고 프로세스 변경 안내",
+          "2026-06-25",
+          "원부자재 가격 급등에 따른 부자재 가격 인상 안내",
+          "2026-06-02",
+          "상품 리뉴얼에 따른 입고 기준 및 바코드 운영 가이드 안내..",
+          "2026-05-29",
+          "국제 유가 급등 및 원유 수급 불안에 따른 원가 동향 안내..",
+          "2026-03-23",
+          "[필독] 스마트스토어 반품 연동 설정 안내",
+          "2025-03-31",
+          "",
+          "▨ 센터공지",
+          "▨ 센터공지",
+          ""
+        ],
+        [
+          "▨ 전체공지",
+          "more"
+        ],
+        [
+          "이벤트 사은품 출고 프로세스 변경 안내",
+          "2026-06-25"
+        ],
+        [
+          "원부자재 가격 급등에 따른 부자재 가격 인상 안내",
+          "2026-06-02"
+        ],
+        [
+          "상품 리뉴얼에 따른 입고 기준 및 바코드 운영 가이드 안내..",
+          "2026-05-29"
+        ],
+        [
+          "국제 유가 급등 및 원유 수급 불안에 따른 원가 동향 안내..",
+          "2026-03-23"
+        ],
+        [
+          "[필독] 스마트스토어 반품 연동 설정 안내",
+          "2025-03-31"
+        ],
+        [
+          "▨ 센터공지",
+          ""
+        ]
+      ]
+    },
+    {
+      "index": 3,
+      "rows": [
+        [
+          "▨ 전체공지",
+          "more"
+        ]
+      ]
+    },
+    {
+      "index": 4,
+      "rows": [
+        [
+          "이벤트 사은품 출고 프로세스 변경 안내",
+          "2026-06-25"
+        ],
+        [
+          "원부자재 가격 급등에 따른 부자재 가격 인상 안내",
+          "2026-06-02"
+        ],
+        [
+          "상품 리뉴얼에 따른 입고 기준 및 바코드 운영 가이드 안내..",
+          "2026-05-29"
+        ],
+        [
+          "국제 유가 급등 및 원유 수급 불안에 따른 원가 동향 안내..",
+          "2026-03-23"
+        ],
+        [
+          "[필독] 스마트스토어 반품 연동 설정 안내",
+          "2025-03-31"
+        ]
+      ]
+    },
+    {
+      "index": 5,
+      "rows": [
+        [
+          "▨ 센터공지",
+          ""
+        ]
+      ]
+    },
+    {
+      "index": 7,
+      "rows": [
+        [
+          "",
+          "물류센터",
+          "YI00:용인1센터 지하1층(저온)\nYI01:용인1센터 1층\nYI02:용인1센터 2층\nYI03:용인1센터 3층\nYI20:용인2센터 지하1층(저온)\nYI21:용인2센터 1층\nYI22:용인2센터 2층\nYI23:용인2센터 3층\nSH02:안산단원센터\nPS01:부산기장센터\nPS02:부산진구센터\nPSK01:부산강서센터\nHS01:화성양감센터\nGPC01:군포복합C센터\nBA01:용인백암센터\nEC01:이크레모스\nTEST:테스트\nDEMO:데모\nYJ01:양주옥정센터\nSSA01:인천청라센터\nASM01:안성미양센터\nASW01:안성원곡센터\nASW02:안성원곡센터4F\nNFA01:NFA\nGG03:이천마장센터\nGG24:용인주북2센터\nAE01:아산음봉센터\nDJ01:대전대덕센터\nPJ01:파주조리센터\nPJ02:파주조리2센터\nSU01:한진 남서울센터 2층\nIC02:북청라센터\nIC04:경기광주센터\nBA02:한진백암센터\nKY01:인천청라2센터\nPG01:경기파주3센터",
+          "고객사",
+          "",
+          ""
+        ]
+      ]
+    },
+    {
+      "index": 8,
+      "rows": [
+        [
+          "▨ 당일 작업현황",
+          "(2026-07-05)"
+        ]
+      ]
+    },
+    {
+      "index": 9,
+      "rows": [
+        [
+          "구분",
+          "입고",
+          "택배",
+          "차량/기타"
+        ],
+        [
+          "확정",
+          "적치",
+          "지시확정",
+          "완료",
+          "지시확정",
+          "완료"
+        ],
+        [
+          "대상",
+          "건수",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "SKU",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "EA",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "완료",
+          "건수",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "SKU",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "EA",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "완료율",
+          "건수",
+          "0%",
+          "0%",
+          "0%",
+          "0%",
+          "0%",
+          "0%"
+        ],
+        [
+          "SKU",
+          "0%",
+          "0%",
+          "0%",
+          "0%",
+          "0%",
+          "0%"
+        ],
+        [
+          "EA",
+          "0%",
+          "0%",
+          "0%",
+          "0%",
+          "0%",
+          "0%"
+        ]
+      ]
+    },
+    {
+      "index": 10,
+      "rows": [
+        [
+          "▨ 당일 미처리 작업현황"
+        ]
+      ]
+    },
+    {
+      "index": 11,
+      "rows": [
+        [
+          "구분",
+          "입고",
+          "출고"
+        ],
+        [
+          "LU지정",
+          "재고보충",
+          "패킹검수",
+          "박스생성"
+        ],
+        [
+          "건수",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "SKU",
+          "0",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "EA",
+          "0",
+          "0",
+          "0",
+          "0"
+        ]
+      ]
+    },
+    {
+      "index": 12,
+      "rows": [
+        [
+          "▨ 유통기한 관리 현황",
+          "(2026-07-05)"
+        ]
+      ]
+    },
+    {
+      "index": 13,
+      "rows": [
+        [
+          "구분",
+          "입고 (입고요청번호 기준)",
+          "재고 (LOC 기준)"
+        ],
+        [
+          "전체",
+          "임박\n자세히 보기",
+          "경과\n자세히 보기",
+          "전체",
+          "임박\n자세히 보기",
+          "경과\n자세히 보기"
+        ],
+        [
+          "건수",
+          "43",
+          "0",
+          "0 %",
+          "43",
+          "100 %",
+          "0",
+          "0",
+          "0 %",
+          "0",
+          "0 %"
+        ],
+        [
+          "SKU",
+          "114",
+          "0",
+          "114",
+          "0",
+          "0",
+          "0"
+        ],
+        [
+          "EA",
+          "36,926",
+          "0",
+          "36,926",
+          "0",
+          "0",
+          "0"
+        ]
+      ]
+    },
+    {
+      "index": 14,
+      "rows": [
+        [
+          "▨ 보관 로케이션 현황"
+        ]
+      ]
+    },
+    {
+      "index": 15,
+      "rows": [
+        [
+          "구분",
+          "CAPA",
+          "보관",
+          "가동율"
+        ],
+        [
+          "팔레트랙",
+          "피킹",
+          "286",
+          "0",
+          "0%"
+        ],
+        [
+          "보충",
+          "1,346",
+          "0",
+          "0%"
+        ],
+        [
+          "선반랙",
+          "피킹",
+          "37,367",
+          "0",
+          "0%"
+        ],
+        [
+          "보충",
+          "0",
+          "0",
+          "0%"
+        ],
+        [
+          "행거랙",
+          "피킹",
+          "188",
+          "0",
+          "0%"
+        ],
+        [
+          "보충",
+          "0",
+          "0",
+          "0%"
+        ],
+        [
+          "평치",
+          "25,530",
+          "0",
+          "0%"
+        ]
+      ]
+    }
+  ],
+  "navigation": {
+    "links": [
+      {
+        "text": "본문 바로가기",
+        "href": "#container",
+        "onclick": "",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "주요메뉴 바로가기",
+        "href": "#gnbNav",
+        "onclick": "",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "Chrome 다운로드",
+        "href": "https://www.google.com/intl/ko/chrome/",
+        "onclick": "",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "user info\n김한승",
+        "href": "",
+        "onclick": "showLayerPopup(this);return false;",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "대시보드",
+        "href": "",
+        "onclick": "",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "상품관리",
+        "href": "",
+        "onclick": "",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "상품이력현황",
+        "href": "",
+        "onclick": "",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "결품현황",
+        "href": "",
+        "onclick": "",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "이벤트 사은품 등록/관리",
+        "href": "",
+        "onclick": "",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "입고관리",
+        "href": "",
+        "onclick": "",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "입고요청",
+        "href": "",
+        "onclick": "",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "센터도착",
+        "href": "",
+        "onclick": "",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "입고검수",
+        "href": "",
+        "onclick": "",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "입고확정",
+        "href": "",
+        "onclick": "",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "로케이션적치",
+        "href": "",
+        "onclick": "",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "입고진행현황",
+        "href": "",
+        "onclick": "",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "출고관리",
+        "href": "",
+        "onclick": "",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "택배 출고 신청",
+        "href": "",
+        "onclick": "",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "해외 택배 출고신청",
+        "href": "",
+        "onclick": "",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "차량 출고 신청",
+        "href": "",
+        "onclick": "",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "출고지시확정",
+        "href": "",
+        "onclick": "",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "피킹",
+        "href": "",
+        "onclick": "",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "검수패킹",
+        "href": "",
+        "onclick": "",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "송장일괄출력",
+        "href": "",
+        "onclick": "",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "출고상품상세리스트",
+        "href": "",
+        "onclick": "",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "배송상태조회",
+        "href": "",
+        "onclick": "",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "기타출고",
+        "href": "",
+        "onclick": "",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "작업원복",
+        "href": "",
+        "onclick": "",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "사은품 미출고 조회",
+        "href": "",
+        "onclick": "",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "박스라벨 발행",
+        "href": "",
+        "onclick": "",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "박스라벨 발행/추적",
+        "href": "",
+        "onclick": "",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "추천실패 로그",
+        "href": "",
+        "onclick": "",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "재고관리",
+        "href": "",
+        "onclick": "",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "재고보충지시",
+        "href": "",
+        "onclick": "",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "로케이션이동",
+        "href": "",
+        "onclick": "",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "재고이동",
+        "href": "",
+        "onclick": "",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "LOC재고현황",
+        "href": "",
+        "onclick": "",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "상품별재고현황",
+        "href": "",
+        "onclick": "",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "재고수불부",
+        "href": "",
+        "onclick": "",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "입출고현황",
+        "href": "",
+        "onclick": "",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "반품관리",
+        "href": "",
+        "onclick": "",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "반품신청/진행상태",
+        "href": "",
+        "onclick": "",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "반품신청 및 현황",
+        "href": "",
+        "onclick": "",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "반품배송조회",
+        "href": "",
+        "onclick": "",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "반품검수",
+        "href": "",
+        "onclick": "",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "반품상품상세리스트",
+        "href": "",
+        "onclick": "",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "FMS현황",
+        "href": "",
+        "onclick": "",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "물류비",
+        "href": "",
+        "onclick": "",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "유통가공비",
+        "href": "",
+        "onclick": "",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "배차관리",
+        "href": "",
+        "onclick": "",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "기타비용",
+        "href": "",
+        "onclick": "",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "물류비정산",
+        "href": "",
+        "onclick": "",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "물류비현황",
+        "href": "",
+        "onclick": "",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "고객게시판",
+        "href": "",
+        "onclick": "",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "1:1 문의",
+        "href": "",
+        "onclick": "",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "쇼핑몰연동",
+        "href": "",
+        "onclick": "",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "미연동내역",
+        "href": "",
+        "onclick": "",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "기본정보",
+        "href": "",
+        "onclick": "",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "상품등록/관리",
+        "href": "",
+        "onclick": "",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "딸린상품꾸미기",
+        "href": "",
+        "onclick": "",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "고객사",
+        "href": "",
+        "onclick": "",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "공급사",
+        "href": "",
+        "onclick": "",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "출고처",
+        "href": "",
+        "onclick": "",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "구역",
+        "href": "",
+        "onclick": "",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "카테고리",
+        "href": "",
+        "onclick": "",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "로케이션",
+        "href": "",
+        "onclick": "",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "박스",
+        "href": "",
+        "onclick": "",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "엑셀양식관리",
+        "href": "",
+        "onclick": "",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "박스추천사전",
+        "href": "",
+        "onclick": "",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "센터용 부자재",
+        "href": "",
+        "onclick": "",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "출고지시로그",
+        "href": "",
+        "onclick": "",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "센터휴무일관리",
+        "href": "",
+        "onclick": "",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "파스토 홈페이지",
+        "href": "",
+        "onclick": "",
+        "id": "btnHomepage",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "사용법",
+        "href": "https://guide-kr.fassto.ai/",
+        "onclick": "",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "업데이트 소식",
+        "href": "https://guide-kr.fassto.ai/3bf88a6c-559e-49b4-b84d-778b72025b8a",
+        "onclick": "",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "비밀번호 변경",
+        "href": "",
+        "onclick": "",
+        "id": "changePassword",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "로그아웃",
+        "href": "",
+        "onclick": "",
+        "id": "btnLogout",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "개인정보 처리방침",
+        "href": "https://www.fassto.ai/view/privacy",
+        "onclick": "",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "서비스 이용약관",
+        "href": "https://www.fassto.ai/view/serviceTerms",
+        "onclick": "",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "Google Play",
+        "href": "https://play.google.com/store/apps/details?id=ai.fassto.fms.app.com.android",
+        "onclick": "",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "App Store",
+        "href": "https://apps.apple.com/kr/app/%ED%8C%8C%EC%8A%A4%ED%86%A0-fassto/id1564687941",
+        "onclick": "",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "사이드바",
+        "href": "#none",
+        "onclick": "",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "전체 닫기",
+        "href": "#closeAll",
+        "onclick": "",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "대시보드",
+        "href": "#main",
+        "onclick": "",
+        "id": "ui-id-1",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "택배·송장 주요 일정 기준일 : 2026-04-02(목)",
+        "href": "https://guide-kr.fassto.ai/shipping",
+        "onclick": "",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "",
+        "href": "",
+        "onclick": "fn_closeRibbonBanner('2022-01-26 17:35:52.0', 'Sun Jul 05 2026 23:59:59 GMT+0900 (한국 표준시)')",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "1주일간 그만보기",
+        "href": "",
+        "onclick": "fn_setNoticePopupCookie(202606251004, 7)",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "",
+        "href": "",
+        "onclick": "fn_closeNoticePopup(202606251004)",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "1주일간 그만보기",
+        "href": "",
+        "onclick": "fn_setNoticePopupCookie(202606021242, 7)",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "",
+        "href": "",
+        "onclick": "fn_closeNoticePopup(202606021242)",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "1주일간 그만보기",
+        "href": "",
+        "onclick": "fn_setNoticePopupCookie(202605291539, 7)",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "",
+        "href": "",
+        "onclick": "fn_closeNoticePopup(202605291539)",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "",
+        "href": "",
+        "onclick": "popHide($('#pic11Popup'))",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "확인",
+        "href": "",
+        "onclick": "popHide($('#pic11Popup'))",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "",
+        "href": "",
+        "onclick": "hideCommonToast()",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "",
+        "href": "",
+        "onclick": "popHide($('#commonLayoutPopup'))",
+        "id": "",
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      },
+      {
+        "text": "홈",
+        "href": "/home",
+        "onclick": "",
+        "id": "",
+        "frame": "about:blank"
+      },
+      {
+        "text": "대화",
+        "href": "/user-chats",
+        "onclick": "",
+        "id": "",
+        "frame": "about:blank"
+      },
+      {
+        "text": "설정",
+        "href": "/setting",
+        "onclick": "",
+        "id": "",
+        "frame": "about:blank"
+      }
+    ],
+    "selects": [
+      {
+        "name": "whCd_MainIn01",
+        "id": "whCd_MainIn01",
+        "options": [
+          {
+            "value": "YI00",
+            "text": "YI00:용인1센터 지하1층(저온)"
+          },
+          {
+            "value": "YI01",
+            "text": "YI01:용인1센터 1층"
+          },
+          {
+            "value": "YI02",
+            "text": "YI02:용인1센터 2층"
+          },
+          {
+            "value": "YI03",
+            "text": "YI03:용인1센터 3층"
+          },
+          {
+            "value": "YI20",
+            "text": "YI20:용인2센터 지하1층(저온)"
+          },
+          {
+            "value": "YI21",
+            "text": "YI21:용인2센터 1층"
+          },
+          {
+            "value": "YI22",
+            "text": "YI22:용인2센터 2층"
+          },
+          {
+            "value": "YI23",
+            "text": "YI23:용인2센터 3층"
+          },
+          {
+            "value": "SH02",
+            "text": "SH02:안산단원센터"
+          },
+          {
+            "value": "PS01",
+            "text": "PS01:부산기장센터"
+          },
+          {
+            "value": "PS02",
+            "text": "PS02:부산진구센터"
+          },
+          {
+            "value": "PSK01",
+            "text": "PSK01:부산강서센터"
+          },
+          {
+            "value": "HS01",
+            "text": "HS01:화성양감센터"
+          },
+          {
+            "value": "GPC01",
+            "text": "GPC01:군포복합C센터"
+          },
+          {
+            "value": "BA01",
+            "text": "BA01:용인백암센터"
+          },
+          {
+            "value": "EC01",
+            "text": "EC01:이크레모스"
+          },
+          {
+            "value": "TEST",
+            "text": "TEST:테스트"
+          },
+          {
+            "value": "DEMO",
+            "text": "DEMO:데모"
+          },
+          {
+            "value": "YJ01",
+            "text": "YJ01:양주옥정센터"
+          },
+          {
+            "value": "SSA01",
+            "text": "SSA01:인천청라센터"
+          },
+          {
+            "value": "ASM01",
+            "text": "ASM01:안성미양센터"
+          },
+          {
+            "value": "ASW01",
+            "text": "ASW01:안성원곡센터"
+          },
+          {
+            "value": "ASW02",
+            "text": "ASW02:안성원곡센터4F"
+          },
+          {
+            "value": "NFA01",
+            "text": "NFA01:NFA"
+          },
+          {
+            "value": "GG03",
+            "text": "GG03:이천마장센터"
+          },
+          {
+            "value": "GG24",
+            "text": "GG24:용인주북2센터"
+          },
+          {
+            "value": "AE01",
+            "text": "AE01:아산음봉센터"
+          },
+          {
+            "value": "DJ01",
+            "text": "DJ01:대전대덕센터"
+          },
+          {
+            "value": "PJ01",
+            "text": "PJ01:파주조리센터"
+          },
+          {
+            "value": "PJ02",
+            "text": "PJ02:파주조리2센터"
+          },
+          {
+            "value": "SU01",
+            "text": "SU01:한진 남서울센터 2층"
+          },
+          {
+            "value": "IC02",
+            "text": "IC02:북청라센터"
+          },
+          {
+            "value": "IC04",
+            "text": "IC04:경기광주센터"
+          },
+          {
+            "value": "BA02",
+            "text": "BA02:한진백암센터"
+          },
+          {
+            "value": "KY01",
+            "text": "KY01:인천청라2센터"
+          },
+          {
+            "value": "PG01",
+            "text": "PG01:경기파주3센터"
+          }
+        ],
+        "frame": "https://fms.fassto.ai/classic/cmn/main/main.do"
+      }
+    ]
+  }
+}
