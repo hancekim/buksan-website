@@ -344,6 +344,7 @@ def explore_pages(page, out_dir, raw_dir, menus, date_str):
                 log("  locDiv=01(피킹) 선택")
             except Exception as e:
                 log(f"  locDiv 선택 실패: {e}")
+        page.wait_for_timeout(1500)  # 센터 변경(onchange) 반영 대기 후 조회
         try:
             page.locator("#btnSearch:visible").first.click(timeout=4000)
             log("  조회(btnSearch) 클릭")
@@ -448,6 +449,7 @@ def main():
     captured = []   # 모든 JSON 응답 메타
     target_payloads = []  # target_keyword 매칭된 응답 본문
     discovery = []  # 관심 API(출고/재고 목록 등)의 요청 파라미터+응답 샘플
+    requests_log = []  # 모든 요청(응답 무관) — 엔드포인트 식별용
     tables = []
     nav = {"links": [], "selects": []}
     explored = {}
@@ -519,6 +521,27 @@ def main():
 
         page.on("response", on_response)
 
+        # --- 요청 로깅: 응답이 JSON 이 아니거나 실패해도 엔드포인트를 남긴다 ---
+        def on_request(req):
+            try:
+                u = req.url
+                if "fms.fassto.ai" not in u:
+                    return
+                if "/cmn/" in u:
+                    return
+                path = u.split("?")[0]
+                if not (path.endswith(".do") or path.endswith(".json") or req.method == "POST"):
+                    return
+                if len(requests_log) < 120:
+                    requests_log.append({
+                        "method": req.method, "url": path,
+                        "post": (req.post_data or "")[:800],
+                    })
+            except Exception:
+                pass
+
+        page.on("request", on_request)
+
         try:
             do_login(page)
 
@@ -567,6 +590,7 @@ def main():
         "navigation": nav,                      # LNB 메뉴/센터 드롭다운 (경로 파악용)
         "explored": explored,                   # 택배출고신청/LOC재고현황 페이지 구조
         "discovery": discovery,                 # 목록 API 요청 파라미터 + 응답 샘플
+        "requests_log": requests_log,           # 모든 요청(엔드포인트 식별용)
     }
     json_path = out_dir / f"fassto_{date_str}.json"
     json_path.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
