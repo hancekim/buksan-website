@@ -179,24 +179,36 @@ def enumerate_fields(page):
 
 
 def _login_in_frame(fr):
-    """비밀번호 input 이 있는 프레임에서 아이디/비번을 채우고 제출을 시도한다."""
-    pw = fr.locator("input[type='password']").first
+    """비밀번호 input 이 있는 프레임에서 아이디/비번을 채우고 제출을 시도한다.
+    파스토 로그인 폼: 아이디=#loginId, 비번=#psWd, 제출='로그인'(submit).
+    #psWd 앞에 화면에 안 보이는 더미 password 칸이 있어 :visible 로 걸러낸다."""
+    # 비밀번호: 지정 셀렉터 → 보이는 password (숨은 더미 제외)
+    pw_sel = CFG["pw_selector"] or "#psWd, input[type='password']:visible"
+    pw = fr.locator(pw_sel).first
     if pw.count() == 0:
         return False
-    # 아이디: 같은 프레임의 첫 text/무타입 input
-    id_input = fr.locator(
-        "input[type='text'], input[type='email'], input:not([type])"
-    ).first
+    # 아이디: 지정 셀렉터 → #loginId → 보이는 text/email
+    id_sel = CFG["id_selector"] or (
+        "#loginId, input[type='text']:visible, input[type='email']:visible"
+    )
+    id_input = fr.locator(id_sel).first
     try:
         if id_input.count() > 0:
-            id_input.fill(CFG["id"], timeout=3000)
-        pw.fill(CFG["pw"], timeout=3000)
+            id_input.fill(CFG["id"], timeout=5000)
+        pw.fill(CFG["pw"], timeout=5000)
         log(f"  로그인 폼 입력 완료 (frame: {fr.url})")
     except Exception as e:
         log(f"  입력 실패: {e}")
         return False
-    # 제출: 프레임 내 로그인 버튼 → 없으면 Enter
-    for sel in SUBMIT_CANDIDATES:
+    # 제출: '로그인' submit 버튼 우선 → 일반 후보 → Enter
+    submit_sels = ([CFG["submit_selector"]] if CFG["submit_selector"] else []) + [
+        "button[type='submit']:has-text('로그인')",
+        "button[type='submit']",
+        "button:has-text('로그인')",
+    ]
+    for sel in submit_sels:
+        if not sel:
+            continue
         try:
             b = fr.locator(sel).first
             if b.count() > 0:
@@ -226,25 +238,23 @@ def do_login(page):
     # 먼저 구조를 로그로 남긴다 (셀렉터 확정용)
     enumerate_fields(page)
 
-    # 1) 셀렉터가 명시됐으면 메인 페이지 우선 시도
+    # 비번 input 이 있는 프레임을 찾아 로그인 (CFG 셀렉터가 있으면 그것을 사용)
     done = False
-    if CFG["id_selector"] or CFG["pw_selector"]:
-        ok_id = try_fill(page, ID_CANDIDATES, CFG["id"], CFG["id_selector"])
-        ok_pw = try_fill(page, PW_CANDIDATES, CFG["pw"], CFG["pw_selector"])
-        if ok_id or ok_pw:
-            try_click(page, SUBMIT_CANDIDATES, CFG["submit_selector"]) or page.keyboard.press("Enter")
+    for fr in page.frames:
+        if _login_in_frame(fr):
             done = True
-
-    # 2) 자동: 비번 input 이 있는 프레임을 찾아 로그인
-    if not done:
-        for fr in page.frames:
-            if _login_in_frame(fr):
-                done = True
-                break
+            break
 
     if not done:
         log("⚠️  로그인 폼을 어떤 프레임에서도 못 찾음. 위 '요소 진단' 로그를 보고 "
             "FASSTO_ID_SELECTOR / FASSTO_PW_SELECTOR 를 지정해야 함.")
+    else:
+        # 로그인 성공 시 보통 메인(main.do)으로 리다이렉트된다. 확인.
+        try:
+            page.wait_for_url("**/main/main.do", timeout=15000)
+            log("  ✅ 로그인 성공 → 메인 화면 이동 확인")
+        except PWTimeout:
+            log("  ⚠️  로그인 후 메인 이동이 확인되지 않음(자격증명 오류이거나 다른 랜딩일 수 있음).")
 
     try:
         page.wait_for_load_state("networkidle", timeout=30000)
