@@ -56,17 +56,25 @@ from playwright.sync_api import sync_playwright, TimeoutError as PWTimeout
 # ---------------------------------------------------------------------------
 DEFAULT_URL = "https://fms.fassto.ai/classic/cmn/main/main.do"
 
+# 참고: GitHub Actions 의 `${{ vars.X }}` 는 변수 미설정 시 빈 문자열("")을 넘긴다.
+# os.environ.get(k, default) 는 "빈 문자열이라도 값이 있으면" 그대로 반환하므로
+# 기본값이 무시된다. 그래서 URL/폴더처럼 기본값이 중요한 항목은 `or` 로 처리해
+# 빈 문자열도 기본값으로 대체되게 한다.
+def env(key, default=""):
+    return (os.environ.get(key) or "").strip() or default
+
+
 CFG = {
-    "id": os.environ.get("FASSTO_ID", ""),
-    "pw": os.environ.get("FASSTO_PW", ""),
-    "login_url": os.environ.get("FASSTO_LOGIN_URL", DEFAULT_URL),
-    "main_url": os.environ.get("FASSTO_MAIN_URL", DEFAULT_URL),
-    "id_selector": os.environ.get("FASSTO_ID_SELECTOR", ""),
-    "pw_selector": os.environ.get("FASSTO_PW_SELECTOR", ""),
-    "submit_selector": os.environ.get("FASSTO_SUBMIT_SELECTOR", ""),
-    "target_keyword": os.environ.get("TARGET_API_KEYWORD", ""),
-    "output_dir": os.environ.get("OUTPUT_DIR", "data"),
-    "headless": os.environ.get("HEADLESS", "true").lower() != "false",
+    "id": env("FASSTO_ID"),
+    "pw": env("FASSTO_PW"),
+    "login_url": env("FASSTO_LOGIN_URL", DEFAULT_URL),
+    "main_url": env("FASSTO_MAIN_URL", DEFAULT_URL),
+    "id_selector": env("FASSTO_ID_SELECTOR"),
+    "pw_selector": env("FASSTO_PW_SELECTOR"),
+    "submit_selector": env("FASSTO_SUBMIT_SELECTOR"),
+    "target_keyword": env("TARGET_API_KEYWORD"),
+    "output_dir": env("OUTPUT_DIR", "data"),
+    "headless": env("HEADLESS", "true").lower() != "false",
 }
 
 # 로그인 입력칸 자동탐지 후보 (사이트마다 name/id 가 달라서 흔한 패턴을 순서대로 시도)
