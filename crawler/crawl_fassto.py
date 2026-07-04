@@ -278,6 +278,51 @@ def dump_frames_html(page, raw_dir):
         )
 
 
+_NAV_JS = """() => {
+    const links = [...document.querySelectorAll('a, [onclick]')].map(a => ({
+        text: (a.innerText || a.getAttribute('title') || '').trim().slice(0, 40),
+        href: a.getAttribute('href') || '',
+        onclick: (a.getAttribute('onclick') || '').slice(0, 120),
+        id: a.id || '',
+    })).filter(l => (l.text || l.onclick) && l.href !== 'javascript:;');
+    const selects = [...document.querySelectorAll('select')].map(s => ({
+        name: s.getAttribute('name') || '', id: s.id || '',
+        options: [...s.options].map(o => ({
+            value: o.value, text: (o.text || '').trim().slice(0, 40)
+        })).slice(0, 80),
+    }));
+    return { links, selects };
+}"""
+
+
+def collect_navigation(page):
+    """LNB 메뉴 링크와 select 드롭다운(센터 선택 등)을 프레임별로 수집한다.
+    이 결과로 '북청라센터' 선택 방법과 출고/재고/상품 메뉴 위치를 파악한다."""
+    nav = {"links": [], "selects": []}
+    seen = set()
+    for fr in page.frames:
+        try:
+            d = fr.evaluate(_NAV_JS)
+        except Exception:
+            continue
+        for l in d.get("links", []):
+            key = (l["text"], l["href"], l["onclick"])
+            if key in seen:
+                continue
+            seen.add(key)
+            nav["links"].append({**l, "frame": fr.url})
+        for s in d.get("selects", []):
+            nav["selects"].append({**s, "frame": fr.url})
+    # 센터 관련 키워드가 든 링크/옵션은 눈에 띄게 로그로도 남긴다
+    for s in nav["selects"]:
+        for o in s["options"]:
+            if any(k in o["text"] for k in ("센터", "청라", "북청")):
+                log(f"  [center?] select#{s['id'] or s['name']} option "
+                    f"value={o['value']!r} text={o['text']!r}")
+    log(f"내비게이션 수집: 링크 {len(nav['links'])}개, select {len(nav['selects'])}개")
+    return nav
+
+
 def extract_html_tables(page):
     """화면의 일반 <table> 들을 [{headers, rows}] 형태로 추출 (canvas 그리드는 못 잡음)."""
     return page.evaluate(
@@ -314,6 +359,8 @@ def main():
 
     captured = []   # 모든 JSON 응답 메타
     target_payloads = []  # target_keyword 매칭된 응답 본문
+    tables = []
+    nav = {"links": [], "selects": []}
 
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=CFG["headless"])
@@ -379,6 +426,9 @@ def main():
             tables = extract_html_tables(page)
             log(f"HTML <table> {len(tables)}개 발견, JSON 응답 {len(captured)}개 캡처")
 
+            # 메뉴/센터 선택기 탐색 (북청라센터 선택·메뉴 경로 파악용)
+            nav = collect_navigation(page)
+
             # 프레임 HTML 덤프 + 스크린샷(구조 분석/확인용)
             dump_frames_html(page, raw_dir)
             page.screenshot(path=str(out_dir / f"screenshot_{date_str}.png"), full_page=True)
@@ -396,6 +446,7 @@ def main():
         "captured_api_index": captured,        # url 목록 (어떤 게 데이터인지 식별용)
         "target_payloads": target_payloads,    # TARGET_API_KEYWORD 지정 시 채워짐
         "html_tables": tables,
+        "navigation": nav,                      # LNB 메뉴/센터 드롭다운 (경로 파악용)
     }
     json_path = out_dir / f"fassto_{date_str}.json"
     json_path.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
