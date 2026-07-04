@@ -215,7 +215,12 @@ def _login_in_frame(fr):
 
 def do_login(page):
     log(f"로그인 페이지 접속: {CFG['login_url']}")
-    page.goto(CFG["login_url"], wait_until="domcontentloaded", timeout=60000)
+    resp = page.goto(CFG["login_url"], wait_until="domcontentloaded", timeout=60000)
+    if resp is not None:
+        log(f"  HTTP 상태: {resp.status} {resp.status_text}")
+        if resp.status == 403:
+            log("  ⛔ 서버가 접속을 차단(403)했습니다. IP 차단(해외/데이터센터 IP)일 "
+                "가능성이 높습니다. 이 경우 한국 내 네트워크에서 실행해야 합니다.")
     page.wait_for_timeout(3000)
 
     # 먼저 구조를 로그로 남긴다 (셀렉터 확정용)
@@ -305,6 +310,16 @@ def main():
         context = browser.new_context(
             viewport={"width": 1600, "height": 1000},
             locale="ko-KR",
+            timezone_id="Asia/Seoul",
+            # 헤드리스 크롬(HeadlessChrome UA)이 WAF 에 막히는 경우가 있어
+            # 일반 크롬처럼 보이도록 UA/언어 헤더를 지정한다.
+            user_agent=(
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+                "(KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
+            ),
+            extra_http_headers={
+                "Accept-Language": "ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7",
+            },
         )
         page = context.new_page()
 
