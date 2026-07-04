@@ -278,40 +278,60 @@ def dump_frames_html(page, raw_dir, prefix=""):
         )
 
 
-def click_menu(page, name):
-    """LNB 메뉴 항목을 텍스트로 찾아 클릭한다(프레임 순회). 메뉴는 JS 탭 방식."""
+def _click_text(page, name):
+    """텍스트로 요소를 찾아 클릭(프레임 순회, exact→부분, 마지막엔 force)."""
     for exact in (True, False):
         for fr in page.frames:
             try:
                 loc = fr.get_by_text(name, exact=exact).first
                 if loc.count() > 0:
-                    loc.click(timeout=4000)
-                    log(f"  메뉴 클릭: '{name}' (frame {fr.url})")
+                    try:
+                        loc.scroll_into_view_if_needed(timeout=2000)
+                    except Exception:
+                        pass
+                    try:
+                        loc.click(timeout=3000)
+                    except Exception:
+                        loc.click(timeout=3000, force=True)  # 숨김/겹침 대비
+                    log(f"  클릭: '{name}' (frame {fr.url})")
                     return True
             except Exception:
                 continue
-    log(f"  ⚠️  메뉴 '{name}' 를 못 찾음")
+    return False
+
+
+def open_menu(page, parent, child):
+    """상위 메뉴(parent)를 펼친 뒤 하위 메뉴(child)를 클릭한다.
+    LNB 하위 항목은 상위가 접혀 있으면 숨겨져 클릭이 안 되므로 먼저 펼친다."""
+    # 하위를 바로 시도 → 실패 시 상위 펼치고 재시도
+    if _click_text(page, child):
+        return True
+    if parent and _click_text(page, parent):
+        page.wait_for_timeout(1200)
+        if _click_text(page, child):
+            return True
+    log(f"  ⚠️  메뉴 '{parent} > {child}' 를 못 찾음")
     return False
 
 
 def explore_pages(page, out_dir, raw_dir, menus, date_str):
-    """지정 메뉴들을 차례로 열어, 각 페이지의 폼/드롭다운/프레임 HTML 을 수집한다.
+    """지정 (상위,하위) 메뉴들을 차례로 열어, 각 페이지의 폼/드롭다운/프레임 HTML 을 수집한다.
     (북청라센터 선택칸·요청일자·조회 버튼·그리드 API 구조 파악용)"""
     explored = {}
-    for name in menus:
-        key = safe_name(name)
-        if not click_menu(page, name):
-            explored[name] = {"opened": False}
+    for parent, child in menus:
+        key = safe_name(child)
+        if not open_menu(page, parent, child):
+            explored[child] = {"opened": False}
             continue
         page.wait_for_timeout(5000)
         try:
             page.wait_for_load_state("networkidle", timeout=15000)
         except PWTimeout:
             pass
-        log(f"── '{name}' 페이지 구조 ──")
+        log(f"── '{child}' 페이지 구조 ──")
         nav = collect_navigation(page)   # select 옵션(센터 목록 등) 로그 포함
         enumerate_fields(page)           # input/버튼 로그
-        explored[name] = {"opened": True, "navigation": nav}
+        explored[child] = {"opened": True, "navigation": nav}
         dump_frames_html(page, raw_dir, prefix=f"{key}__")
         try:
             page.screenshot(
@@ -478,10 +498,11 @@ def main():
             dump_frames_html(page, raw_dir)
             page.screenshot(path=str(out_dir / f"screenshot_{date_str}.png"), full_page=True)
 
-            # 대상 페이지 열어 구조 캡처 (택배 출고 신청 / LOC재고현황)
+            # 대상 페이지 열어 구조 캡처 (상위 메뉴 펼친 뒤 하위 클릭)
             explored = explore_pages(
                 page, out_dir, raw_dir,
-                ["택배 출고 신청", "LOC재고현황"], date_str,
+                [("출고관리", "택배 출고 신청"), ("재고관리", "LOC재고현황")],
+                date_str,
             )
 
         finally:
