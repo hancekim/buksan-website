@@ -434,6 +434,74 @@ def safe_name(url):
     return name[:120]
 
 
+# ---------------------------------------------------------------------------
+# 리포트 데이터: 출고(pic12) + 재고LOC(stk06) API 직접 호출
+# ---------------------------------------------------------------------------
+API_BASE = "https://fms.fassto.ai/classic"
+
+# LOC재고현황(stk06) 검색 파라미터 기본값 (whCd/locDiv 만 채워 사용)
+STK06_SCHPARAM = {
+    "cateCd": "", "whCd": "", "cstCd": "", "cstNm": "", "groupcstCd": None,
+    "godCd": "", "cstGodCd": "", "godNm": "", "inBoxBarcd": "", "lCate": "",
+    "mCate": "", "sCate": "", "productsBeyondExpirationDate": "", "seasonCd": "",
+    "genderCd": "", "makeYr": "", "boxInCntYn": "N", "zone": "", "locX": "",
+    "locY": "", "locZ": "", "locD": "", "locDiv": "", "boxCountYn": "N",
+    "equipType": "", "keepWay": "", "dealTemp": "",
+}
+
+
+def business_date_range(now):
+    """요청일자 범위 [7일전, 종료일]. 새벽 02:00 이전이면 종료일=어제(업무일 기준)."""
+    end = now.date() if now.hour >= 2 else (now.date() - datetime.timedelta(days=1))
+    start = end - datetime.timedelta(days=7)
+    return start.isoformat(), end.isoformat()
+
+
+def api_post(page, url, form):
+    """로그인 세션 쿠키로 폼 POST 후 JSON 반환."""
+    r = page.request.post(
+        url, form=form,
+        headers={"X-Requested-With": "XMLHttpRequest", "Referer": API_BASE + "/cmn/main/main.do"},
+    )
+    try:
+        return r.json()
+    except Exception:
+        return {"_status": r.status, "_text": (r.text() or "")[:1500]}
+
+
+def fetch_outbound(page, center, start, end):
+    """택배출고신청 목록(pic12/mainList). 요청일자 start~end, 전체 배송유형/작업상태."""
+    return api_post(page, f"{API_BASE}/pic/pic12/mainList.json", {
+        "custNmValue": "", "whCd": center,
+        "ordDt1_pic12": start, "ordDt2_pic12": end,
+        "cstCd": "", "cstNm": "", "groupcstCd": "", "ordNo": "",
+        "ordDiv": "", "wrkStat": "", "salChanel": "", "custNm": "",
+        "custTelNo": "", "fileDownloadYn": "0", "searchType": "slipNo",
+        "slipNo": "", "labelNo": "",
+    })
+
+
+def fetch_loc_stock(page, center):
+    """LOC재고현황(stk06/mainList) — 해당 센터 피킹(locDiv=01) 재고."""
+    sch = dict(STK06_SCHPARAM)
+    sch["whCd"] = center
+    sch["locDiv"] = "01"
+    return api_post(page, f"{API_BASE}/stk/stk06/mainList.json",
+                    {"schParam": json.dumps(sch, ensure_ascii=False)})
+
+
+def _rows_of(payload):
+    """API 응답에서 목록 배열을 꺼낸다(list/rows/data 등 키 대응)."""
+    if isinstance(payload, list):
+        return payload
+    if isinstance(payload, dict):
+        for k in ("list", "rows", "data", "resultList", "items"):
+            v = payload.get(k)
+            if isinstance(v, list):
+                return v
+    return []
+
+
 def main():
     if not CFG["id"] or not CFG["pw"]:
         log("❌ FASSTO_ID / FASSTO_PW 환경변수가 필요합니다.")
@@ -453,6 +521,7 @@ def main():
     tables = []
     nav = {"links": [], "selects": []}
     explored = {}
+    report_source = {}
 
     # 관심 API 판별: classic 경로의 목록/조회성 엔드포인트 (노이즈 제외)
     def _is_interesting(url):
@@ -560,19 +629,27 @@ def main():
             tables = extract_html_tables(page)
             log(f"HTML <table> {len(tables)}개 발견, JSON 응답 {len(captured)}개 캡처")
 
-            # 메뉴/센터 선택기 탐색 (북청라센터 선택·메뉴 경로 파악용)
-            nav = collect_navigation(page)
-
-            # 프레임 HTML 덤프 + 스크린샷(구조 분석/확인용)
-            dump_frames_html(page, raw_dir)
-            page.screenshot(path=str(out_dir / f"screenshot_{date_str}.png"), full_page=True)
-
-            # 대상 페이지 열어 구조 캡처 (상위 메뉴 펼친 뒤 하위 클릭)
-            explored = explore_pages(
-                page, out_dir, raw_dir,
-                [("출고관리", "택배 출고 신청"), ("재고관리", "LOC재고현황")],
-                date_str,
-            )
+            # 리포트 소스: 출고/재고 API 직접 호출 (북청라센터=IC02)
+            start, end = business_date_range(now)
+            log(f"요청일자 범위: {start} ~ {end} (센터 IC02)")
+            outbound = fetch_outbound(page, "IC02", start, end)
+            loc_stock = fetch_loc_stock(page, "IC02")
+            (raw_dir / "outbound_pic12.json").write_text(
+                json.dumps(outbound, ensure_ascii=False, indent=2), encoding="utf-8")
+            (raw_dir / "loc_stk06.json").write_text(
+                json.dumps(loc_stock, ensure_ascii=False, indent=2), encoding="utf-8")
+            out_rows = _rows_of(outbound)
+            loc_rows = _rows_of(loc_stock)
+            log(f"출고 {len(out_rows)}건, LOC재고 {len(loc_rows)}건")
+            report_source = {
+                "date_range": [start, end],
+                "outbound_count": len(out_rows),
+                "outbound_keys": sorted(out_rows[0].keys()) if out_rows else [],
+                "outbound_sample": out_rows[:3],
+                "loc_count": len(loc_rows),
+                "loc_keys": sorted(loc_rows[0].keys()) if loc_rows else [],
+                "loc_sample": loc_rows[:2],
+            }
 
         finally:
             context.close()
@@ -586,9 +663,7 @@ def main():
         "captured_api_count": len(captured),
         "captured_api_index": captured,        # url 목록 (어떤 게 데이터인지 식별용)
         "target_payloads": target_payloads,    # TARGET_API_KEYWORD 지정 시 채워짐
-        "html_tables": tables,
-        "navigation": nav,                      # LNB 메뉴/센터 드롭다운 (경로 파악용)
-        "explored": explored,                   # 택배출고신청/LOC재고현황 페이지 구조
+        "report_source": report_source,         # 출고/재고 API 응답 샘플(필드 확인용)
         "discovery": discovery,                 # 목록 API 요청 파라미터 + 응답 샘플
         "requests_log": requests_log,           # 모든 요청(엔드포인트 식별용)
     }
