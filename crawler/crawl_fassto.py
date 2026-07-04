@@ -266,16 +266,60 @@ def do_login(page):
     enumerate_fields(page)
 
 
-def dump_frames_html(page, raw_dir):
+def dump_frames_html(page, raw_dir, prefix=""):
     """각 프레임의 HTML 을 raw 에 저장 (아티팩트로 받아 구조 분석용)."""
     for idx, fr in enumerate(page.frames):
         try:
             html = fr.content()
         except Exception:
             continue
-        (raw_dir / f"frame_{idx:02d}_{safe_name(fr.url)}.html").write_text(
+        (raw_dir / f"{prefix}frame_{idx:02d}_{safe_name(fr.url)}.html").write_text(
             html, encoding="utf-8"
         )
+
+
+def click_menu(page, name):
+    """LNB 메뉴 항목을 텍스트로 찾아 클릭한다(프레임 순회). 메뉴는 JS 탭 방식."""
+    for exact in (True, False):
+        for fr in page.frames:
+            try:
+                loc = fr.get_by_text(name, exact=exact).first
+                if loc.count() > 0:
+                    loc.click(timeout=4000)
+                    log(f"  메뉴 클릭: '{name}' (frame {fr.url})")
+                    return True
+            except Exception:
+                continue
+    log(f"  ⚠️  메뉴 '{name}' 를 못 찾음")
+    return False
+
+
+def explore_pages(page, out_dir, raw_dir, menus, date_str):
+    """지정 메뉴들을 차례로 열어, 각 페이지의 폼/드롭다운/프레임 HTML 을 수집한다.
+    (북청라센터 선택칸·요청일자·조회 버튼·그리드 API 구조 파악용)"""
+    explored = {}
+    for name in menus:
+        key = safe_name(name)
+        if not click_menu(page, name):
+            explored[name] = {"opened": False}
+            continue
+        page.wait_for_timeout(5000)
+        try:
+            page.wait_for_load_state("networkidle", timeout=15000)
+        except PWTimeout:
+            pass
+        log(f"── '{name}' 페이지 구조 ──")
+        nav = collect_navigation(page)   # select 옵션(센터 목록 등) 로그 포함
+        enumerate_fields(page)           # input/버튼 로그
+        explored[name] = {"opened": True, "navigation": nav}
+        dump_frames_html(page, raw_dir, prefix=f"{key}__")
+        try:
+            page.screenshot(
+                path=str(out_dir / f"screenshot_{key}_{date_str}.png"), full_page=True
+            )
+        except Exception:
+            pass
+    return explored
 
 
 _NAV_JS = """() => {
@@ -361,6 +405,7 @@ def main():
     target_payloads = []  # target_keyword 매칭된 응답 본문
     tables = []
     nav = {"links": [], "selects": []}
+    explored = {}
 
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=CFG["headless"])
@@ -433,6 +478,12 @@ def main():
             dump_frames_html(page, raw_dir)
             page.screenshot(path=str(out_dir / f"screenshot_{date_str}.png"), full_page=True)
 
+            # 대상 페이지 열어 구조 캡처 (택배 출고 신청 / LOC재고현황)
+            explored = explore_pages(
+                page, out_dir, raw_dir,
+                ["택배 출고 신청", "LOC재고현황"], date_str,
+            )
+
         finally:
             context.close()
             browser.close()
@@ -447,6 +498,7 @@ def main():
         "target_payloads": target_payloads,    # TARGET_API_KEYWORD 지정 시 채워짐
         "html_tables": tables,
         "navigation": nav,                      # LNB 메뉴/센터 드롭다운 (경로 파악용)
+        "explored": explored,                   # 택배출고신청/LOC재고현황 페이지 구조
     }
     json_path = out_dir / f"fassto_{date_str}.json"
     json_path.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
