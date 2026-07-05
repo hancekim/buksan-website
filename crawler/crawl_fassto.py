@@ -589,9 +589,23 @@ def main():
                 if not is_jsonish:
                     return
                 body = resp.text()
+                # 관심 API 는 JSON 파싱 여부와 무관하게 원본(머리)을 남긴다
+                # (빈 응답/HTML 도 진단해야 하므로)
+                if _is_interesting(url) and len(discovery) < 40:
+                    try:
+                        post = resp.request.post_data
+                    except Exception:
+                        post = None
+                    discovery.append({
+                        "url": url, "status": resp.status,
+                        "method": getattr(resp.request, "method", ""),
+                        "post_data": (post or "")[:1500],
+                        "len": len(body or ""), "body_head": (body or "")[:6000],
+                    })
+                    log(f"  ◆ 관심 API 응답: {url} (len={len(body or '')})")
                 if not body or len(body) < 2:
                     return
-                # JSON 으로 파싱 가능한 것만
+                # JSON 으로 파싱 가능한 것만 (아래 raw 저장/캡처용)
                 try:
                     data = json.loads(body)
                 except Exception:
@@ -603,19 +617,6 @@ def main():
                 if CFG["target_keyword"] and CFG["target_keyword"] in url:
                     target_payloads.append({"url": url, "data": data})
                     log(f"  ★ 타겟 API 캡처: {url}")
-                # 관심 API 는 요청 파라미터 + 응답 샘플을 결과에 담는다(엔드포인트 확정용)
-                if _is_interesting(url) and len(discovery) < 25:
-                    try:
-                        req = resp.request
-                        post = req.post_data
-                    except Exception:
-                        post = None
-                    body_head = json.dumps(data, ensure_ascii=False)[:6000]
-                    discovery.append({
-                        "url": url, "method": getattr(resp.request, "method", ""),
-                        "post_data": (post or "")[:1500], "body_head": body_head,
-                    })
-                    log(f"  ◆ 관심 API 캡처: {url}")
             except Exception:
                 pass
 
@@ -690,6 +691,15 @@ def main():
                 "loc_keys": sorted(loc_rows[0].keys()) if loc_rows else [],
                 "loc_sample": loc_rows[:2],
             }
+
+            # 직접 호출이 비면 UI 조회로 실제 mainList 응답을 캡처(원본은 discovery 에 저장)
+            if not out_rows or not loc_rows:
+                log("직접 호출 결과가 비어 UI 조회로 재시도(원본 캡처)")
+                explored = explore_pages(
+                    page, out_dir, raw_dir,
+                    [("출고관리", "택배 출고 신청"), ("재고관리", "LOC재고현황")],
+                    date_str,
+                )
 
         finally:
             context.close()
