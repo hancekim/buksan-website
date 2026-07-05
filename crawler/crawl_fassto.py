@@ -483,8 +483,24 @@ def api_post(page, url, form):
     return page.evaluate(js, [url, body])
 
 
+def _init_module(page, form_url):
+    """메뉴 탭 진입 시 호출되는 Form.do 를 먼저 쳐서 모듈 세션을 초기화한다.
+    (초기화 없이 mainList 를 직접 부르면 빈 응답이 온다)"""
+    try:
+        page.evaluate(
+            """async (url) => {
+                try { await fetch(url, {method:'POST',
+                    headers:{'X-Requested-With':'XMLHttpRequest'}, credentials:'include'}); }
+                catch(e) {}
+            }""", form_url)
+        page.wait_for_timeout(800)
+    except Exception:
+        pass
+
+
 def fetch_outbound(page, center, start, end):
     """택배출고신청 목록(pic12/mainList). 요청일자 start~end, 전체 배송유형/작업상태."""
+    _init_module(page, f"{API_BASE}/pic/pic12/pic12Form.do")
     return api_post(page, f"{API_BASE}/pic/pic12/mainList.json", {
         "custNmValue": "", "whCd": center,
         "ordDt1_pic12": start, "ordDt2_pic12": end,
@@ -497,6 +513,7 @@ def fetch_outbound(page, center, start, end):
 
 def fetch_loc_stock(page, center):
     """LOC재고현황(stk06/mainList) — 해당 센터 피킹(locDiv=01) 재고."""
+    _init_module(page, f"{API_BASE}/stk/stk06/stk06Form.do")
     sch = dict(STK06_SCHPARAM)
     sch["whCd"] = center
     sch["locDiv"] = "01"
