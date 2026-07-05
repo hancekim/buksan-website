@@ -1,0 +1,142 @@
+{
+  "collected_at": "2026-07-06T00:44:50.040285+09:00",
+  "date": "2026-07-06",
+  "main_url": "https://fms.fassto.ai/classic/cmn/main/main.do",
+  "captured_api_count": 15,
+  "captured_api_index": [
+    {
+      "url": "https://fms.fassto.ai/classic/cmn/popup/checkServerMaintenance.json",
+      "status": 200,
+      "content_type": "application/json;charset=utf-8"
+    },
+    {
+      "url": "https://fms.fassto.ai/classic/cmn/main/channelIOList.json",
+      "status": 200,
+      "content_type": "application/json;charset=utf-8"
+    },
+    {
+      "url": "https://fms.fassto.ai/classic/cmn/main/lnbBannerList.json",
+      "status": 200,
+      "content_type": "application/json;charset=utf-8"
+    },
+    {
+      "url": "https://fms.fassto.ai/modern/cmn/login/checkFeeSheetFee.json",
+      "status": 200,
+      "content_type": "application/json;charset=utf-8"
+    },
+    {
+      "url": "https://api.channel.io/front/v8/elastic/plugins/f20a0013-e3de-4e0e-882e-3fef2e802f53?",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "url": "https://fms.fassto.ai/classic/cmn/main/ribbonBannerInfo.json",
+      "status": 200,
+      "content_type": "application/json;charset=utf-8"
+    },
+    {
+      "url": "https://fms.fassto.ai/classic/cmn/main/mainInSch.json",
+      "status": 200,
+      "content_type": "application/json;charset=utf-8"
+    },
+    {
+      "url": "https://fms.fassto.ai/classic/cmn/main/mainInSch.json",
+      "status": 200,
+      "content_type": "application/json;charset=utf-8"
+    },
+    {
+      "url": "https://api.channel.io/front/v8/elastic/plugins/f20a0013-e3de-4e0e-882e-3fef2e802f53/boot",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "url": "https://api.channel.io/front/v8/managers/operators?",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "url": "https://api.channel.io/front/v8/channels/50875/operations?",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "url": "https://api.channel.io/front/v8/channels/50875/events",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "url": "https://fms.fassto.ai/classic/cmn/popup/checkServerMaintenance.json",
+      "status": 500,
+      "content_type": "application/json;charset=utf-8"
+    },
+    {
+      "url": "https://fms.fassto.ai/classic/cmn/main/mainInSch.json",
+      "status": 500,
+      "content_type": "application/json;charset=utf-8"
+    },
+    {
+      "url": "https://fms.fassto.ai/classic/cmn/main/mainInSch.json",
+      "status": 500,
+      "content_type": "application/json;charset=utf-8"
+    }
+  ],
+  "target_payloads": [],
+  "report_source": {
+    "date_range": [
+      "2026-06-28",
+      "2026-07-05"
+    ],
+    "outbound_status": 200,
+    "outbound_head": "<script>\nalert('세션이 만료되어 로그인 페이지로 이동합니다.');\n if( opener ) {\n   opener.top.location.replace('/classic/cmn/login/login.do');\n   self.close(); \n } else { \n   top.location.replace('/classic/cmn/login/login.do');\n } \n</script>\n",
+    "outbound_top_keys": null,
+    "outbound_count": 0,
+    "outbound_keys": [],
+    "outbound_sample": [],
+    "loc_status": 200,
+    "loc_head": "<script>\nalert('세션이 만료되어 로그인 페이지로 이동합니다.');\n if( opener ) {\n   opener.top.location.replace('/classic/cmn/login/login.do');\n   self.close(); \n } else { \n   top.location.replace('/classic/cmn/login/login.do');\n } \n</script>\n",
+    "loc_top_keys": null,
+    "loc_count": 0,
+    "loc_keys": [],
+    "loc_sample": []
+  },
+  "discovery": [
+    {
+      "url": "https://fms.fassto.ai/classic/pic/pic12/mainList.json",
+      "status": 200,
+      "method": "POST",
+      "post_data": "custNmValue=&whCd=IC02&ordDt1_pic12=2026-06-28&ordDt2_pic12=2026-07-05&cstCd=&cstNm=&groupcstCd=&ordNo=&ordDiv=&wrkStat=&salChanel=&custNm=&custTelNo=&fileDownloadYn=0&searchType=slipNo&slipNo=&labelNo=",
+      "len": 222,
+      "body_head": "<script>\nalert('세션이 만료되어 로그인 페이지로 이동합니다.');\n if( opener ) {\n   opener.top.location.replace('/classic/cmn/login/login.do');\n   self.close(); \n } else { \n   top.location.replace('/classic/cmn/login/login.do');\n } \n</script>\n"
+    },
+    {
+      "url": "https://fms.fassto.ai/classic/stk/stk06/mainList.json",
+      "status": 200,
+      "method": "POST",
+      "post_data": "schParam=%7B%22cateCd%22%3A+%22%22%2C+%22whCd%22%3A+%22IC02%22%2C+%22cstCd%22%3A+%22%22%2C+%22cstNm%22%3A+%22%22%2C+%22groupcstCd%22%3A+null%2C+%22godCd%22%3A+%22%22%2C+%22cstGodCd%22%3A+%22%22%2C+%22godNm%22%3A+%22%22%2C+%22inBoxBarcd%22%3A+%22%22%2C+%22lCate%22%3A+%22%22%2C+%22mCate%22%3A+%22%22%2C+%22sCate%22%3A+%22%22%2C+%22productsBeyondExpirationDate%22%3A+%22%22%2C+%22seasonCd%22%3A+%22%22%2C+%22genderCd%22%3A+%22%22%2C+%22makeYr%22%3A+%22%22%2C+%22boxInCntYn%22%3A+%22N%22%2C+%22zone%22%3A+%22%22%2C+%22locX%22%3A+%22%22%2C+%22locY%22%3A+%22%22%2C+%22locZ%22%3A+%22%22%2C+%22locD%22%3A+%22%22%2C+%22locDiv%22%3A+%2201%22%2C+%22boxCountYn%22%3A+%22N%22%2C+%22equipType%22%3A+%22%22%2C+%22keepWay%22%3A+%22%22%2C+%22dealTemp%22%3A+%22%22%7D",
+      "len": 222,
+      "body_head": "<script>\nalert('세션이 만료되어 로그인 페이지로 이동합니다.');\n if( opener ) {\n   opener.top.location.replace('/classic/cmn/login/login.do');\n   self.close(); \n } else { \n   top.location.replace('/classic/cmn/login/login.do');\n } \n</script>\n"
+    }
+  ],
+  "requests_log": [
+    {
+      "method": "POST",
+      "url": "https://fms.fassto.ai/classic/pic/pic12/pic12Form.do",
+      "post": ""
+    },
+    {
+      "method": "POST",
+      "url": "https://fms.fassto.ai/classic/pic/pic12/mainList.json",
+      "post": "custNmValue=&whCd=IC02&ordDt1_pic12=2026-06-28&ordDt2_pic12=2026-07-05&cstCd=&cstNm=&groupcstCd=&ordNo=&ordDiv=&wrkStat=&salChanel=&custNm=&custTelNo=&fileDownloadYn=0&searchType=slipNo&slipNo=&labelNo="
+    },
+    {
+      "method": "POST",
+      "url": "https://fms.fassto.ai/classic/stk/stk06/stk06Form.do",
+      "post": ""
+    },
+    {
+      "method": "POST",
+      "url": "https://fms.fassto.ai/classic/stk/stk06/mainList.json",
+      "post": "schParam=%7B%22cateCd%22%3A+%22%22%2C+%22whCd%22%3A+%22IC02%22%2C+%22cstCd%22%3A+%22%22%2C+%22cstNm%22%3A+%22%22%2C+%22groupcstCd%22%3A+null%2C+%22godCd%22%3A+%22%22%2C+%22cstGodCd%22%3A+%22%22%2C+%22godNm%22%3A+%22%22%2C+%22inBoxBarcd%22%3A+%22%22%2C+%22lCate%22%3A+%22%22%2C+%22mCate%22%3A+%22%22%2C+%22sCate%22%3A+%22%22%2C+%22productsBeyondExpirationDate%22%3A+%22%22%2C+%22seasonCd%22%3A+%22%22%2C+%22genderCd%22%3A+%22%22%2C+%22makeYr%22%3A+%22%22%2C+%22boxInCntYn%22%3A+%22N%22%2C+%22zone%22%3A+%22%22%2C+%22locX%22%3A+%22%22%2C+%22locY%22%3A+%22%22%2C+%22locZ%22%3A+%22%22%2C+%22locD%22%3A+%22%22%2C+%22locDiv%22%3A+%2201%22%2C+%22boxCountYn%22%3A+%22N%22%2C+%22equipType%22%3A+%22%22%2C+%22keepWay%22%3A+%22%22%2C+%22dealTemp%22%3A+%22%22%7D"
+    }
+  ]
+}
