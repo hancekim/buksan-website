@@ -1,5 +1,5 @@
 {
-  "collected_at": "2026-07-05T08:34:52.784888+09:00",
+  "collected_at": "2026-07-05T08:59:54.102237+09:00",
   "date": "2026-07-05",
   "main_url": "https://fms.fassto.ai/classic/cmn/main/main.do",
   "captured_api_count": 15,
@@ -45,7 +45,7 @@
       "content_type": "application/json;charset=utf-8"
     },
     {
-      "url": "https://fms.fassto.ai/classic/cmn/main/getExpirationDateManagementStatus.json",
+      "url": "https://fms.fassto.ai/classic/cmn/main/mainInSch.json",
       "status": 200,
       "content_type": "application/json;charset=utf-8"
     },
@@ -55,7 +55,7 @@
       "content_type": "application/json"
     },
     {
-      "url": "https://fms.fassto.ai/classic/cmn/main/mainInSch.json",
+      "url": "https://fms.fassto.ai/classic/cmn/main/getExpirationDateManagementStatus.json",
       "status": 200,
       "content_type": "application/json;charset=utf-8"
     },
