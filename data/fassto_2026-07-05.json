@@ -1,5 +1,5 @@
 {
-  "collected_at": "2026-07-05T09:14:32.758534+09:00",
+  "collected_at": "2026-07-05T09:34:37.735674+09:00",
   "date": "2026-07-05",
   "main_url": "https://fms.fassto.ai/classic/cmn/main/main.do",
   "captured_api_count": 15,
@@ -50,14 +50,14 @@
       "content_type": "application/json"
     },
     {
-      "url": "https://api.channel.io/front/v8/elastic/plugins/f20a0013-e3de-4e0e-882e-3fef2e802f53/boot",
-      "status": 200,
-      "content_type": "application/json"
-    },
-    {
       "url": "https://fms.fassto.ai/classic/cmn/main/mainInSch.json",
       "status": 200,
       "content_type": "application/json;charset=utf-8"
+    },
+    {
+      "url": "https://api.channel.io/front/v8/elastic/plugins/f20a0013-e3de-4e0e-882e-3fef2e802f53/boot",
+      "status": 200,
+      "content_type": "application/json"
     },
     {
       "url": "https://fms.fassto.ai/classic/cmn/main/getExpirationDateManagementStatus.json",
@@ -103,8 +103,18 @@
   "requests_log": [
     {
       "method": "POST",
+      "url": "https://fms.fassto.ai/classic/pic/pic12/pic12Form.do",
+      "post": ""
+    },
+    {
+      "method": "POST",
       "url": "https://fms.fassto.ai/classic/pic/pic12/mainList.json",
       "post": "custNmValue=&whCd=IC02&ordDt1_pic12=2026-06-28&ordDt2_pic12=2026-07-05&cstCd=&cstNm=&groupcstCd=&ordNo=&ordDiv=&wrkStat=&salChanel=&custNm=&custTelNo=&fileDownloadYn=0&searchType=slipNo&slipNo=&labelNo="
+    },
+    {
+      "method": "POST",
+      "url": "https://fms.fassto.ai/classic/stk/stk06/stk06Form.do",
+      "post": ""
     },
     {
       "method": "POST",
