@@ -1,8 +1,8 @@
 {
-  "collected_at": "2026-07-07T02:36:10.805211+09:00",
+  "collected_at": "2026-07-07T03:49:57.572439+09:00",
   "date": "2026-07-07",
   "main_url": "https://fms.fassto.ai/classic/cmn/main/main.do",
-  "captured_api_count": 23,
+  "captured_api_count": 22,
   "captured_api_index": [
     {
       "url": "https://fms.fassto.ai/classic/cmn/popup/checkServerMaintenance.json",
@@ -55,19 +55,14 @@
       "content_type": "application/json"
     },
     {
-      "url": "https://fms.fassto.ai/classic/cmn/main/getExpirationDateManagementStatus.json",
-      "status": 200,
-      "content_type": "application/json;charset=utf-8"
-    },
-    {
       "url": "https://fms.fassto.ai/classic/cmn/main/mainInSch.json",
       "status": 200,
       "content_type": "application/json;charset=utf-8"
     },
     {
-      "url": "https://api.channel.io/front/v8/managers/operators?",
+      "url": "https://fms.fassto.ai/classic/cmn/main/getExpirationDateManagementStatus.json",
       "status": 200,
-      "content_type": "application/json"
+      "content_type": "application/json;charset=utf-8"
     },
     {
       "url": "https://api.channel.io/front/v8/channels/50875/operations?",
@@ -75,13 +70,13 @@
       "content_type": "application/json"
     },
     {
-      "url": "https://api.channel.io/front/v8/channels/50875/events",
+      "url": "https://api.channel.io/front/v8/managers/operators?",
       "status": 200,
       "content_type": "application/json"
     },
     {
-      "url": "https://browser-intake-datadoghq.com/api/v2/rum?ddsource=browser&dd-api-key=pub538cb6126cb59246563f3890885c2b96&dd-evp-origin-version=7.2.0&dd-evp-origin=browser&dd-request-id=737ff346-5880-4801-b6c1-c9b3a770231a&batch_time=1783359409284&_dd.api=fetch",
-      "status": 202,
+      "url": "https://api.channel.io/front/v8/channels/50875/events",
+      "status": 200,
       "content_type": "application/json"
     },
     {
