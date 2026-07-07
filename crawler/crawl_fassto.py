@@ -315,9 +315,8 @@ def open_menu(page, parent, child):
     return False
 
 
-def explore_pages(page, out_dir, raw_dir, menus, date_str):
-    """지정 (상위,하위) 메뉴들을 차례로 열어, 각 페이지의 폼/드롭다운/프레임 HTML 을 수집한다.
-    (북청라센터 선택칸·요청일자·조회 버튼·그리드 API 구조 파악용)"""
+def explore_pages(page, out_dir, raw_dir, menus, date_str, start=None, end=None):
+    """지정 (상위,하위) 메뉴를 열어 북청라(IC02) 선택·조회 → 목록 API 응답을 유도한다."""
     explored = {}
     for parent, child in menus:
         key = safe_name(child)
@@ -345,6 +344,21 @@ def explore_pages(page, out_dir, raw_dir, menus, date_str):
                 log("  locDiv=01(피킹) 선택")
             except Exception as e:
                 log(f"  locDiv 선택 실패: {e}")
+        if child == "택배 출고 신청" and start and end:
+            # 요청일자 범위 설정(7일전~오늘). 날짜 input 에 값 세팅 후 change 이벤트 발생.
+            try:
+                page.evaluate(
+                    """([s, e]) => {
+                        const set = (sel, val) => {
+                            const el = document.querySelector(sel);
+                            if (el) { el.value = val;
+                                el.dispatchEvent(new Event('change', {bubbles:true})); }
+                        };
+                        set('#ordDt1_pic12', s); set('#ordDt2_pic12', e);
+                    }""", [start, end])
+                log(f"  요청일자 {start}~{end} 설정")
+            except Exception as e:
+                log(f"  요청일자 설정 실패: {e}")
         page.wait_for_timeout(1500)  # 센터 변경(onchange) 반영 대기 후 조회
         try:
             page.locator("#btnSearch:visible").first.click(timeout=4000)
@@ -533,6 +547,168 @@ def _rows_of(payload):
     return []
 
 
+# 리포트 배송유형 컬럼 (코드, 표시명) — ordDiv 값 기준
+ORD_DIV_COLS = [("O", "토스도착"), ("P", "도착보장"), ("S", "당일도착"), ("N", "일반배송")]
+
+
+def _pick(d, *names):
+    for n in names:
+        v = d.get(n)
+        if v not in (None, ""):
+            return v
+    return ""
+
+
+def build_report_model(report_data):
+    """LOC재고 + 출고 데이터를 리포트 표 모델로 집계한다.
+    - 냉동/냉장: 주문 상품코드를 LOC재고(취급온도)에서 찾아 판별(냉동 포함 시 냉동, 그 외 냉장)
+    - 셀 값: 출고요청(wrkStat=1) / 출고작업중(wrkStat=2) 건수
+    반환: {"clients":[...], "cells":{(cst,temp,ordDiv):{"req","work"}}, "meta":{...}}
+    """
+    loc_rows = _rows_of(report_data.get("loc"))
+    out_rows = _rows_of(report_data.get("outbound"))
+
+    # 상품코드 -> 취급온도명(냉장/냉동/상온)
+    temp_map = {}
+    for r in loc_rows:
+        g = _pick(r, "godCd", "cstGodCd")
+        if not g:
+            continue
+        temp_map[g] = _pick(r, "godDealTempNm", "zoneDealTempNm")
+
+    cells = {}
+    clients = {}   # cstNm -> True (등장 순)
+    order_keys = sorted(out_rows[0].keys()) if out_rows else []
+    for o in out_rows:
+        cst = _pick(o, "cstNm", "custNm", "cstNmValue") or "(미상)"
+        clients[cst] = True
+        god = _pick(o, "godCd", "cstGodCd", "godCd1")
+        tname = temp_map.get(god, "")
+        temp = "냉동" if "냉동" in tname else "냉장"   # 상온/미상 → 냉장(사은품 포함)
+        odiv = _pick(o, "ordDiv", "ordDivCd")
+        ws = str(_pick(o, "wrkStat", "wrkStatCd"))
+        cell = cells.setdefault((cst, temp, odiv), {"req": 0, "work": 0})
+        if ws == "1":
+            cell["req"] += 1
+        elif ws == "2":
+            cell["work"] += 1
+
+    return {
+        "clients": list(clients.keys()),
+        "cells": cells,
+        "meta": {
+            "loc_count": len(loc_rows),
+            "outbound_count": len(out_rows),
+            "order_keys": order_keys,
+        },
+    }
+
+
+def _cell_txt(cells, cst, temp, odiv):
+    c = cells.get((cst, temp, odiv))
+    if not c:
+        return "0 / 0"
+    return f"{c['req']} / {c['work']}"
+
+
+def _sum_cell(cells, cst, temp):
+    req = work = 0
+    for (_c, _t, _d), v in cells.items():
+        if _c == cst and _t == temp:
+            req += v["req"]; work += v["work"]
+    return req, work
+
+
+def render_report_html(model, center_name, start, end, collected_at):
+    """리포트 표를 HTML 문자열로 렌더링(거래처 × 냉동/냉장/합계 × 배송유형)."""
+    clients = model["clients"]
+    cells = model["cells"]
+    meta = model["meta"]
+    divs = ORD_DIV_COLS
+
+    def _row(temp_cells):
+        """temp_cells: dict code->(req,work). 반환: (총계txt, [칸txt...])"""
+        per = []
+        tr = tw = 0
+        for code, _ in divs:
+            r, w = temp_cells.get(code, (0, 0))
+            per.append(f"{r} / {w}")
+            tr += r; tw += w
+        return f"{tr} / {tw}", per
+
+    body_rows = []
+    for cst in clients:
+        # 냉동/냉장 행
+        for i, temp in enumerate(("냉동", "냉장")):
+            tc = {}
+            for code, _ in divs:
+                c = cells.get((cst, temp, code))
+                tc[code] = (c["req"], c["work"]) if c else (0, 0)
+            tot, per = _row(tc)
+            name = cst if i == 0 else ""
+            tds = "".join(f"<td>{x}</td>" for x in per)
+            body_rows.append(
+                f'<tr><td class="cst">{name}</td><td>{temp}</td>'
+                f'<td class="subtot">{tot}</td>{tds}<td></td><td></td></tr>')
+        # 합계 행
+        tc = {}
+        for code, _ in divs:
+            r = sum(v["req"] for (c, t, d), v in cells.items() if c == cst and d == code)
+            w = sum(v["work"] for (c, t, d), v in cells.items() if c == cst and d == code)
+            tc[code] = (r, w)
+        tot, per = _row(tc)
+        tds = "".join(f'<td class="tot">{x}</td>' for x in per)
+        body_rows.append(
+            f'<tr class="totrow"><td class="cst"></td><td>합계</td>'
+            f'<td class="tot">{tot}</td>{tds}<td></td><td></td></tr>')
+
+    if not clients:
+        body_rows.append(
+            f'<tr><td colspan="9" class="empty">현재 조회된 출고요청/출고작업중 주문이 '
+            f'없습니다. (요청일자 {start} ~ {end})</td></tr>')
+
+    div_th = "".join(f'<th class="crawl">{name}</th>' for _, name in divs)
+    return f"""<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>북청라센터 주문처리현황</title>
+<style>
+  :root {{ color-scheme: light dark; }}
+  body {{ font-family: 'Pretendard', system-ui, sans-serif; margin: 24px; background:#f7f8fa; color:#1a1a1a; }}
+  @media (prefers-color-scheme: dark) {{ body {{ background:#12141a; color:#e8e8ea; }} }}
+  h1 {{ font-size: 20px; margin: 0 0 4px; }}
+  .meta {{ color:#777; font-size: 13px; margin-bottom:16px; }}
+  .wrap {{ overflow-x:auto; }}
+  table {{ border-collapse: collapse; width: 100%; min-width: 820px; background:#fff; }}
+  @media (prefers-color-scheme: dark) {{ table {{ background:#1b1e26; }} }}
+  th, td {{ border: 1px solid #d8dbe0; padding: 7px 10px; text-align:center; font-size:13px; }}
+  @media (prefers-color-scheme: dark) {{ th,td {{ border-color:#333842; }} }}
+  thead th {{ background:#eef1f5; font-weight:600; }}
+  @media (prefers-color-scheme: dark) {{ thead th {{ background:#242833; }} }}
+  th.crawl {{ background:#e3f0ff; }} @media (prefers-color-scheme: dark) {{ th.crawl {{ background:#1e3350; }} }}
+  td.subtot, td.tot {{ font-weight:600; background:#f4f6f9; }}
+  @media (prefers-color-scheme: dark) {{ td.subtot, td.tot {{ background:#232734; }} }}
+  tr.totrow td {{ background:#eef1f5; font-weight:600; }}
+  @media (prefers-color-scheme: dark) {{ tr.totrow td {{ background:#242833; }} }}
+  td.empty {{ color:#888; padding:24px; }}
+  .legend {{ font-size:12px; color:#888; margin-top:10px; }}
+</style></head><body>
+  <h1>주문처리현황 — {center_name}</h1>
+  <div class="meta">요청일자 {start} ~ {end} · 수집시각 {collected_at} · 셀 값 = 출고요청 / 출고작업중
+    · LOC재고 {meta['loc_count']}건 · 출고 {meta['outbound_count']}건</div>
+  <div class="wrap"><table>
+    <thead>
+      <tr><th>거래처</th><th>구분</th><th>총계</th>{div_th}<th>CS처리건</th><th>비고</th></tr>
+    </thead>
+    <tbody>
+      {''.join(body_rows)}
+    </tbody>
+  </table></div>
+  <div class="legend">※ 냉동/냉장은 주문 상품코드를 LOC재고현황(피킹) 취급온도로 판별 —
+     냉동 포함 시 냉동, 그 외 냉장(상온·사은품 포함). CS처리건·비고는 수기 입력란.</div>
+</body></html>"""
+
+
 def main():
     if not CFG["id"] or not CFG["pw"]:
         log("❌ FASSTO_ID / FASSTO_PW 환경변수가 필요합니다.")
@@ -553,6 +729,7 @@ def main():
     nav = {"links": [], "selects": []}
     explored = {}
     report_source = {}
+    report_data = {"loc": None, "outbound": None}  # mainList 전체 응답
 
     # 관심 API 판별: classic 경로의 목록/조회성 엔드포인트 (노이즈 제외)
     def _is_interesting(url):
@@ -614,6 +791,12 @@ def main():
                 captured.append(entry)
                 fname = raw_dir / f"{len(captured):03d}_{safe_name(url)}.json"
                 fname.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
+                # 리포트용: 출고/재고 mainList 전체 응답을 보관(가장 큰 것 우선)
+                if "pic12/mainList" in url:
+                    report_data["outbound"] = data
+                elif "stk06/mainList" in url:
+                    if _rows_of(data) or report_data.get("loc") is None:
+                        report_data["loc"] = data
                 if CFG["target_keyword"] and CFG["target_keyword"] in url:
                     target_payloads.append({"url": url, "data": data})
                     log(f"  ★ 타겟 API 캡처: {url}")
@@ -661,49 +844,57 @@ def main():
             tables = extract_html_tables(page)
             log(f"HTML <table> {len(tables)}개 발견, JSON 응답 {len(captured)}개 캡처")
 
-            # 리포트 소스: 출고/재고 API 직접 호출 (북청라센터=IC02)
+            # 리포트 소스: UI 조회로 출고/재고 mainList 전체 응답 캡처 (북청라=IC02)
             start, end = business_date_range(now)
             log(f"요청일자 범위: {start} ~ {end} (센터 IC02)")
-            out_res = fetch_outbound(page, "IC02", start, end)
-            loc_res = fetch_loc_stock(page, "IC02")
-            outbound = out_res.get("json")
-            loc_stock = loc_res.get("json")
-            (raw_dir / "outbound_pic12.json").write_text(
-                json.dumps(out_res, ensure_ascii=False, indent=2), encoding="utf-8")
-            (raw_dir / "loc_stk06.json").write_text(
-                json.dumps(loc_res, ensure_ascii=False, indent=2), encoding="utf-8")
-            out_rows = _rows_of(outbound)
-            loc_rows = _rows_of(loc_stock)
-            log(f"출고 {len(out_rows)}건(status {out_res.get('status')}), "
-                f"LOC재고 {len(loc_rows)}건(status {loc_res.get('status')})")
+            explored = explore_pages(
+                page, out_dir, raw_dir,
+                [("출고관리", "택배 출고 신청"), ("재고관리", "LOC재고현황")],
+                date_str, start=start, end=end,
+            )
+            out_rows = _rows_of(report_data.get("outbound"))
+            loc_rows = _rows_of(report_data.get("loc"))
+            log(f"출고 {len(out_rows)}건, LOC재고 {len(loc_rows)}건")
             report_source = {
                 "date_range": [start, end],
-                "outbound_status": out_res.get("status"),
-                "outbound_head": out_res.get("head"),
-                "outbound_top_keys": (sorted(outbound.keys()) if isinstance(outbound, dict) else None),
                 "outbound_count": len(out_rows),
                 "outbound_keys": sorted(out_rows[0].keys()) if out_rows else [],
-                "outbound_sample": out_rows[:3],
-                "loc_status": loc_res.get("status"),
-                "loc_head": loc_res.get("head"),
-                "loc_top_keys": (sorted(loc_stock.keys()) if isinstance(loc_stock, dict) else None),
                 "loc_count": len(loc_rows),
                 "loc_keys": sorted(loc_rows[0].keys()) if loc_rows else [],
-                "loc_sample": loc_rows[:2],
             }
-
-            # 직접 호출이 비면 UI 조회로 실제 mainList 응답을 캡처(원본은 discovery 에 저장)
-            if not out_rows or not loc_rows:
-                log("직접 호출 결과가 비어 UI 조회로 재시도(원본 캡처)")
-                explored = explore_pages(
-                    page, out_dir, raw_dir,
-                    [("출고관리", "택배 출고 신청"), ("재고관리", "LOC재고현황")],
-                    date_str,
-                )
 
         finally:
             context.close()
             browser.close()
+
+    # ----- 리포트(HTML/CSV) 생성 -----
+    try:
+        model = build_report_model(report_data)
+        collected = now.strftime("%Y-%m-%d %H:%M KST")
+        html = render_report_html(model, "북청라센터(IC02)",
+                                  report_source.get("date_range", ["", ""])[0],
+                                  report_source.get("date_range", ["", ""])[1], collected)
+        Path("report.html").write_text(html, encoding="utf-8")
+        log("✅ report.html 생성")
+        # CSV(엑셀용) — 거래처/구분/총계/배송유형/CS/비고
+        csv_path = out_dir / f"report_{date_str}.csv"
+        with open(csv_path, "w", newline="", encoding="utf-8-sig") as f:
+            w = csv.writer(f)
+            w.writerow(["거래처", "구분", "총계"] + [n for _, n in ORD_DIV_COLS] + ["CS처리건", "비고"])
+            for cst in model["clients"]:
+                for temp in ("냉동", "냉장"):
+                    row = [cst, temp]
+                    tr = tw = 0
+                    cellvals = []
+                    for code, _ in ORD_DIV_COLS:
+                        c = model["cells"].get((cst, temp, code))
+                        r, wk = (c["req"], c["work"]) if c else (0, 0)
+                        cellvals.append(f"{r} / {wk}"); tr += r; tw += wk
+                    row += [f"{tr} / {tw}"] + cellvals + ["", ""]
+                    w.writerow(row)
+        log(f"✅ report CSV 저장: {csv_path}")
+    except Exception as e:
+        log(f"⚠️ 리포트 생성 실패: {e}")
 
     # ----- 결과 저장 -----
     result = {
@@ -719,20 +910,7 @@ def main():
     }
     json_path = out_dir / f"fassto_{date_str}.json"
     json_path.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
-    log(f"✅ JSON 저장: {json_path}")
-
-    # HTML 테이블이 있으면 첫 번째를 CSV 로도 저장
-    if tables:
-        csv_path = out_dir / f"fassto_{date_str}.csv"
-        with open(csv_path, "w", newline="", encoding="utf-8-sig") as f:
-            w = csv.writer(f)
-            for row in tables[0]["rows"]:
-                w.writerow(row)
-        log(f"✅ CSV 저장: {csv_path}")
-    else:
-        log("ℹ️  일반 HTML 테이블이 없음(= canvas 그리드일 가능성 높음). "
-            "data/raw 의 JSON 응답을 확인해 TARGET_API_KEYWORD 를 지정하세요.")
-
+    log(f"✅ 진단 JSON 저장: {json_path}")
     log("완료. raw 응답: " + str(raw_dir))
 
 
