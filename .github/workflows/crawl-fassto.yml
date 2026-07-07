@@ -76,8 +76,9 @@ jobs:
           # 정제된 결과만 커밋 (raw 와 스크린샷은 제외).
           # 글롭을 각각 add 한다 — 한 글롭이 매칭 0건이면 git add 전체가 실패해
           # 나머지도 스테이징되지 않기 때문(예: CSV 없을 때 JSON 까지 누락).
+          git add report.html 2>/dev/null || true
+          git add data/report_*.csv 2>/dev/null || true
           git add data/fassto_*.json 2>/dev/null || true
-          git add data/fassto_*.csv 2>/dev/null || true
           if git diff --cached --quiet; then
             echo "변경된 데이터 없음 — 커밋 생략"
           else
