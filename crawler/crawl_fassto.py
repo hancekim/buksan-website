@@ -315,12 +315,35 @@ def open_menu(page, parent, child):
     return False
 
 
+def dismiss_popups(page):
+    """공지/추천 팝업 등 화면을 가리는 요소를 닫아 메뉴 클릭이 막히지 않게 한다."""
+    for sel in ("#closeRecommandChrome", "#pop_close", "#order_pop_close",
+                ".pop_close", "button:has-text('1주일간 그만보기')",
+                "button:has-text('닫기')"):
+        try:
+            loc = page.locator(sel + ":visible")
+            for i in range(min(loc.count(), 4)):
+                loc.nth(i).click(timeout=800)
+        except Exception:
+            pass
+    try:
+        page.keyboard.press("Escape")
+    except Exception:
+        pass
+
+
 def explore_pages(page, out_dir, raw_dir, menus, date_str, start=None, end=None):
     """지정 (상위,하위) 메뉴를 열어 북청라(IC02) 선택·조회 → 목록 API 응답을 유도한다."""
     explored = {}
     for parent, child in menus:
         key = safe_name(child)
-        if not open_menu(page, parent, child):
+        dismiss_popups(page)
+        opened = open_menu(page, parent, child)
+        if not opened:  # 팝업 닫고 한 번 더
+            dismiss_popups(page)
+            page.wait_for_timeout(800)
+            opened = open_menu(page, parent, child)
+        if not opened:
             explored[child] = {"opened": False}
             continue
         page.wait_for_timeout(5000)
@@ -360,16 +383,20 @@ def explore_pages(page, out_dir, raw_dir, menus, date_str, start=None, end=None)
             except Exception as e:
                 log(f"  요청일자 설정 실패: {e}")
         page.wait_for_timeout(1500)  # 센터 변경(onchange) 반영 대기 후 조회
-        try:
-            page.locator("#btnSearch:visible").first.click(timeout=4000)
-            log("  조회(btnSearch) 클릭")
-            page.wait_for_timeout(6000)
+        for attempt in (1, 2):
             try:
-                page.wait_for_load_state("networkidle", timeout=15000)
-            except PWTimeout:
-                pass
-        except Exception as e:
-            log(f"  조회 클릭 실패: {e}")
+                page.locator("#btnSearch:visible").first.click(timeout=4000)
+                log(f"  조회(btnSearch) 클릭 #{attempt}")
+                page.wait_for_timeout(6000)
+                try:
+                    page.wait_for_load_state("networkidle", timeout=15000)
+                except PWTimeout:
+                    pass
+                break
+            except Exception as e:
+                log(f"  조회 클릭 실패 #{attempt}: {e}")
+                dismiss_popups(page)
+                page.wait_for_timeout(1000)
 
         explored[child] = {"opened": True, "navigation": nav}
         dump_frames_html(page, raw_dir, prefix=f"{key}__")
