@@ -1,5 +1,5 @@
 {
-  "collected_at": "2026-07-18T02:01:51.232356+09:00",
+  "collected_at": "2026-07-18T02:57:16.350464+09:00",
   "date": "2026-07-18",
   "main_url": "https://fms.fassto.ai/classic/cmn/main/main.do",
   "captured_api_count": 22,
@@ -25,6 +25,11 @@
       "content_type": "application/json;charset=utf-8"
     },
     {
+      "url": "https://api.channel.io/front/v8/elastic/plugins/f20a0013-e3de-4e0e-882e-3fef2e802f53?",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
       "url": "https://fms.fassto.ai/classic/cmn/main/ribbonBannerInfo.json",
       "status": 200,
       "content_type": "application/json;charset=utf-8"
@@ -45,9 +50,9 @@
       "content_type": "application/json;charset=utf-8"
     },
     {
-      "url": "https://fms.fassto.ai/classic/cmn/main/mainInSch.json",
+      "url": "https://api.channel.io/front/v8/elastic/plugins/f20a0013-e3de-4e0e-882e-3fef2e802f53/boot",
       "status": 200,
-      "content_type": "application/json;charset=utf-8"
+      "content_type": "application/json"
     },
     {
       "url": "https://fms.fassto.ai/classic/cmn/main/getExpirationDateManagementStatus.json",
@@ -55,22 +60,17 @@
       "content_type": "application/json;charset=utf-8"
     },
     {
-      "url": "https://api.channel.io/front/v8/elastic/plugins/f20a0013-e3de-4e0e-882e-3fef2e802f53?",
+      "url": "https://fms.fassto.ai/classic/cmn/main/mainInSch.json",
       "status": 200,
-      "content_type": "application/json"
+      "content_type": "application/json;charset=utf-8"
     },
     {
-      "url": "https://api.channel.io/front/v8/elastic/plugins/f20a0013-e3de-4e0e-882e-3fef2e802f53/boot",
+      "url": "https://api.channel.io/front/v8/channels/50875/operations?",
       "status": 200,
       "content_type": "application/json"
     },
     {
       "url": "https://api.channel.io/front/v8/managers/operators?",
-      "status": 200,
-      "content_type": "application/json"
-    },
-    {
-      "url": "https://api.channel.io/front/v8/channels/50875/operations?",
       "status": 200,
       "content_type": "application/json"
     },
