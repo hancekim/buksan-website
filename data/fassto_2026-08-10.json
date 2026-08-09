@@ -1,5 +1,5 @@
 {
-  "collected_at": "2026-08-10T02:03:07.850362+09:00",
+  "collected_at": "2026-08-10T02:21:35.982223+09:00",
   "date": "2026-08-10",
   "main_url": "https://fms.fassto.ai/classic/cmn/main/main.do",
   "captured_api_count": 22,
@@ -45,16 +45,6 @@
       "content_type": "application/json;charset=utf-8"
     },
     {
-      "url": "https://api.channel.io/front/v8/elastic/plugins/f20a0013-e3de-4e0e-882e-3fef2e802f53?",
-      "status": 200,
-      "content_type": "application/json"
-    },
-    {
-      "url": "https://api.channel.io/front/v8/elastic/plugins/f20a0013-e3de-4e0e-882e-3fef2e802f53/boot",
-      "status": 200,
-      "content_type": "application/json"
-    },
-    {
       "url": "https://fms.fassto.ai/classic/cmn/main/mainInSch.json",
       "status": 200,
       "content_type": "application/json;charset=utf-8"
@@ -63,6 +53,16 @@
       "url": "https://fms.fassto.ai/classic/cmn/main/getExpirationDateManagementStatus.json",
       "status": 200,
       "content_type": "application/json;charset=utf-8"
+    },
+    {
+      "url": "https://api.channel.io/front/v8/elastic/plugins/f20a0013-e3de-4e0e-882e-3fef2e802f53?",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "url": "https://api.channel.io/front/v8/elastic/plugins/f20a0013-e3de-4e0e-882e-3fef2e802f53/boot",
+      "status": 200,
+      "content_type": "application/json"
     },
     {
       "url": "https://api.channel.io/front/v8/channels/50875/operations?",
@@ -81,6 +81,11 @@
     },
     {
       "url": "https://fms.fassto.ai/classic/pic/pic12/defaultDaySet.json",
+      "status": 200,
+      "content_type": "application/json;charset=utf-8"
+    },
+    {
+      "url": "https://fms.fassto.ai/classic/cmn/popup/checkServerMaintenance.json",
       "status": 200,
       "content_type": "application/json;charset=utf-8"
     },
@@ -106,11 +111,6 @@
     },
     {
       "url": "https://fms.fassto.ai/classic/stk/stk06/mainList.json",
-      "status": 200,
-      "content_type": "application/json;charset=utf-8"
-    },
-    {
-      "url": "https://fms.fassto.ai/classic/cmn/popup/checkServerMaintenance.json",
       "status": 200,
       "content_type": "application/json;charset=utf-8"
     }
