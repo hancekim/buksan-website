@@ -1,0 +1,102 @@
+{
+  "collected_at": "2026-08-18T00:17:17.353970+09:00",
+  "date": "2026-08-18",
+  "main_url": "https://fms.fassto.ai/classic/cmn/main/main.do",
+  "captured_api_count": 15,
+  "captured_api_index": [
+    {
+      "url": "https://fms.fassto.ai/classic/cmn/popup/checkServerMaintenance.json",
+      "status": 200,
+      "content_type": "application/json;charset=utf-8"
+    },
+    {
+      "url": "https://fms.fassto.ai/classic/cmn/main/lnbBannerList.json",
+      "status": 200,
+      "content_type": "application/json;charset=utf-8"
+    },
+    {
+      "url": "https://fms.fassto.ai/classic/cmn/main/channelIOList.json",
+      "status": 200,
+      "content_type": "application/json;charset=utf-8"
+    },
+    {
+      "url": "https://fms.fassto.ai/modern/cmn/login/checkFeeSheetFee.json",
+      "status": 200,
+      "content_type": "application/json;charset=utf-8"
+    },
+    {
+      "url": "https://fms.fassto.ai/classic/cmn/main/ribbonBannerInfo.json",
+      "status": 200,
+      "content_type": "application/json;charset=utf-8"
+    },
+    {
+      "url": "https://fms.fassto.ai/classic/cmn/main/mainInSch.json",
+      "status": 200,
+      "content_type": "application/json;charset=utf-8"
+    },
+    {
+      "url": "https://fms.fassto.ai/classic/cmn/main/mainInSch.json",
+      "status": 200,
+      "content_type": "application/json;charset=utf-8"
+    },
+    {
+      "url": "https://fms.fassto.ai/classic/cmn/main/mainInSch.json",
+      "status": 200,
+      "content_type": "application/json;charset=utf-8"
+    },
+    {
+      "url": "https://api.channel.io/front/v8/elastic/plugins/f20a0013-e3de-4e0e-882e-3fef2e802f53?",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "url": "https://api.channel.io/front/v8/elastic/plugins/f20a0013-e3de-4e0e-882e-3fef2e802f53/boot",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "url": "https://fms.fassto.ai/classic/cmn/main/mainInSch.json",
+      "status": 200,
+      "content_type": "application/json;charset=utf-8"
+    },
+    {
+      "url": "https://fms.fassto.ai/classic/cmn/main/getExpirationDateManagementStatus.json",
+      "status": 200,
+      "content_type": "application/json;charset=utf-8"
+    },
+    {
+      "url": "https://api.channel.io/front/v8/managers/operators?",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "url": "https://api.channel.io/front/v8/channels/50875/operations?",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "url": "https://api.channel.io/front/v8/channels/50875/events",
+      "status": 200,
+      "content_type": "application/json"
+    }
+  ],
+  "target_payloads": [],
+  "report_source": {
+    "date_range": [
+      "2026-08-10",
+      "2026-08-17"
+    ],
+    "outbound_count": 0,
+    "outbound_keys": [],
+    "loc_count": 0,
+    "loc_keys": []
+  },
+  "discovery": [],
+  "requests_log": [
+    {
+      "method": "POST",
+      "url": "https://fms.fassto.ai/classic/pic/pic12/pic12Form.do",
+      "post": ""
+    }
+  ]
+}
