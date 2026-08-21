@@ -1,5 +1,5 @@
 {
-  "collected_at": "2026-08-22T01:59:21.591735+09:00",
+  "collected_at": "2026-08-22T02:19:30.854879+09:00",
   "date": "2026-08-22",
   "main_url": "https://fms.fassto.ai/classic/cmn/main/main.do",
   "captured_api_count": 21,
@@ -50,14 +50,14 @@
       "content_type": "application/json"
     },
     {
-      "url": "https://fms.fassto.ai/classic/cmn/main/mainInSch.json",
-      "status": 200,
-      "content_type": "application/json;charset=utf-8"
-    },
-    {
       "url": "https://api.channel.io/front/v8/elastic/plugins/f20a0013-e3de-4e0e-882e-3fef2e802f53/boot",
       "status": 200,
       "content_type": "application/json"
+    },
+    {
+      "url": "https://fms.fassto.ai/classic/cmn/main/mainInSch.json",
+      "status": 200,
+      "content_type": "application/json;charset=utf-8"
     },
     {
       "url": "https://fms.fassto.ai/classic/cmn/main/getExpirationDateManagementStatus.json",
@@ -65,12 +65,12 @@
       "content_type": "application/json;charset=utf-8"
     },
     {
-      "url": "https://api.channel.io/front/v8/managers/operators?",
+      "url": "https://api.channel.io/front/v8/channels/50875/operations?",
       "status": 200,
       "content_type": "application/json"
     },
     {
-      "url": "https://api.channel.io/front/v8/channels/50875/operations?",
+      "url": "https://api.channel.io/front/v8/managers/operators?",
       "status": 200,
       "content_type": "application/json"
     },
@@ -113,8 +113,8 @@
   "target_payloads": [],
   "report_source": {
     "date_range": [
-      "2026-08-14",
-      "2026-08-21"
+      "2026-08-15",
+      "2026-08-22"
     ],
     "outbound_count": 0,
     "outbound_keys": [],
@@ -223,7 +223,7 @@
     {
       "method": "POST",
       "url": "https://fms.fassto.ai/classic/pic/pic12/mainList.json",
-      "post": "custNmValue=&whCd=IC02&ordDt1_pic12=2026-08-14&ordDt2_pic12=2026-08-21&cstCd=&cstNm=&groupcstCd=&ordNo=&ordDiv=&wrkStat=&salChanel=&custNm=&custTelNo=&fileDownloadYn=0&searchType=slipNo&slipNo=&labelNo="
+      "post": "custNmValue=&whCd=IC02&ordDt1_pic12=2026-08-15&ordDt2_pic12=2026-08-22&cstCd=&cstNm=&groupcstCd=&ordNo=&ordDiv=&wrkStat=&salChanel=&custNm=&custTelNo=&fileDownloadYn=0&searchType=slipNo&slipNo=&labelNo="
     },
     {
       "method": "POST",
