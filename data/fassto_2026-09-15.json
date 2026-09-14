@@ -1,8 +1,8 @@
 {
-  "collected_at": "2026-09-15T04:53:11.082426+09:00",
+  "collected_at": "2026-09-15T05:41:09.550111+09:00",
   "date": "2026-09-15",
   "main_url": "https://fms.fassto.ai/classic/cmn/main/main.do",
-  "captured_api_count": 22,
+  "captured_api_count": 21,
   "captured_api_index": [
     {
       "url": "https://fms.fassto.ai/classic/cmn/popup/checkServerMaintenance.json",
@@ -106,11 +106,6 @@
     },
     {
       "url": "https://fms.fassto.ai/classic/stk/stk06/mainList.json",
-      "status": 200,
-      "content_type": "application/json;charset=utf-8"
-    },
-    {
-      "url": "https://fms.fassto.ai/classic/cmn/popup/checkServerMaintenance.json",
       "status": 200,
       "content_type": "application/json;charset=utf-8"
     }
