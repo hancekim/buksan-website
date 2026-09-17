@@ -1,5 +1,5 @@
 {
-  "collected_at": "2026-09-18T02:52:03.668013+09:00",
+  "collected_at": "2026-09-18T04:56:27.498471+09:00",
   "date": "2026-09-18",
   "main_url": "https://fms.fassto.ai/classic/cmn/main/main.do",
   "captured_api_count": 21,
@@ -65,12 +65,12 @@
       "content_type": "application/json"
     },
     {
-      "url": "https://api.channel.io/front/v8/managers/operators?",
+      "url": "https://api.channel.io/front/v8/channels/50875/operations?",
       "status": 200,
       "content_type": "application/json"
     },
     {
-      "url": "https://api.channel.io/front/v8/channels/50875/operations?",
+      "url": "https://api.channel.io/front/v8/managers/operators?",
       "status": 200,
       "content_type": "application/json"
     },
