@@ -1,0 +1,317 @@
+{
+  "collected_at": "2026-09-27T02:18:43.254486+09:00",
+  "date": "2026-09-27",
+  "main_url": "https://fms.fassto.ai/classic/cmn/main/main.do",
+  "captured_api_count": 22,
+  "captured_api_index": [
+    {
+      "url": "https://fms.fassto.ai/classic/cmn/popup/checkServerMaintenance.json",
+      "status": 200,
+      "content_type": "application/json;charset=utf-8"
+    },
+    {
+      "url": "https://fms.fassto.ai/classic/cmn/main/lnbBannerList.json",
+      "status": 200,
+      "content_type": "application/json;charset=utf-8"
+    },
+    {
+      "url": "https://fms.fassto.ai/classic/cmn/main/channelIOList.json",
+      "status": 200,
+      "content_type": "application/json;charset=utf-8"
+    },
+    {
+      "url": "https://fms.fassto.ai/modern/cmn/login/checkFeeSheetFee.json",
+      "status": 200,
+      "content_type": "application/json;charset=utf-8"
+    },
+    {
+      "url": "https://fms.fassto.ai/classic/cmn/main/ribbonBannerInfo.json",
+      "status": 200,
+      "content_type": "application/json;charset=utf-8"
+    },
+    {
+      "url": "https://fms.fassto.ai/classic/cmn/main/mainInSch.json",
+      "status": 200,
+      "content_type": "application/json;charset=utf-8"
+    },
+    {
+      "url": "https://fms.fassto.ai/classic/cmn/main/mainInSch.json",
+      "status": 200,
+      "content_type": "application/json;charset=utf-8"
+    },
+    {
+      "url": "https://fms.fassto.ai/classic/cmn/main/mainInSch.json",
+      "status": 200,
+      "content_type": "application/json;charset=utf-8"
+    },
+    {
+      "url": "https://fms.fassto.ai/classic/cmn/main/getExpirationDateManagementStatus.json",
+      "status": 200,
+      "content_type": "application/json;charset=utf-8"
+    },
+    {
+      "url": "https://fms.fassto.ai/classic/cmn/main/mainInSch.json",
+      "status": 200,
+      "content_type": "application/json;charset=utf-8"
+    },
+    {
+      "url": "https://api.channel.io/front/v8/elastic/plugins/f20a0013-e3de-4e0e-882e-3fef2e802f53?",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "url": "https://api.channel.io/front/v8/elastic/plugins/f20a0013-e3de-4e0e-882e-3fef2e802f53/boot",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "url": "https://api.channel.io/front/v8/channels/50875/operations?",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "url": "https://api.channel.io/front/v8/managers/operators?",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "url": "https://api.channel.io/front/v8/channels/50875/events",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "url": "https://fms.fassto.ai/classic/pic/pic12/defaultDaySet.json",
+      "status": 200,
+      "content_type": "application/json;charset=utf-8"
+    },
+    {
+      "url": "https://fms.fassto.ai/classic/pic/pic12/mainList.json",
+      "status": 200,
+      "content_type": "application/json;charset=utf-8"
+    },
+    {
+      "url": "https://fms.fassto.ai/classic/cmn/commInfo/getCodeList.json",
+      "status": 200,
+      "content_type": "application/json;charset=utf-8"
+    },
+    {
+      "url": "https://fms.fassto.ai/classic/cmn/commInfo/getCodeList.json",
+      "status": 200,
+      "content_type": "application/json;charset=utf-8"
+    },
+    {
+      "url": "https://fms.fassto.ai/classic/stk/stk06/zoneList.json",
+      "status": 200,
+      "content_type": "application/json;charset=utf-8"
+    },
+    {
+      "url": "https://fms.fassto.ai/classic/stk/stk06/zoneList.json",
+      "status": 200,
+      "content_type": "application/json;charset=utf-8"
+    },
+    {
+      "url": "https://fms.fassto.ai/classic/stk/stk06/mainList.json",
+      "status": 200,
+      "content_type": "application/json;charset=utf-8"
+    }
+  ],
+  "target_payloads": [],
+  "report_source": {
+    "date_range": [
+      "2026-09-20",
+      "2026-09-27"
+    ],
+    "outbound_count": 5801,
+    "outbound_keys": [
+      "addGodOrdQty",
+      "basicAddr",
+      "cancelEnblYn",
+      "chk",
+      "coupangFileYn",
+      "cstCd",
+      "cstNm",
+      "custAddr",
+      "custNm",
+      "custTelNo",
+      "custTelNoEtc",
+      "detailAddr",
+      "emgrYn",
+      "fileDownload",
+      "fileSeq",
+      "m_custNm",
+      "m_custTelNo",
+      "m_custTelNoEtc",
+      "mallId",
+      "mapSlipNo",
+      "oneDayDelivery",
+      "ordDiv",
+      "ordDt",
+      "ordNo",
+      "ordNoWithoutPrefix",
+      "ordQty",
+      "ordSeq",
+      "orgBasicAddr",
+      "orgCustAddr",
+      "orgCustNm",
+      "orgCustTelNo",
+      "orgDetailAddr",
+      "orgOrdDt",
+      "outDiv",
+      "outDivNm",
+      "outTp",
+      "outTpNm",
+      "outWay",
+      "outWayNm",
+      "regId",
+      "regTime",
+      "regUpdIdEnc",
+      "remark",
+      "rtnAddr1",
+      "rtnAddr2",
+      "rtnCheck",
+      "rtnEmpNm",
+      "rtnOrdDt",
+      "rtnReservationYn",
+      "rtnTelNo",
+      "rtnZipCd",
+      "salChanel",
+      "sendNm",
+      "sendTelNo",
+      "shipReqTerm",
+      "shopApiYn",
+      "shopCd",
+      "shopNm",
+      "sku",
+      "slipNo",
+      "updTime",
+      "updUserNm",
+      "whCd",
+      "whNm",
+      "wrkStat",
+      "wrkStatNm",
+      "zipNo"
+    ],
+    "loc_count": 547,
+    "loc_keys": [
+      "badStkQty",
+      "boxSupplyYn",
+      "canQty",
+      "chunilWhCd",
+      "cstCd",
+      "cstGodCd",
+      "cstNm",
+      "distTermDt",
+      "distTermMgtYn",
+      "equipType",
+      "godBarcd",
+      "godCd",
+      "godDealTemp",
+      "godDealTempNm",
+      "godDiv",
+      "godNm",
+      "inBoxInCnt",
+      "inDt",
+      "keepWay",
+      "keepWayNm",
+      "locD",
+      "locDiv",
+      "locDivNm",
+      "locNo",
+      "locX",
+      "locY",
+      "locZ",
+      "lotNo",
+      "luNo",
+      "makeDt",
+      "ordSetQty",
+      "outOfDateStockQty",
+      "setQty",
+      "sort",
+      "stockQty",
+      "totStkQty",
+      "whCd",
+      "zone",
+      "zoneDealTemp",
+      "zoneDealTempNm"
+    ]
+  },
+  "discovery": [
+    {
+      "url": "https://fms.fassto.ai/classic/pic/pic12/defaultDaySet.json",
+      "status": 200,
+      "method": "POST",
+      "post_data": "toDay=2026-09-27&defaultDayHour=2026-09-27+14%3A00%3A00&minDayHour=2026-09-27+17%3A00%3A00&pSign=%2B&tomorDayInterval=1&maxInterval=4",
+      "len": 136,
+      "body_head": "{\"defaultDaySet\":{\"defaultDate\":\"2026-09-27\",\"minDate\":\"2026-09-27\",\"maxDate\":\"2026-10-01\",\"tomorDate\":\"2026-09-28\"},\"result\":\"success\"}"
+    },
+    {
+      "url": "https://fms.fassto.ai/classic/pic/pic12/mainList.json",
+      "status": 200,
+      "method": "POST",
+      "post_data": "custNmValue=&whCd=IC02&ordDt1_pic12=2026-09-20&ordDt2_pic12=2026-09-27&cstCd=&cstNm=&groupcstCd=&ordNo=&ordDiv=&wrkStat=&salChanel=&custNm=&custTelNo=&fileDownloadYn=0&searchType=slipNo&slipNo=&labelNo=",
+      "len": 8830512,
+      "body_head": "{\"list\":[{\"chk\":\"0\",\"ordDt\":\"20260927\",\"orgOrdDt\":\"20260927\",\"whCd\":\"IC02\",\"slipNo\":\"IC02OO260927000763\",\"cstCd\":\"94FYU\",\"shopCd\":\"99999999\",\"ordNo\":\"Nsmst_2026092795430341_ncp_1oyzx0_01\",\"ordSeq\":1,\"outDiv\":\"1\",\"ordDiv\":\"P\",\"outTp\":1,\"wrkStat\":\"1\",\"emgrYn\":\"N\",\"outWay\":\"1\",\"sku\":1,\"ordQty\":1,\"addGodOrdQty\":0,\"outDivNm\":\"도착보장\",\"outTpNm\":\"일반출고\",\"outWayNm\":\"선입선출\",\"wrkStatNm\":\"출고요청\",\"updTime\":\"202609270213\",\"regTime\":\"202609270213\",\"cancelEnblYn\":\"Y\",\"regUpdIdEnc\":\"SMARTSTORE_API\",\"remark\":\"\",\"shopApiYn\":\"Y\",\"rtnReservationYn\":\"N\",\"rtnOrdDt\":\"2026-09-28\",\"mapSlipNo\":\"\",\"shipReqTerm\":\"배송 전 미리 연락해 주세요\",\"salChanel\":\"스마트스토어_크레세오\",\"oneDayDelivery\":\"N\",\"cstNm\":\"크레세오\",\"whNm\":\"북청라센터\",\"shopNm\":\"미지정 출고\",\"coupangFileYn\":\"\",\"custNm\":\"이준혁\",\"orgCustNm\":\"이준혁\",\"custAddr\":\"경기도 오산시 대호로62번길 65 (궐동, 아성빌) 아성빌 310호\",\"orgCustAddr\":\"경기도 오산시 대호로62번길 65 (궐동, 아성빌) 아성빌 310호\",\"basicAddr\":\"경기도 오산시 대호로62번길 65 (궐동, 아성빌)\",\"orgBasicAddr\":\"경기도 오산시 대호로62번길 65 (궐동, 아성빌)\",\"detailAddr\":\"아성빌 310호\",\"orgDetailAddr\":\"아성빌 310호\",\"zipNo\":\"18122\",\"custTelNo\":\"010-2699-2532\",\"orgCustTelNo\":\"010-2699-2532\",\"custTelNoEtc\":\"\",\"sendNm\":\"\",\"sendTelNo\":\"010-2699-2532\",\"rtnAddr1\":\"인천 서구 북항단지로 91 (원창동)\",\"rtnAddr2\":\"1층\",\"rtnEmpNm\":\"이봉규\",\"rtnZipCd\":\"22856\",\"rtnTelNo\":\"010-4899-7741\",\"rtnCheck\":\"N\",\"updUserNm\":\"스마트스토어 API\",\"mallId\":\"ncp_1oyzx0_01\",\"regId\":\"SMARTSTORE_API\",\"fileSeq\":\"0\",\"m_custNm\":\"이*혁\",\"m_custTelNo\":\"010-****-2532\",\"m_custTelNoEtc\":\"\",\"ordNoWithoutPrefix\":\"2026092795430341\",\"fileDownload\":\"N\"},{\"chk\":\"0\",\"ordDt\":\"20260927\",\"orgOrdDt\":\"20260927\",\"whCd\":\"IC02\",\"slipNo\":\"IC02OO260927000762\",\"cstCd\":\"94F5C\",\"shopCd\":\"99999999\",\"ordNo\":\"Nsmst_2026092795442651_binggrae14\",\"ordSeq\":1,\"outDiv\":\"1\",\"ordDiv\":\"P\",\"outTp\":1,\"wrkStat\":\"1\",\"emgrYn\":\"N\",\"outWay\":\"1\",\"sku\":1,\"ordQty\":40,\"addGodOrdQty\":0,\"outDivNm\":\"도착보장\",\"outTpNm\":\"일반출고\",\"outWayNm\":\"선입선출\",\"wrkStatNm\":\"출고요청\",\"updTime\":\"202609270213\",\"regTime\":\"202609270213\",\"cancelEnblYn\":\"Y\",\"regUpdIdEnc\":\"SMARTSTORE_API\",\"remark\":\"\",\"shopApiYn\":\"Y\",\"rtnReservationYn\":\"N\",\"rtnOrdDt\":\"2026-09-28\",\"mapSlipNo\":\"\",\"shipReqTerm\":\"\",\"salChanel\":\"스마트스토어_빙그레 본사직영몰\",\"oneDayDelivery\":\"N\",\"cstNm\":\"저온_빙그레\",\"whNm\":\"북청라센터\",\"shopNm\":\"미지정 출고\",\"coupangFileYn\":\"\",\"custNm\":\"문보람\",\"orgCustNm\":\"문보람\",\"custAddr\":\"전라북도 익산시 선화로 17 (모현동2가, 배산 제일 오투그란데) 102동 1001호\",\"orgCustAddr\":\"전라북도 익산시 선화로 17 (모현동2가, 배산 제일 오투그란데) 102동 1001호\",\"basicAddr\":\"전라북도 익산시 선화로 17 (모현동2가, 배산 제일 오투그란데)\",\"orgBasicAddr\":\"전라북도 익산시 선화로 17 (모현동2가, 배산 제일 오투그란데)\",\"detailAddr\":\"102동 1001호\",\"orgDetailAddr\":\"102동 1001호\",\"zipNo\":\"54653\",\"custTelNo\":\"010-8668-3720\",\"orgCustTelNo\":\"010-8668-3720\",\"custTelNoEtc\":\"010-9253-1183\",\"sendNm\":\"\",\"sendTelNo\":\"\",\"rtnAddr1\":\"인천 서구 북항단지로 91 (원창동)\",\"rtnAddr2\":\"1층\",\"rtnEmpNm\":\"이봉규\",\"rtnZipCd\":\"22856\",\"rtnTelNo\":\"010-4899-7741\",\"rtnCheck\":\"N\",\"updUserNm\":\"스마트스토어 API\",\"mallId\":\"binggrae14\",\"regId\":\"SMARTSTORE_API\",\"fileSeq\":\"0\",\"m_custNm\":\"문*람\",\"m_custTelNo\":\"010-****-3720\",\"m_custTelNoEtc\":\"010-****-1183\",\"ordNoWithoutPrefix\":\"2026092795442651\",\"fileDownload\":\"N\"},{\"chk\":\"0\",\"ordDt\":\"20260927\",\"orgOrdDt\":\"20260927\",\"whCd\":\"IC02\",\"slipNo\":\"IC02OO260927000761\",\"cstCd\":\"94E4K\",\"shopCd\":\"99999999\",\"ordNo\":\"Nsmst_2026092795431351_ncp_1onpmb_01\",\"ordSeq\":1,\"outDiv\":\"1\",\"ordDiv\":\"P\",\"outTp\":1,\"wrkStat\":\"1\",\"emgrYn\":\"N\",\"outWay\":\"1\",\"sku\":3,\"ordQty\":5,\"addGodOrdQty\":0,\"outDivNm\":\"도착보장\",\"outTpNm\":\"일반출고\",\"outWayNm\":\"선입선출\",\"wrkStatNm\":\"출고요청\",\"updTime\":\"202609270212\",\"regTime\":\"202609270212\",\"cancelEnblYn\":\"Y\",\"regUpdIdEnc\":\"SMARTSTORE_API\",\"remark\":\"\",\"shopApiYn\":\"Y\",\"rtnReservationYn\":\"N\",\"rtnOrdDt\":\"2026-09-28\",\"mapSlipNo\":\"\",\"shipReqTerm\":\"\",\"salChanel\":\"스마트스토어_HERACLES\",\"oneDayDelivery\":\"N\",\"cstNm\":\"주식회사 하우투약(저온)\",\"whNm\":\"북청라센터\",\"shopNm\":\"미지정 출고\",\"coupangFileYn\":\"\",\"custNm\":\"정상윤\",\"orgCustNm\":\"정상윤\",\"custAddr\":\"전남광주통합특별시 광산구 신창로48번길 20 (신창동) 스카이빌 204호\",\"orgCustAddr\":\"전남광주통합특별시 광산구 신창로48번길 20 (신창동) 스카이빌 204호\",\"basicAddr\":\"전남광주통합특별시 광산구 신창로48번길 20 (신창동)\",\"orgBasicAddr\":\"전남광주통합특별시 광산구 신창로48번길 20 (신창동)\",\"detailAddr\":\"스카이빌 204호\",\"orgDetailAddr\":\"스카이빌 204호\",\"zipNo\":\"62293\",\"custTelNo\":\"010-3535-9088\",\"orgCustTelNo\":\"010-3535-9088\",\"custTelNoEtc\":\"\",\"sendNm\":\"\",\"sendTelNo\":\"\",\"rtnAddr1\":\"인천 서구 북항단지로 91 (원창동)\",\"rtnAddr2\":\"1층\",\"rtnEmpNm\":\"이봉규\",\"rtnZipCd\":\"22856\",\"rtnTelNo\":\"010-4899-7741\",\"rtnCheck\":\"N\",\"updUserNm\":\"스마트스토어 API\",\"mallId\":\"ncp_1onpmb_01\",\"regId\":\"SMARTSTORE_API\",\"fileSeq\":\"0\",\"m_custNm\":\"정*윤\",\"m_custTelNo\":\"010-****-9088\",\"m_custTelNoEtc\":\"\",\"ordNoWithoutPrefix\":\"2026092795431351\",\"fileDownload\":\"N\"},{\"chk\":\"0\",\"ordDt\":\"20260927\",\"orgOrdDt\":\"20260927\",\"whCd\":\"IC02\",\"slipNo\":\"IC02OO260927000760\",\"cstCd\":\"94E4K\",\"shopCd\":\"99999999\",\"ordNo\":\"Nsmst_2026092795434161_ncp_1onpmb_01\",\"ordSeq\":1,\"outDiv\":\"1\",\"ordDiv\":\"P\",\"outTp\":1,\"wrkStat\":\"1\",\"emgrYn\":\"N\",\"outWay\":\"1\",\"sku\":3,\"ordQty\":5,\"addGodOrdQty\":0,\"outDivNm\":\"도착보장\",\"outTpNm\":\"일반출고\",\"outWayNm\":\"선입선출\",\"wrkStatNm\":\"출고요청\",\"updTime\":\"202609270212\",\"regTime\":\"202609270212\",\"cancelEnblYn\":\"Y\",\"regUpdIdEnc\":\"SMARTSTORE_API\",\"remark\":\"\",\"shopApiYn\":\"Y\",\"rtnReservationYn\":\"N\",\"rtnOrdDt\":\"2026-09-28\",\"mapSlipNo\":\"\",\"shipReqTerm\":\"\",\"salChanel\":\"스마트스토어_HERACLES\",\"oneDayDelivery\":\"N\",\"cstNm\":\"주식회사 하우투약(저온)\",\"whNm\":\"북청라센터\",\"shopNm\":\"미지정 출고\",\"coupangFileYn\":\"\",\"custNm\":\"조봉덕\",\"orgCustNm\":\"조봉덕\",\"custAddr\":\"인천광역시 연수구 먼우금로83번길 12 (동춘동, 건영아파트) 107동 402호\",\"orgCustAddr\":\"인천광역시 연수구 먼우금로83번길 12 (동춘동, 건영아파트) 107동 402호\",\"basicAddr\":\"인천광역시 연수구 먼우금로83번길 12 (동춘동, 건영아파트)\",\"orgBasicAddr\":\"인천광역시 연수구 먼우금로83번길 12 (동춘동, 건영아파트)\",\"detailAddr\":\"107동 402호\",\"orgDetailAddr\":\"107동 402호\",\"zipNo\":\"21969\",\"custTelNo\":\"010-3331-2258\",\"orgCustTelNo\":\"010-3331-2258\",\"custTelNoEtc\":\"\",\"sendNm\":\"\",\"sendTelNo\":\"\",\"rtnAddr1\":\"인천 서구 북항단지로 91 (원창동)\",\"rtnAddr2\":\"1층\",\"rtnEmpNm\":\"이봉규\",\"rtnZipCd\":\"22856\",\"rtnTelNo\":\"010-4899-7741\",\"rtnCheck\":\"N\",\"updUserNm\":\"스마트스토어 API\",\"mallId\":\"ncp_1onpmb_01\",\"regId\":\"SMARTSTORE_API\",\"fileSeq\":\"0\",\"m_custNm\":\"조*덕\",\"m_custTelNo\":\"010-****-2258\",\"m_custTelNoEtc\":\"\",\"ordNoWithoutPrefix\":\"2026092795434161\",\"fileDownload\":\"N\"},{\"chk\":\"0\",\"ordDt\":\"20260927\",\"orgOrdDt\":\"20260927\",\"whCd\":\"IC02\",\"slipNo\":\"IC02O"
+    },
+    {
+      "url": "https://fms.fassto.ai/classic/stk/stk06/zoneList.json",
+      "status": 200,
+      "method": "POST",
+      "post_data": "cateCd=&whCd=YI00&cstCd=&cstNm=&groupcstCd=&godCd=&cstGodCd=&godNm=&inBoxBarcd=&lCate=&mCate=&sCate=&productsBeyondExpirationDate=&seasonCd=&genderCd=&makeYr=&boxInCntYn=N&zone=&locX=&locY=&locZ=&locD=&locDiv=&boxCountYn=N&equipType=&keepWay=&dealTemp=",
+      "len": 606,
+      "body_head": "{\"list\":[{\"cd\":\"0M\",\"nm\":\"0M\"},{\"cd\":\"1F\",\"nm\":\"1F\"},{\"cd\":\"1M\",\"nm\":\"1M\"},{\"cd\":\"2F\",\"nm\":\"2F\"},{\"cd\":\"2M\",\"nm\":\"2M\"},{\"cd\":\"3F\",\"nm\":\"3F\"},{\"cd\":\"3M\",\"nm\":\"3M\"},{\"cd\":\"3P\",\"nm\":\"3P\"},{\"cd\":\"4F\",\"nm\":\"4F\"},{\"cd\":\"4H\",\"nm\":\"4H\"},{\"cd\":\"4M\",\"nm\":\"4M\"},{\"cd\":\"CO\",\"nm\":\"CO\"},{\"cd\":\"CR\",\"nm\":\"CR\"},{\"cd\":\"DD\",\"nm\":\"DD\"},{\"cd\":\"DL\",\"nm\":\"DL\"},{\"cd\":\"EX\",\"nm\":\"EX\"},{\"cd\":\"FD\",\"nm\":\"FD\"},{\"cd\":\"FL\",\"nm\":\"FL\"},{\"cd\":\"FR\",\"nm\":\"FR\"},{\"cd\":\"FU\",\"nm\":\"FU\"},{\"cd\":\"FX\",\"nm\":\"FX\"},{\"cd\":\"FY\",\"nm\":\"FY\"},{\"cd\":\"IN\",\"nm\":\"IN\"},{\"cd\":\"RD\",\"nm\":\"RD\"},{\"cd\":\"RT\",\"nm\":\"RT\"},{\"cd\":\"RTS\",\"nm\":\"RTS\"},{\"cd\":\"UI\",\"nm\":\"UI\"}]}"
+    },
+    {
+      "url": "https://fms.fassto.ai/classic/stk/stk06/zoneList.json",
+      "status": 200,
+      "method": "POST",
+      "post_data": "cateCd=&whCd=IC02&cstCd=&cstNm=&groupcstCd=&godCd=&cstGodCd=&godNm=&inBoxBarcd=&lCate=&mCate=&sCate=&productsBeyondExpirationDate=&seasonCd=&genderCd=&makeYr=&boxInCntYn=N&zone=&locX=&locY=&locZ=&locD=&locDiv=&boxCountYn=N&equipType=&keepWay=&dealTemp=",
+      "len": 334,
+      "body_head": "{\"list\":[{\"cd\":\"C\",\"nm\":\"C\"},{\"cd\":\"CR\",\"nm\":\"CR\"},{\"cd\":\"DD\",\"nm\":\"DD\"},{\"cd\":\"DL\",\"nm\":\"DL\"},{\"cd\":\"EX\",\"nm\":\"EX\"},{\"cd\":\"F\",\"nm\":\"F\"},{\"cd\":\"FD\",\"nm\":\"FD\"},{\"cd\":\"FL\",\"nm\":\"FL\"},{\"cd\":\"FU\",\"nm\":\"FU\"},{\"cd\":\"ID\",\"nm\":\"ID\"},{\"cd\":\"IN\",\"nm\":\"IN\"},{\"cd\":\"R\",\"nm\":\"R\"},{\"cd\":\"RD\",\"nm\":\"RD\"},{\"cd\":\"RT\",\"nm\":\"RT\"},{\"cd\":\"UI\",\"nm\":\"UI\"}]}"
+    },
+    {
+      "url": "https://fms.fassto.ai/classic/stk/stk06/mainList.json",
+      "status": 200,
+      "method": "POST",
+      "post_data": "schParam=%7B%22cateCd%22%3A%22%22%2C%22whCd%22%3A%22IC02%22%2C%22cstCd%22%3A%22%22%2C%22cstNm%22%3A%22%22%2C%22groupcstCd%22%3Anull%2C%22godCd%22%3A%22%22%2C%22cstGodCd%22%3A%22%22%2C%22godNm%22%3A%22%22%2C%22inBoxBarcd%22%3A%22%22%2C%22lCate%22%3A%22%22%2C%22mCate%22%3A%22%22%2C%22sCate%22%3A%22%22%2C%22productsBeyondExpirationDate%22%3A%22%22%2C%22seasonCd%22%3A%22%22%2C%22genderCd%22%3A%22%22%2C%22makeYr%22%3A%22%22%2C%22boxInCntYn%22%3A%22N%22%2C%22zone%22%3A%22%22%2C%22locX%22%3A%22%22%2C%22locY%22%3A%22%22%2C%22locZ%22%3A%22%22%2C%22locD%22%3A%22%22%2C%22locDiv%22%3A%2201%22%2C%22boxCountYn%22%3A%22N%22%2C%22equipType%22%3A%22%22%2C%22keepWay%22%3A%22%22%2C%22dealTemp%22%3A%22%22%7D",
+      "len": 399804,
+      "body_head": "{\"isGcasCst\":false,\"list\":[{\"whCd\":\"IC02\",\"locNo\":\"C01CA0103\",\"zone\":\"C\",\"locX\":\"01\",\"locY\":\"CA\",\"locZ\":\"01\",\"locD\":\"03\",\"luNo\":\"NONE\",\"lotNo\":\"25081801\",\"godCd\":\"94E4KVLL00006\",\"cstCd\":\"94E4K\",\"cstNm\":\"주식회사 하우투약(저온)\",\"cstGodCd\":\"VLL00006\",\"godNm\":\"오메가3_소개카드\",\"makeDt\":\"\",\"distTermDt\":\"\",\"totStkQty\":5876,\"badStkQty\":0,\"stockQty\":5876,\"canQty\":5558,\"ordSetQty\":318,\"setQty\":0,\"distTermMgtYn\":\"N\",\"godBarcd\":\"N17551597439013\",\"godDiv\":\"03\",\"locDiv\":\"01\",\"locDivNm\":\"피킹\",\"equipType\":\"03\",\"keepWay\":\"02\",\"keepWayNm\":\"팔레트랙\",\"godDealTemp\":\"03\",\"godDealTempNm\":\"상온\",\"zoneDealTemp\":\"01\",\"zoneDealTempNm\":\"냉장\",\"outOfDateStockQty\":0,\"inDt\":\"20260921\",\"sort\":0,\"inBoxInCnt\":0,\"boxSupplyYn\":\"N\",\"chunilWhCd\":\"\"},{\"whCd\":\"IC02\",\"locNo\":\"C01CA0103\",\"zone\":\"C\",\"locX\":\"01\",\"locY\":\"CA\",\"locZ\":\"01\",\"locD\":\"03\",\"luNo\":\"NONE\",\"lotNo\":\"26072201\",\"godCd\":\"94E4KVLL00001\",\"cstCd\":\"94E4K\",\"cstNm\":\"주식회사 하우투약(저온)\",\"cstGodCd\":\"VLL00001\",\"godNm\":\"(저온)헤라클래스 엑스퍼트 오메가3 30정\",\"makeDt\":\"20260629\",\"distTermDt\":\"20290628\",\"totStkQty\":2479,\"badStkQty\":0,\"stockQty\":2479,\"canQty\":1614,\"ordSetQty\":865,\"setQty\":0,\"distTermMgtYn\":\"Y\",\"godBarcd\":\"880993503119 4\",\"godDiv\":\"01\",\"locDiv\":\"01\",\"locDivNm\":\"피킹\",\"equipType\":\"03\",\"keepWay\":\"02\",\"keepWayNm\":\"팔레트랙\",\"godDealTemp\":\"01\",\"godDealTempNm\":\"냉장\",\"zoneDealTemp\":\"01\",\"zoneDealTempNm\":\"냉장\",\"outStopDt\":\"20290623\",\"elapsedDate\":-1000,\"expiredSoonDate\":-995,\"outOfDateStockQty\":0,\"inDt\":\"20260722\",\"sort\":0,\"inBoxInCnt\":0,\"boxSupplyYn\":\"N\",\"chunilWhCd\":\"\"},{\"whCd\":\"IC02\",\"locNo\":\"C01CA0103\",\"zone\":\"C\",\"locX\":\"01\",\"locY\":\"CA\",\"locZ\":\"01\",\"locD\":\"03\",\"luNo\":\"NONE\",\"lotNo\":\"26090701\",\"godCd\":\"94E4KVLL00050\",\"cstCd\":\"94E4K\",\"cstNm\":\"주식회사 하우투약(저온)\",\"cstGodCd\":\"VLL00050\",\"godNm\":\"(저온)헤라클레스_제품 팜플렛\",\"makeDt\":\"\",\"distTermDt\":\"\",\"totStkQty\":5736,\"badStkQty\":0,\"stockQty\":5736,\"canQty\":5473,\"ordSetQty\":263,\"setQty\":0,\"distTermMgtYn\":\"N\",\"godBarcd\":\"N17887400448824\",\"godDiv\":\"01\",\"locDiv\":\"01\",\"locDivNm\":\"피킹\",\"equipType\":\"03\",\"keepWay\":\"02\",\"keepWayNm\":\"팔레트랙\",\"godDealTemp\":\"01\",\"godDealTempNm\":\"냉장\",\"zoneDealTemp\":\"01\",\"zoneDealTempNm\":\"냉장\",\"outOfDateStockQty\":0,\"inDt\":\"20260907\",\"sort\":0,\"inBoxInCnt\":0,\"boxSupplyYn\":\"N\",\"chunilWhCd\":\"\"},{\"whCd\":\"IC02\",\"locNo\":\"C01CA0104\",\"zone\":\"C\",\"locX\":\"01\",\"locY\":\"CA\",\"locZ\":\"01\",\"locD\":\"04\",\"luNo\":\"NONE\",\"lotNo\":\"26040801\",\"godCd\":\"94E4KVLL00014\",\"cstCd\":\"94E4K\",\"cstNm\":\"주식회사 하우투약(저온)\",\"cstGodCd\":\"VLL00014\",\"godNm\":\"(저온)헤라클래스 오메가3 이지\",\"makeDt\":\"20260220\",\"distTermDt\":\"20290219\",\"totStkQty\":843,\"badStkQty\":0,\"stockQty\":843,\"canQty\":778,\"ordSetQty\":65,\"setQty\":0,\"distTermMgtYn\":\"Y\",\"godBarcd\":\"8809935037745\",\"godDiv\":\"01\",\"locDiv\":\"01\",\"locDivNm\":\"피킹\",\"equipType\":\"03\",\"keepWay\":\"02\",\"keepWayNm\":\"팔레트랙\",\"godDealTemp\":\"01\",\"godDealTempNm\":\"냉장\",\"zoneDealTemp\":\"01\",\"zoneDealTempNm\":\"냉장\",\"outStopDt\":\"20290214\",\"elapsedDate\":-871,\"expiredSoonDate\":-866,\"outOfDateStockQty\":0,\"inDt\":\"20260807\",\"sort\":0,\"inBoxInCnt\":0,\"boxSupplyYn\":\"N\",\"chunilWhCd\":\"\"},{\"whCd\":\"IC02\",\"locNo\":\"C01CA0105\",\"zone\":\"C\",\"locX\":\"01\",\"locY\":\"CA\",\"locZ\":\"01\",\"locD\":\"05\",\"luNo\":\"NONE\",\"lotNo\":\"26082701\",\"godCd\":\"099570005\",\"cstCd\":\"09957\",\"cstNm\":\"주식회사 포어스코퍼레이션(저온)\",\"cstGodCd\":\"0005\",\"godNm\":\"냉장 - 일식카레소스 (2kg)\",\"makeDt\":\"20260826\",\"distTermDt\":\"20261025\",\"totStkQty\":31,\"badStkQty\":0,\"stockQty\":31,\"canQty\":31,\"ordSetQty\":0,\"setQty\":0,\"distTermMgtYn\":\"Y\",\"godBarcd\":\"099570005\",\"godDiv\":\"01\",\"locDiv\":\"01\",\"locDivNm\":\"피킹\",\"equipType\":\"03\",\"keepWay\":\"02\",\"keepWayNm\":\"팔레트랙\",\"godDealTemp\":\"01\",\"godDealTempNm\":\"냉장\",\"zoneDealTemp\":\"01\",\"zoneDealTempNm\":\"냉장\",\"outStopDt\":\"20261025\",\"elapsedDate\":-28,\"expiredSoonDate\":-23,\"outOfDateStockQty\":0,\"inDt\":\"20260827\",\"sort\":0,\"inBoxInCnt\":5,\"boxSupplyYn\":\"N\",\"chunilWhCd\":\"\"},{\"whCd\":\"IC02\",\"locNo\":\"C01CA0106\",\"zone\":\"C\",\"locX\":\"01\",\"locY\":\"CA\",\"locZ\":\"01\",\"locD\":\"06\",\"luNo\":\"NONE\",\"lotNo\":\"26073101\",\"godCd\":\"099570001\",\"cstCd\":\"09957\",\"cstNm\":\"주식회사 포어스코퍼레이션(저온)\",\"cstGodCd\":\"0001\",\"godNm\":\"냉장 - 데리야끼베이스-1 (2kg)\",\"makeDt\":\"20260730\",\"distTermDt\":\"20270130\",\"totStkQty\":31,\"badStkQty\":0,\"stockQty\":31,\"canQty\":31,\"ordSetQty\":0,\"setQty\":0,\"distTermMgtYn\":\"Y\",\"godBarcd\":\"099570001\",\"godDiv\":\"01\",\"locDiv\":\"01\",\"locDivNm\":\"피킹\",\"equipType\":\"03\",\"keepWay\":\"02\",\"keepWayNm\":\"팔레트랙\",\"godDealTemp\":\"01\",\"godDealTempNm\":\"냉장\",\"zoneDealTemp\":\"01\",\"zoneDealTempNm\":\"냉장\",\"outStopDt\":\"20270130\",\"elapsedDate\":-125,\"expiredSoonDate\":-120,\"outOfDateStockQty\":0,\"inDt\":\"20260731\",\"sort\":0,\"inBoxInCnt\":5,\"boxSupplyYn\":\"N\",\"chunilWhCd\":\"\"},{\"whCd\":\"IC02\",\"locNo\":\"C01CA0107\",\"zone\":\"C\",\"locX\":\"01\",\"locY\":\"CA\",\"locZ\":\"01\",\"locD\":\"07\",\"luNo\":\"NONE\",\"lotNo\":\"26030901\",\"godCd\":\"94E4KVLL00022\",\"cstCd\":\"94E4K\",\"cstNm\":\"주식회사 하우투약(저온)\",\"cstGodCd\":\"VLL00022\",\"godNm\":\"오메가3_보냉백_저온\",\"makeDt\":\"\",\"distTermDt\":\"\",\"totStkQty\":686,\"badStkQty\":0,\"stockQty\":686,\"canQty\":686,\"ordSetQty\":0,\"setQty\":0,\"distTermMgtYn\":\"N\",\"godBarcd\":\"N17727755523398\",\"godDiv\":\"02\",\"locDiv\":\"01\",\"locDivNm\":\"피킹\",\"equipType\":\"03\",\"keepWay\":\"02\",\"keepWayNm\":\"팔레트랙\",\"godDealTemp\":\"03\",\"godDealTempNm\":\"상온\",\"zoneDealTemp\":\"01\",\"zoneDealTempNm\":\"냉장\",\"outOfDateStockQty\":0,\"inDt\":\"20260611\",\"sort\":0,\"inBoxInCnt\":0,\"boxSupplyYn\":\"N\",\"chunilWhCd\":\"\"},{\"whCd\":\"IC02\",\"locNo\":\"C01CA0108\",\"zone\":\"C\",\"locX\":\"01\",\"locY\":\"CA\",\"locZ\":\"01\",\"locD\":\"08\",\"luNo\":\"NONE\",\"lotNo\":\"26090101\",\"godCd\":\"94E4KVLL00048\",\"cstCd\":\"94E4K\",\"cstNm\":\"주식회사 하우투약(저온)\",\"cstGodCd\":\"VLL00048\",\"godNm\":\"(저온)헤라클레스 엑스퍼트 비피더스 30캡슐\",\"makeDt\":\"20260731\",\"distTermDt\":\"20280130\",\"totStkQty\":3357,\"badStkQty\":0,\"stockQty\":3357,\"canQty\":3357,\"ordSetQty\":0,\"setQty\":0,\"distTermMgtYn\":\"Y\",\"godBarcd\":\"8809935039404\",\"godDiv\":\"01\",\"locDiv\":\"01\",\"locDivNm\":\"피킹\",\"equipType\":\"03\",\"keepWay\":\"02\",\"keepWayNm\":\"팔레트랙\",\"godDealTemp\":\"01\",\"godDealTempNm\":\"냉장\",\"zoneDealTemp\":\"01\",\"zoneDealTempNm\":\"냉장\",\"outStopDt\":\"20280125\",\"elapsedDate\":-485,\"expiredSoonDate\":-480,\"outOfDateStockQty\":0,\"inDt\":\"20260901\",\"sort\":0,\"inBoxInCnt\":0,\"boxSupplyYn\":\"N\",\"chunilWhCd\":\"\"},{\"whCd\":\"IC02\",\"locNo\":\"C01CA0111\",\"zone\":\"C\",\"locX\":\"01\",\"locY\":\"CA\",\"locZ\":\"01\",\"locD\":\"11\",\"luNo\":\"NONE\",\"lotNo\":\"26081101\",\"godCd\":\"06727COBB-GSTB0049\",\"cstCd\":"
+    }
+  ],
+  "requests_log": [
+    {
+      "method": "POST",
+      "url": "https://fms.fassto.ai/classic/pic/pic12/pic12Form.do",
+      "post": ""
+    },
+    {
+      "method": "POST",
+      "url": "https://fms.fassto.ai/classic/pic/pic12/defaultDaySet.json",
+      "post": "toDay=2026-09-27&defaultDayHour=2026-09-27+14%3A00%3A00&minDayHour=2026-09-27+17%3A00%3A00&pSign=%2B&tomorDayInterval=1&maxInterval=4"
+    },
+    {
+      "method": "POST",
+      "url": "https://fms.fassto.ai/classic/pic/pic12/mainList.json",
+      "post": "custNmValue=&whCd=IC02&ordDt1_pic12=2026-09-20&ordDt2_pic12=2026-09-27&cstCd=&cstNm=&groupcstCd=&ordNo=&ordDiv=&wrkStat=&salChanel=&custNm=&custTelNo=&fileDownloadYn=0&searchType=slipNo&slipNo=&labelNo="
+    },
+    {
+      "method": "POST",
+      "url": "https://fms.fassto.ai/classic/stk/stk06/stk06Form.do",
+      "post": ""
+    },
+    {
+      "method": "POST",
+      "url": "https://fms.fassto.ai/classic/stk/stk06/zoneList.json",
+      "post": "cateCd=&whCd=YI00&cstCd=&cstNm=&groupcstCd=&godCd=&cstGodCd=&godNm=&inBoxBarcd=&lCate=&mCate=&sCate=&productsBeyondExpirationDate=&seasonCd=&genderCd=&makeYr=&boxInCntYn=N&zone=&locX=&locY=&locZ=&locD=&locDiv=&boxCountYn=N&equipType=&keepWay=&dealTemp="
+    },
+    {
+      "method": "POST",
+      "url": "https://fms.fassto.ai/classic/stk/stk06/zoneList.json",
+      "post": "cateCd=&whCd=IC02&cstCd=&cstNm=&groupcstCd=&godCd=&cstGodCd=&godNm=&inBoxBarcd=&lCate=&mCate=&sCate=&productsBeyondExpirationDate=&seasonCd=&genderCd=&makeYr=&boxInCntYn=N&zone=&locX=&locY=&locZ=&locD=&locDiv=&boxCountYn=N&equipType=&keepWay=&dealTemp="
+    },
+    {
+      "method": "POST",
+      "url": "https://fms.fassto.ai/classic/stk/stk06/mainList.json",
+      "post": "schParam=%7B%22cateCd%22%3A%22%22%2C%22whCd%22%3A%22IC02%22%2C%22cstCd%22%3A%22%22%2C%22cstNm%22%3A%22%22%2C%22groupcstCd%22%3Anull%2C%22godCd%22%3A%22%22%2C%22cstGodCd%22%3A%22%22%2C%22godNm%22%3A%22%22%2C%22inBoxBarcd%22%3A%22%22%2C%22lCate%22%3A%22%22%2C%22mCate%22%3A%22%22%2C%22sCate%22%3A%22%22%2C%22productsBeyondExpirationDate%22%3A%22%22%2C%22seasonCd%22%3A%22%22%2C%22genderCd%22%3A%22%22%2C%22makeYr%22%3A%22%22%2C%22boxInCntYn%22%3A%22N%22%2C%22zone%22%3A%22%22%2C%22locX%22%3A%22%22%2C%22locY%22%3A%22%22%2C%22locZ%22%3A%22%22%2C%22locD%22%3A%22%22%2C%22locDiv%22%3A%2201%22%2C%22boxCountYn%22%3A%22N%22%2C%22equipType%22%3A%22%22%2C%22keepWay%22%3A%22%22%2C%22dealTemp%22%3A%22%22%7D"
+    }
+  ]
+}
