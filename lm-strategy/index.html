@@ -1,0 +1,1975 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="로지스허브-인천 4층 임대 건을 임대인 전략·LM 전략·임차사 계산기 세 관점으로 보는 계산기">
+<link rel="stylesheet" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css">
+<title>LM 전략</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@400;500;700;800&display=swap">
+<style>
+/* Layout: 1층 저온창고 단계 사용 시뮬레이터와 같은 골격. 왼쪽 조건 입력, 오른쪽 요약·협상 지도·협상 카드, 아래 상세 표 */
+:root{
+  --bg:#F3F5F7;--surface:#FFFFFF;--surface-2:#F8F9FA;
+  --ink:#212529;--ink-2:#495057;--muted:#6C757D;
+  --line:#DEE2E6;--line-2:#EDF0F2;
+  --blue:#007BFF;--blue-ink:#0062CC;--blue-soft:#E6F0FF;
+  --warn:#8F5600;--warn-soft:#FFF1D6;
+  --off:#F1F3F5;--hatch:rgba(108,117,125,.30);
+  --font:"Pretendard Variable",Pretendard,Inter,"Noto Sans KR",-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#15181B;--surface:#212529;--surface-2:#1A1D20;
+    --ink:#E9ECEF;--ink-2:#C3CAD1;--muted:#8E98A2;
+    --line:#383E44;--line-2:#2B3035;
+    --blue:#3D8BFD;--blue-ink:#8DBBFE;--blue-soft:#14304F;
+    --warn:#F3B962;--warn-soft:#3A2B12;
+    --off:#1B1F23;--hatch:rgba(160,170,180,.22);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#15181B;--surface:#212529;--surface-2:#1A1D20;
+  --ink:#E9ECEF;--ink-2:#C3CAD1;--muted:#8E98A2;
+  --line:#383E44;--line-2:#2B3035;
+  --blue:#3D8BFD;--blue-ink:#8DBBFE;--blue-soft:#14304F;
+  --warn:#F3B962;--warn-soft:#3A2B12;
+  --off:#1B1F23;--hatch:rgba(160,170,180,.22);
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:15px;line-height:1.55;font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+
+.page{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:26px 56px}
+.wrap{max-width:1520px;margin:0 auto;padding-inline:clamp(0px,1.5vw,16px)}
+.head{display:flex;flex-wrap:wrap;gap:14px 28px;align-items:flex-end;justify-content:space-between;margin-bottom:20px}
+.head h1{margin:0;font-size:clamp(24px,2.4vw,32px);font-weight:800;letter-spacing:-.03em;line-height:1.2;text-wrap:balance}
+.head p{margin:6px 0 0;color:var(--muted);font-size:14px;max-width:84ch}
+.btn{font-size:13px;padding:7px 12px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;white-space:nowrap}
+.btn:hover{border-color:var(--blue);color:var(--blue-ink)}
+.btn.sm{font-size:12px;padding:4px 9px;border-radius:6px}
+
+.layout{display:grid;grid-template-columns:372px minmax(0,1fr);grid-template-areas:"ctl top" "bottom bottom";gap:20px 26px;align-items:start}
+.top{grid-area:top;min-width:0;display:grid;gap:18px}
+.bottom{grid-area:bottom;min-width:0}
+.controls{grid-area:ctl;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:2px 18px 16px;min-width:0}
+.layout.tall{grid-template-areas:"ctl top" "ctl bottom";grid-template-rows:auto 1fr}
+@media (max-width:1060px){.layout,.layout.tall{grid-template-columns:minmax(0,1fr);grid-template-areas:"top" "ctl" "bottom";grid-template-rows:auto}}
+
+/* controls */
+.ctl{padding:16px 0;border-bottom:1px solid var(--line-2)}
+.ctl:last-child{border-bottom:0}
+.ctl h2{font-size:14.5px;margin:0 0 10px;font-weight:700;letter-spacing:-.01em;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.ctl h2 small{font-weight:500;font-size:12px;color:var(--muted)}
+.note{font-size:12.5px;color:var(--muted);margin:8px 0 0;line-height:1.5}
+.tag{font-size:11px;font-weight:700;padding:1px 6px;border-radius:4px;white-space:nowrap;line-height:1.6}
+.tag.c{background:var(--blue-soft);color:var(--blue-ink)}
+.tag.u{background:var(--off);color:var(--ink-2);box-shadow:inset 0 0 0 1px var(--line)}
+.tag.a{background:var(--warn-soft);color:var(--warn)}
+input[type=number],input[type=text],input[type=month],select{background:var(--surface-2);border:1px solid var(--line);border-radius:7px;padding:6px 8px;font-size:14px;min-width:0;width:100%}
+input[type=number]{text-align:right}
+input:hover,select:hover{border-color:var(--muted)}
+input[type=checkbox],input[type=radio]{width:16px;height:16px;accent-color:var(--blue);margin:0;flex:none}
+.fgrid{display:grid;grid-template-columns:96px minmax(0,1fr);gap:7px 10px;align-items:center}
+.fl{font-size:13px;color:var(--ink-2)}
+.unitf{display:flex;align-items:center;gap:6px;min-width:0}
+.unitf span{font-size:12.5px;color:var(--muted);white-space:nowrap;min-width:46px}
+.checks{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:10px;font-size:13px}
+.checks label{display:inline-flex;align-items:center;gap:6px;cursor:pointer}
+
+.segf{border:0;padding:0;margin:0 0 12px;min-width:0}
+.segf legend{font-size:12.5px;color:var(--muted);margin-bottom:6px;padding:0}
+.opts{display:flex;flex-wrap:wrap;gap:6px}
+.opts label{position:relative;display:inline-flex}
+.opts input{position:absolute;opacity:0;width:1px;height:1px}
+.opts span{display:inline-block;padding:6px 11px;border:1px solid var(--line);border-radius:999px;font-size:13px;cursor:pointer;background:var(--surface);line-height:1.35}
+.opts span:hover{border-color:var(--muted)}
+.opts input:checked+span{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.opts input:focus-visible+span{outline:2px solid var(--blue);outline-offset:2px}
+
+.scen{padding:11px 0;border-top:1px dashed var(--line)}
+.scen:first-child{border-top:0;padding-top:2px}
+.scen-top{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.scen-top .sname{flex:1;font-weight:600}
+.sid{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:6px;background:var(--blue);color:#fff;font-weight:800;font-size:12px;flex:none}
+.scen.is-off .sid{background:var(--line);color:var(--muted)}
+.scen.is-off .sname{color:var(--muted)}
+.pick{display:inline-flex;align-items:center;gap:5px;font-size:12px;color:var(--muted);cursor:pointer;white-space:nowrap}
+.pick input:checked+span{color:var(--blue-ink);font-weight:700}
+.onf{display:inline-flex;align-items:center;gap:6px;cursor:pointer}
+.scen-fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.scen-fields label.wide{grid-column:1/-1;flex-direction:row;align-items:center;gap:8px}
+.scen-fields label.wide span{white-space:nowrap}
+.scen-fields label.wide select{flex:1}
+.scen-fields label{display:flex;flex-direction:column;gap:3px;font-size:11.5px;color:var(--muted);min-width:0}
+.scen-fields select{padding:6px 4px}
+.scen-meta{margin:7px 0 0;font-size:12px;color:var(--ink-2)}
+.scen-err{margin:5px 0 0;font-size:12.5px;color:var(--warn)}
+
+.ladder{width:100%;border-collapse:collapse;font-size:13px;margin-top:2px}
+.ladder th{font-weight:500;color:var(--muted);text-align:left;padding:3px 6px 3px 0;white-space:nowrap}
+.ladder thead th{font-size:12px;text-align:right}
+.ladder thead th:first-child{text-align:left}
+.ladder td{padding:3px 3px}
+.ladder td.tg{width:1%;white-space:nowrap;padding-left:6px}
+.ladder tr.cur th{color:var(--blue-ink);font-weight:700}
+
+/* summary */
+.summary{display:grid;grid-template-columns:1.35fr 1fr 1fr 1fr;border-top:2px solid var(--ink);border-bottom:1px solid var(--line)}
+.kpi{padding:14px 16px;border-left:1px solid var(--line);min-width:0}
+.kpi:first-child{border-left:0;padding-left:0}
+.k-label{display:block;font-size:13px;color:var(--muted)}
+.k-val{display:block;font-size:clamp(21px,2vw,27px);font-weight:800;letter-spacing:-.025em;line-height:1.2;margin:5px 0 3px;white-space:nowrap}
+.kpi.primary .k-val{font-size:clamp(28px,2.9vw,38px);color:var(--blue-ink)}
+.k-sub{display:block;font-size:12.5px;color:var(--muted);line-height:1.5}
+.k-val.ok{color:var(--blue-ink)}
+.k-val.no{color:var(--warn)}
+.facts{font-size:13px;color:var(--ink-2);margin:-6px 0 0;line-height:1.6}
+@media (max-width:820px){
+  .summary{grid-template-columns:1fr 1fr}
+  .kpi{border-left:0;padding:12px 12px 12px 0;border-top:1px solid var(--line-2)}
+  .kpi.primary{grid-column:1/-1;border-top:0}
+}
+
+/* panels */
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;min-width:0}
+.p-top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:10px 22px;padding:16px 18px 14px}
+.p-top h2{font-size:16px;margin:0;letter-spacing:-.01em}
+.p-top p{margin:3px 0 0;font-size:13px;color:var(--muted);max-width:78ch}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12.5px;color:var(--ink-2);align-items:center}
+.lg{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.sw{width:16px;height:12px;border-radius:2px;display:inline-block;position:relative}
+.sw.ok{background:var(--blue-soft);box-shadow:inset 0 0 0 1px var(--blue)}
+.sw.low{background:repeating-linear-gradient(135deg,var(--hatch) 0 1px,transparent 1px 5px),var(--off);box-shadow:inset 0 0 0 1px var(--line)}
+.sw.high{background:var(--warn-soft);box-shadow:inset 0 0 0 1px var(--warn)}
+.sw.cur{background:var(--surface);box-shadow:inset 0 0 0 2px var(--ink)}
+.sw.best{background:var(--surface);box-shadow:inset 0 0 0 1px var(--line)}
+.sw.best::after{content:"";position:absolute;top:0;right:0;border-style:solid;border-width:0 7px 7px 0;border-color:transparent var(--blue) transparent transparent}
+.sw.tbest{background:var(--surface);box-shadow:inset 0 0 0 1px var(--line)}
+.sw.tbest::before{content:"";position:absolute;left:3px;bottom:2px;width:5px;height:5px;border:1.5px solid var(--ink-2)}
+
+.map-scroll{overflow-x:auto;overscroll-behavior-x:contain;border-top:1px solid var(--line)}
+.map{display:grid;font-size:12px;min-width:max-content}
+.mh{display:grid;place-items:center;color:var(--muted);font-size:11.5px;padding:5px 2px;background:var(--surface);border-bottom:1px solid var(--line)}
+.mh.cnr{position:sticky;left:0;z-index:3;justify-items:start;text-align:left;padding:5px 10px;line-height:1.3;border-right:1px solid var(--line)}
+.mh.rh{position:sticky;left:0;z-index:2;justify-items:end;padding:0 10px;border-right:1px solid var(--line);border-bottom:1px solid var(--line-2);font-weight:600;color:var(--ink-2);white-space:nowrap}
+.mh.rh.curr{color:var(--ink);font-weight:800}
+.mh.ch.curr{color:var(--ink);font-weight:800}
+.cell{position:relative;border:0;border-right:1px solid var(--surface);border-bottom:1px solid var(--surface);height:34px;min-width:46px;padding:0;font-size:12px;font-weight:600;cursor:pointer;background:var(--off);color:var(--muted)}
+.cell.low{background:repeating-linear-gradient(135deg,var(--hatch) 0 1px,transparent 1px 6px),var(--off);color:var(--muted);font-weight:500}
+.cell.ok{background:var(--blue-soft);color:var(--blue-ink)}
+.cell.high{background:var(--warn-soft);color:var(--warn)}
+.cell.cur{box-shadow:inset 0 0 0 2px var(--ink);color:var(--ink);font-weight:800;z-index:1}
+.cell.best::after{content:"";position:absolute;top:0;right:0;border-style:solid;border-width:0 10px 10px 0;border-color:transparent var(--blue) transparent transparent}
+.cell.tbest::before{content:"";position:absolute;left:4px;bottom:4px;width:6px;height:6px;border:1.5px solid var(--ink-2)}
+.cell:hover,.cell.hl{box-shadow:inset 0 0 0 2px var(--muted);z-index:1}
+.cell.cur:hover,.cell.cur.hl{box-shadow:inset 0 0 0 2px var(--ink)}
+.cell:focus-visible{outline:2px solid var(--blue);outline-offset:-2px;z-index:2}
+.detail{padding:12px 18px 14px;border-top:1px solid var(--line-2);font-size:13px;min-height:64px;color:var(--ink-2)}
+.detail b{color:var(--ink)}
+.detail .d-head{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;margin-bottom:3px}
+.pill{font-size:11px;font-weight:700;padding:1px 7px;border-radius:999px;white-space:nowrap}
+.pill.ok{background:var(--blue-soft);color:var(--blue-ink)}
+.pill.low{background:var(--off);color:var(--ink-2);box-shadow:inset 0 0 0 1px var(--line)}
+.pill.high{background:var(--warn-soft);color:var(--warn)}
+.empty{padding:22px 18px;color:var(--muted);font-size:14px}
+
+/* tables */
+.tw{overflow-x:auto}
+table.data{border-collapse:separate;border-spacing:0;width:100%;font-size:13px}
+.data caption{text-align:left;font-weight:700;font-size:13.5px;padding:14px 16px 6px}
+.data th,.data td{padding:7px 12px;border-bottom:1px solid var(--line-2);text-align:right;white-space:nowrap}
+.data th{font-size:12px;color:var(--muted);font-weight:600;border-bottom:1px solid var(--line)}
+.data .l{text-align:left}
+.data th:first-child,.data td:first-child{position:sticky;left:0;background:var(--surface);z-index:1;text-align:left}
+.data tbody tr:hover td{background:var(--surface-2)}
+.data tfoot td{font-weight:800;border-top:2px solid var(--ink)}
+.data td.soft{color:var(--muted)}
+.data td.strong{font-weight:700}
+.data td.up{color:var(--blue-ink)}
+.data td.dn{color:var(--warn)}
+.data th.base{color:var(--blue-ink)}
+.data td.wrap{white-space:normal;min-width:180px}
+.kind{font-size:11px;font-weight:700;padding:1px 6px;border-radius:4px;white-space:nowrap}
+.kind.fo{background:var(--off);color:var(--ink-2);box-shadow:inset 0 0 0 1px var(--line)}
+.kind.rf{background:var(--blue-soft);color:var(--blue-ink)}
+.kind.paid{background:transparent;color:var(--ink-2)}
+.tbl-note{font-size:12.5px;color:var(--muted);padding:10px 16px 16px;margin:0;line-height:1.6;max-width:110ch}
+.insights{margin:0;padding:12px 18px 16px 34px;font-size:13.5px;color:var(--ink-2);line-height:1.6;display:grid;gap:4px;border-top:1px solid var(--line-2)}
+.insights b{color:var(--ink)}
+
+.tabs{display:flex;flex-wrap:wrap;gap:2px 4px;padding:10px 14px 0;border-bottom:1px solid var(--line);align-items:center}
+.tab{font-size:14px;padding:8px 11px 10px;border:0;background:transparent;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px}
+.tab:hover{color:var(--ink)}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--ink);font-weight:700}
+.tabs .spacer{flex:1}
+.unit-note{font-size:12px;color:var(--muted);margin-right:6px}
+.copied{font-size:12px;color:var(--blue-ink);margin-right:6px}
+.copybox{display:block;width:calc(100% - 32px);margin:10px 16px;height:90px;font:12px/1.4 ui-monospace,Menlo,monospace;background:var(--surface-2);color:var(--ink);border:1px solid var(--line);border-radius:6px}
+
+.src{margin-top:16px}
+.src summary{cursor:pointer;padding:13px 18px;font-weight:700;font-size:14px}
+.src .tw{border-top:1px solid var(--line-2)}
+.src td{white-space:normal;text-align:left;vertical-align:top;line-height:1.5}
+.src td:first-child{white-space:nowrap;font-weight:600}
+
+[hidden]{display:none!important}
+
+/* 관점 전환 */
+.persp{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;padding:4px;margin:0 0 20px;background:var(--surface);border:1px solid var(--line);border-radius:12px}
+.pv{display:flex;flex-direction:column;align-items:flex-start;gap:1px;min-width:0;padding:9px 14px;border:0;border-radius:9px;background:transparent;color:var(--ink);cursor:pointer;text-align:left}
+.pv:hover{background:var(--surface-2)}
+.pv b{font-size:15px;font-weight:800;letter-spacing:-.01em}
+.pv span{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.pv[aria-selected="true"]{background:var(--ink);color:var(--surface)}
+.pv[aria-selected="true"] span{color:var(--surface);opacity:.72}
+@media (max-width:560px){.pv{padding:8px 10px}.pv b{font-size:14px}.pv span{display:none}}
+.ctl-sep{margin:14px 0 0;padding:6px 10px;border-radius:7px;background:var(--surface-2);font-size:12px;font-weight:700;color:var(--ink-2)}
+input.asm,select.asm{border-style:dashed;border-color:var(--warn)}
+.pair{display:contents}
+.tabbtns{display:flex;flex-wrap:wrap;gap:2px 4px}
+.pill.mid{background:var(--surface);color:var(--ink-2);box-shadow:inset 0 0 0 1px var(--muted)}
+.pill.ask{background:transparent;color:var(--muted);border:1px dashed var(--muted);padding:0 6px}
+
+/* 임대인: 압박 진단 */
+.press{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+.press li{display:grid;grid-template-columns:168px 150px minmax(0,1fr);gap:4px 16px;padding:11px 18px;border-bottom:1px solid var(--line-2);align-items:baseline;font-size:13px}
+.press li:last-child{border-bottom:0}
+.press .pk{font-weight:700;color:var(--ink);display:flex;align-items:center;gap:7px;white-space:nowrap}
+.press .pval{color:var(--ink);font-weight:600}
+.press .pt{color:var(--ink-2);line-height:1.55}
+@media (max-width:820px){.press li{grid-template-columns:minmax(0,1fr) auto}.press .pt{grid-column:1/-1}}
+
+/* 임대인: 이해관계 카드 */
+.rel{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px;padding:0 18px 18px}
+.rc{border:1px solid var(--line);border-radius:10px;padding:11px 13px 12px;background:var(--surface-2);min-width:0}
+.rc.me{border-color:var(--blue);background:var(--blue-soft)}
+.rc .rr{font-size:11.5px;color:var(--muted);font-weight:700}
+.rc .rn{font-weight:800;font-size:14.5px;margin:2px 0 6px;overflow-wrap:anywhere;line-height:1.35}
+.rc ul{margin:0;padding:0;list-style:none;font-size:12.5px;color:var(--ink-2);display:grid;gap:2px}
+.rc .ri{margin-top:8px;padding-top:7px;border-top:1px dashed var(--line);font-size:12.5px;color:var(--ink)}
+
+/* 임차사: 실부담 막대 */
+.bars{display:grid;gap:12px;padding:4px 18px 18px}
+.bar-row{display:grid;grid-template-columns:120px minmax(0,1fr) 128px;gap:12px;align-items:center;font-size:13px}
+.bar-row .bn{font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bar-row .bt{text-align:right;white-space:nowrap}
+.bar-row .bt b{font-size:15px}
+.stack{display:flex;height:22px;border-radius:5px;overflow:hidden;background:var(--off)}
+.stack i{display:block;height:100%}
+.c-rent{background:var(--blue)}
+.c-mgmt{background:var(--blue-soft);box-shadow:inset 0 0 0 1px var(--blue)}
+.c-dep{background:var(--warn-soft);box-shadow:inset 0 0 0 1px var(--warn)}
+.c-one{background:repeating-linear-gradient(135deg,var(--hatch) 0 1px,transparent 1px 5px),var(--off);box-shadow:inset 0 0 0 1px var(--line)}
+@media (max-width:620px){.bar-row{grid-template-columns:minmax(0,1fr) auto}.bar-row .stack{grid-column:1/-1;grid-row:2}}
+
+/* 임차사: 월별 납부 막대 */
+.mchart{padding:20px 18px 6px}
+.mc-bars{display:flex;align-items:flex-end;gap:1px;height:150px;position:relative;border-bottom:1px solid var(--line)}
+.mc-bars i{flex:1;min-width:0;display:block;background:var(--blue);border-radius:1px 1px 0 0}
+.mc-bars i.rf{background:var(--blue-soft);box-shadow:inset 0 0 0 1px var(--blue)}
+.mc-bars i.fo{background:repeating-linear-gradient(135deg,var(--hatch) 0 1px,transparent 1px 4px),var(--off);box-shadow:inset 0 0 0 1px var(--line)}
+.mc-mark{position:absolute;top:0;bottom:0;width:0;border-left:2px dashed var(--warn)}
+.mc-mark span{position:absolute;top:-18px;font-size:11px;color:var(--warn);white-space:nowrap;font-weight:700}
+.mc-axis{display:flex;gap:1px;font-size:11px;color:var(--muted);height:20px;padding-top:3px}
+.mc-axis span{flex:1;min-width:0;white-space:nowrap;overflow:visible}
+.mc-cap{font-size:12.5px;color:var(--muted);padding:6px 18px 16px;margin:0}
+
+.mbar{display:none}
+@media (max-width:1060px){
+  .mbar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:20;gap:14px;justify-content:space-between;align-items:center;
+    padding:10px max(16px,env(safe-area-inset-right,0px)) calc(10px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));
+    background:var(--ink);color:var(--surface);font-size:12.5px}
+  .mbar b{font-size:15px;margin-left:4px}
+  .page{padding-block-end:88px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="page"><div class="wrap">
+  <header class="head">
+    <div>
+      <h1>LM 전략</h1>
+      <p id="headDesc"></p>
+    </div>
+    <button class="btn" id="resetAll" type="button">기본값으로 되돌리기</button>
+  </header>
+
+  <nav class="persp" role="tablist" aria-label="관점">
+    <button type="button" role="tab" class="pv" data-p="ll"><b>임대인 전략</b><span>대출·시행·시공·신탁 반영</span></button>
+    <button type="button" role="tab" class="pv" data-p="lm"><b>LM 전략</b><span>수수료·협상 지도</span></button>
+    <button type="button" role="tab" class="pv" data-p="tn"><b>임차사 계산기</b><span>실부담·현금흐름·위험</span></button>
+  </nav>
+
+  <div class="layout">
+    <aside class="controls" aria-label="조건 입력">
+      <section class="ctl" aria-labelledby="h-deal">
+        <h2 id="h-deal">대상 공간</h2>
+        <div class="fgrid">
+          <label class="fl" for="dealName">건명</label><input type="text" id="dealName" data-k="deal.name">
+          <label class="fl" for="area">임대면적</label><div class="unitf"><input type="number" id="area" min="0" step="1" data-k="deal.area"><span>평</span></div>
+          <label class="fl" for="handover">인도</label><input type="month" id="handover" data-k="deal.handover" placeholder="2026-11">
+        </div>
+      </section>
+
+      <section class="ctl" aria-labelledby="h-terms">
+        <h2 id="h-terms">임대 조건 <small>원/평·월, VAT 별도</small></h2>
+        <div class="fgrid">
+          <label class="fl" for="face">명목 임대료</label><div class="unitf"><input type="number" id="face" min="0" step="100" data-k="terms.face"><span>1년차</span></div>
+          <label class="fl" for="escRate">연 인상률</label><div class="unitf"><input type="number" id="escRate" min="0" step="0.5" data-k="terms.esc"><span>%</span></div>
+          <span class="fl">단수 처리</span>
+          <div class="opts" role="radiogroup" aria-label="단수 처리">
+            <label><input type="radio" name="round" value="floor"><span>원 미만 절사</span></label>
+            <label><input type="radio" name="round" value="round"><span>반올림</span></label>
+          </div>
+          <label class="fl" for="mgmt">관리비</label><div class="unitf"><input type="number" id="mgmt" min="0" step="100" data-k="terms.mgmt"><span>원</span></div>
+          <label class="fl" for="dep">보증금</label><div class="unitf"><input type="number" id="dep" min="0" step="1" data-k="terms.depMonths"><span>개월분</span></div>
+        </div>
+        <div class="checks">
+          <label><input type="checkbox" id="mgmtEsc" data-k="terms.mgmtEsc">관리비도 인상</label>
+          <label><input type="checkbox" id="mgmtFree" data-k="terms.mgmtFree">무상 기간에도 관리비 납부</label>
+        </div>
+        <p class="note">인상은 임대개시일부터 매 12개월마다 직전 연차 임대료에 붙습니다.</p>
+      </section>
+
+      <section class="ctl" aria-labelledby="h-scen">
+        <h2 id="h-scen">비교할 안 <small>기준 안이 요약·지도·카드에 쓰입니다</small></h2>
+        <div id="scens"></div>
+      </section>
+
+      <div class="ctl-sep" data-views="lm">LM 수수료·협상</div>
+      <div class="ctl-sep" data-views="ll">임대인 상황 <span style="font-weight:500;color:var(--muted)">· 주황 점선 칸은 가정</span></div>
+      <div class="ctl-sep" data-views="tn">임차사 상황 <span style="font-weight:500;color:var(--muted)">· 주황 점선 칸은 가정</span></div>
+
+      <section class="ctl" data-views="ll" aria-labelledby="h-asset">
+        <h2 id="h-asset">자산·지분</h2>
+        <div class="fgrid">
+          <label class="fl" for="llOwner">임대인</label><input type="text" id="llOwner" data-k="ll.owner">
+          <label class="fl" for="llAcq">인수 시점</label><input type="month" id="llAcq" data-k="ll.acq">
+          <label class="fl" for="llValue">평가액</label><div class="unitf"><input type="number" id="llValue" min="0" step="10" data-k="ll.value"><span>억 원</span></div>
+          <label class="fl" for="llEquity">에쿼티</label><div class="unitf"><input type="number" id="llEquity" min="0" step="10" data-k="ll.equity"><span>억 원</span></div>
+          <label class="fl" for="llBld">건물 면적</label><div class="unitf"><input type="number" id="llBld" min="0" step="1" data-k="ll.bldArea"><span>평</span></div>
+          <label class="fl" for="llOcc">현재 임대율</label><div class="unitf"><input class="asm" type="number" id="llOcc" min="0" max="100" step="1" data-k="ll.occ"><span>%</span></div>
+          <label class="fl" for="llAvg">기존 평균 실질</label><div class="unitf"><input class="asm" type="number" id="llAvg" min="0" step="500" data-k="ll.avgRent"><span>원/평</span></div>
+          <label class="fl" for="llVac">공실 관리비</label><div class="unitf"><input class="asm" type="number" id="llVac" min="0" step="100" data-k="ll.vacMgmt"><span>원/평</span></div>
+          <label class="fl" for="llCap">Cap rate</label><div class="unitf"><input class="asm" type="number" id="llCap" min="0.1" step="0.1" data-k="ll.cap"><span>%</span></div>
+          <label class="fl" for="llFund">펀드 만기</label><input type="month" id="llFund" data-k="ll.fundEnd">
+        </div>
+        <p class="note">2023년 11월 보도: 페블스톤·AEW가 3,100억 원에 인수, 에쿼티 1,400억 원, 연면적 약 38,115평, 임대율 약 80%. 현재 임대율은 4층 공실을 포함한 값으로, 공실 관리비는 빈 면적에 임대인이 떠안는 관리비로 넣습니다. 펀드 만기는 모르면 비워 두세요.</p>
+      </section>
+
+      <section class="ctl" data-views="ll" aria-labelledby="h-loan">
+        <h2 id="h-loan">현재 대출 <small>담보대출</small></h2>
+        <div class="fgrid">
+          <label class="fl" for="lnLender">대주</label><input type="text" id="lnLender" data-k="ll.loan.lender">
+          <label class="fl" for="lnAmt">잔액</label><div class="unitf"><input type="number" id="lnAmt" min="0" step="10" data-k="ll.loan.amt"><span>억 원</span></div>
+          <label class="fl" for="lnRate">금리</label><div class="unitf"><input class="asm" type="number" id="lnRate" min="0" step="0.1" data-k="ll.loan.rate"><span>%</span></div>
+          <label class="fl" for="lnEnd">만기</label><input type="month" id="lnEnd" data-k="ll.loan.end">
+          <label class="fl" for="lnIcr">ICR 약정</label><div class="unitf"><input class="asm" type="number" id="lnIcr" min="0" step="0.05" data-k="ll.loan.icr"><span>배 이상</span></div>
+          <label class="fl" for="lnLtv">LTV 약정</label><div class="unitf"><input class="asm" type="number" id="lnLtv" min="0" step="1" data-k="ll.loan.ltv"><span>% 이하</span></div>
+          <label class="fl" for="lnMax">채권최고액</label><div class="unitf"><input class="asm" type="number" id="lnMax" min="0" step="10" data-k="ll.loan.maxPct"><span>%</span></div>
+          <label class="fl" for="lnSec">담보 형태</label><select id="lnSec" data-k="ll.loan.sec"><option value="unknown">모름</option><option value="mortgage">근저당</option><option value="trust">담보신탁 (우선수익권)</option></select>
+        </div>
+        <p class="note">보도된 것은 잔액 1,700억 원과 HSBC 참여뿐입니다. 금리·만기·약정은 공개되지 않았습니다. 채권최고액은 잔액 대비 비율로 넣습니다(근저당이면 흔히 120~130%).</p>
+      </section>
+
+      <section class="ctl" data-views="ll" aria-labelledby="h-pf">
+        <h2 id="h-pf">프로젝트 대출 <small>개발 PF</small></h2>
+        <fieldset class="segf">
+          <legend>상태</legend>
+          <div class="opts">
+            <label><input type="radio" name="pfStatus" value="repaid" data-r="ll.pf.status"><span>상환 완료</span></label>
+            <label><input type="radio" name="pfStatus" value="live" data-r="ll.pf.status"><span>남아 있음</span></label>
+            <label><input type="radio" name="pfStatus" value="unknown" data-r="ll.pf.status"><span>모름</span></label>
+          </div>
+        </fieldset>
+        <div class="fgrid" id="pfFields">
+          <label class="fl" for="pfLender">대주</label><input type="text" id="pfLender" data-k="ll.pf.lender">
+          <label class="fl" for="pfAmt">잔액</label><div class="unitf"><input type="number" id="pfAmt" min="0" step="10" data-k="ll.pf.amt"><span>억 원</span></div>
+          <label class="fl" for="pfRate">금리</label><div class="unitf"><input type="number" id="pfRate" min="0" step="0.1" data-k="ll.pf.rate"><span>%</span></div>
+          <label class="fl" for="pfEnd">만기</label><input type="month" id="pfEnd" data-k="ll.pf.end">
+        </div>
+        <p class="note">기본값 '상환 완료'는 2023년 11월 펀드 인수 때 개발 PF가 정리됐다는 가정입니다.</p>
+      </section>
+
+      <section class="ctl" data-views="ll" aria-labelledby="h-dev">
+        <h2 id="h-dev">시행·시공</h2>
+        <div class="fgrid">
+          <label class="fl" for="dvDev">시행사</label><input type="text" id="dvDev" data-k="ll.dev.developer">
+          <label class="fl" for="dvBld">시공사</label><input type="text" id="dvBld" data-k="ll.dev.builder">
+          <label class="fl" for="dvAmt">도급액</label><div class="unitf"><input type="number" id="dvAmt" min="0" step="10" data-k="ll.dev.contract"><span>억 원</span></div>
+          <label class="fl" for="dvDone">준공</label><input type="month" id="dvDone" data-k="ll.dev.done">
+          <label class="fl" for="dvDefect">하자보수 만료</label><input type="month" id="dvDefect" data-k="ll.dev.defectEnd">
+          <label class="fl" for="dvGuar">공실 보전</label><select id="dvGuar" data-k="ll.dev.guarantee"><option value="unknown">모름</option><option value="none">없음</option><option value="builder">시공사 임대확약</option><option value="master">마스터리스</option></select>
+          <div class="pair" id="guarEndPair"><label class="fl" for="dvGuarEnd">보전 만료</label><input type="month" id="dvGuarEnd" data-k="ll.dev.guarEnd"></div>
+        </div>
+        <div class="checks"><label><input type="checkbox" id="dvLien" data-k="ll.dev.lien">미지급 공사비·유치권 이슈 있음</label></div>
+        <p class="note">대림건설이 2020년 12월 페블스톤엠디피에프브이와 1,050억 원(실착공 후 22개월) 도급 계약을 공시했고, 건물은 2023년 4월 준공됐습니다. 하자보수 만료와 공실 보전은 확인한 값을 넣으세요.</p>
+      </section>
+
+      <section class="ctl" data-views="ll" aria-labelledby="h-trust">
+        <h2 id="h-trust">신탁·동의</h2>
+        <div class="fgrid">
+          <label class="fl" for="trHold">보유 구조</label><select class="asm" id="trHold" data-k="ll.trust.hold"><option value="fund">부동산펀드 (신탁업자 보관)</option><option value="reit">리츠 (자산보관기관)</option><option value="spc">SPC·PFV 직접 보유</option><option value="unknown">모름</option></select>
+          <label class="fl" for="trName">수탁자</label><input type="text" id="trName" data-k="ll.trust.trustee" placeholder="신탁업자·신탁사 이름">
+          <label class="fl" for="trWeeks">동의 소요</label><div class="unitf"><input class="asm" type="number" id="trWeeks" min="0" step="1" data-k="ll.trust.weeks"><span>주</span></div>
+        </div>
+        <div class="checks">
+          <label><input type="checkbox" id="trNeedT" data-k="ll.trust.needTrustee">수탁자 날인·동의</label>
+          <label><input type="checkbox" id="trNeedL" data-k="ll.trust.needLender">대주 동의</label>
+        </div>
+        <p class="note">담보 형태는 현재 대출에서 고릅니다. 담보신탁이면 수탁자와 우선수익자(대주) 동의 없이 맺은 임대차는 신탁사에 대항하지 못할 수 있습니다.</p>
+      </section>
+
+      <section class="ctl" data-views="tn" aria-labelledby="h-tn">
+        <h2 id="h-tn">임차사 운영 <small>원/평·월</small></h2>
+        <div class="fgrid">
+          <label class="fl" for="tnName">임차사</label><input type="text" id="tnName" data-k="tn.name">
+          <label class="fl" for="tnPrice">화주 단가</label><div class="unitf"><input type="number" id="tnPrice" min="0" step="500" data-k="tn.price"><span>원/평</span></div>
+          <label class="fl" for="tnUtil">가동률</label><div class="unitf"><input class="asm" type="number" id="tnUtil" min="1" max="100" step="1" data-k="tn.util"><span>%</span></div>
+          <label class="fl" for="tnOpex">운영비</label><div class="unitf"><input type="number" id="tnOpex" min="0" step="500" data-k="tn.opex"><span>원/평</span></div>
+          <label class="fl" for="tnShip">화주 계약</label><div class="unitf"><input class="asm" type="number" id="tnShip" min="0" step="1" data-k="tn.shipT"><span>개월</span></div>
+        </div>
+        <p class="note">화주 단가는 임차사가 화주에게 받는 보관료, 운영비는 인건비·장비 등 임대료 밖의 비용입니다. 비워 두면(0) 손익 대신 손익분기 단가만 보여 줍니다. 핏아웃 기간에는 매출과 운영비가 없다고 봅니다.</p>
+      </section>
+
+      <section class="ctl" data-views="tn" aria-labelledby="h-tn2">
+        <h2 id="h-tn2">일회성 비용·자본</h2>
+        <div class="fgrid">
+          <label class="fl" for="tnCapex">설비 투자</label><div class="unitf"><input type="number" id="tnCapex" min="0" step="0.1" data-k="tn.capex"><span>억 원</span></div>
+          <label class="fl" for="tnSetup">이전·셋업</label><div class="unitf"><input type="number" id="tnSetup" min="0" step="0.1" data-k="tn.setup"><span>억 원</span></div>
+          <label class="fl" for="tnRestore">원상복구</label><div class="unitf"><input type="number" id="tnRestore" min="0" step="0.1" data-k="tn.restore"><span>억 원</span></div>
+          <label class="fl" for="tnWacc">자본비용</label><div class="unitf"><input class="asm" type="number" id="tnWacc" min="0" step="0.5" data-k="tn.wacc"><span>% 연</span></div>
+        </div>
+        <p class="note">설비 투자는 랙·도크·WMS처럼 임차사가 직접 들이는 돈입니다. 자본비용은 보증금 기회비용과 현재가치 할인에 함께 씁니다.</p>
+      </section>
+
+      <section class="ctl" data-views="lm ll" aria-labelledby="h-lm">
+        <h2 id="h-lm">LM 수수료 산정</h2>
+        <fieldset class="segf">
+          <legend>기준</legend>
+          <div class="opts">
+            <label><input type="radio" name="basis" value="eff"><span>실질 월임대료 × 배수</span></label>
+            <label><input type="radio" name="basis" value="face"><span>명목 월임대료 × 개월</span></label>
+          </div>
+        </fieldset>
+        <table class="ladder" id="ladder">
+          <thead><tr><th>계약기간</th><th>실질 배수 %</th><th>명목 개월</th><th></th></tr></thead>
+          <tbody></tbody>
+        </table>
+        <p class="note">10월 16일 통화: 5년은 실질의 2.5개월(250%)이 상한이고 최근 5년 계약은 230%였습니다. 300%는 10년 계약이어야 나옵니다.</p>
+      </section>
+
+      <section class="ctl" data-views="lm" aria-labelledby="h-range">
+        <h2 id="h-range">협상 범위 <span class="tag a">가정</span></h2>
+        <div class="fgrid">
+          <label class="fl" for="floor">임대인 하한</label><div class="unitf"><input type="number" id="floor" min="0" step="100" data-k="range.floor"><span>원 실질</span></div>
+          <label class="fl" for="ceil">임차인 상한</label><div class="unitf"><input type="number" id="ceil" min="0" step="100" data-k="range.ceil"><span>원 실질</span></div>
+        </div>
+        <p class="note">페블스톤 회신 33,595원은 임차인이 받지 않았고 33,077원에 합의했습니다. 파악한 값으로 바꾸면 협상 지도가 다시 그려집니다.</p>
+      </section>
+
+      <section class="ctl" aria-labelledby="h-view">
+        <h2 id="h-view">보기</h2>
+        <fieldset class="segf" data-views="lm">
+          <legend>금액</legend>
+          <div class="opts">
+            <label><input type="radio" name="vat" value="ex"><span>VAT 별도</span></label>
+            <label><input type="radio" name="vat" value="in"><span>VAT 포함</span></label>
+          </div>
+        </fieldset>
+        <fieldset class="segf" style="margin-bottom:0">
+          <legend>표 단위</legend>
+          <div class="opts">
+            <label><input type="radio" name="unit" value="won"><span>원</span></label>
+            <label><input type="radio" name="unit" value="k"><span>천원</span></label>
+            <label><input type="radio" name="unit" value="m"><span>백만원</span></label>
+          </div>
+        </fieldset>
+      </section>
+    </aside>
+
+    <div class="top">
+      <!-- 임대인 전략 -->
+      <section class="summary" id="llSummary" data-views="ll" aria-live="polite"></section>
+      <p class="facts" id="llFacts" data-views="ll"></p>
+
+      <section class="panel" data-views="ll" aria-labelledby="h-press">
+        <div class="p-top">
+          <div>
+            <h2 id="h-press">임대인이 서두를 이유</h2>
+            <p>대출·펀드·시행·시공·신탁 상황에서 임대인이 4층 계약을 얼마나 급하게 원할지 봅니다. 압박이 높은 항목이 우리 협상 근거입니다.</p>
+          </div>
+          <div class="legend" aria-hidden="true">
+            <span class="lg"><span class="pill high">높음</span></span>
+            <span class="lg"><span class="pill mid">보통</span></span>
+            <span class="lg"><span class="pill ok">낮음</span></span>
+            <span class="lg"><span class="pill ask">확인 필요</span></span>
+          </div>
+        </div>
+        <ul class="press" id="llPress"></ul>
+      </section>
+
+      <section class="panel" data-views="ll" aria-labelledby="h-llev">
+        <div class="p-top">
+          <div>
+            <h2 id="h-llev">양보 카드별 임대인 영향</h2>
+            <p id="llLevSub"></p>
+          </div>
+        </div>
+        <div class="tw" id="llLevers"></div>
+        <ul class="insights" id="llIns"></ul>
+      </section>
+
+      <section class="panel" data-views="ll" aria-labelledby="h-rel">
+        <div class="p-top">
+          <div>
+            <h2 id="h-rel">이해관계 구조</h2>
+            <p>왼쪽에 넣은 대출·시행·시공·신탁 관계를 당사자별로 모았습니다. 아래 줄은 이 건에 미치는 영향입니다.</p>
+          </div>
+        </div>
+        <div class="rel" id="llRel"></div>
+      </section>
+
+      <!-- 임차사 계산기 -->
+      <section class="summary" id="tnSummary" data-views="tn" aria-live="polite"></section>
+      <p class="facts" id="tnFacts" data-views="tn"></p>
+
+      <section class="panel" data-views="tn" aria-labelledby="h-bars">
+        <div class="p-top">
+          <div>
+            <h2 id="h-bars">안별 월 실부담</h2>
+            <p>핏아웃부터 만기까지 평균 낸 돈을 평당·월로 나눴습니다. 보증금은 자본비용만큼, 일회성 비용은 점유 기간에 나눠 넣었습니다.</p>
+          </div>
+          <div class="legend" aria-hidden="true">
+            <span class="lg"><i class="sw c-rent"></i>임대료</span>
+            <span class="lg"><i class="sw c-mgmt"></i>관리비</span>
+            <span class="lg"><i class="sw c-dep"></i>보증금 비용</span>
+            <span class="lg"><i class="sw c-one"></i>일회성 비용</span>
+          </div>
+        </div>
+        <div class="bars" id="tnBars"></div>
+      </section>
+
+      <section class="panel" data-views="tn" aria-labelledby="h-mc">
+        <div class="p-top">
+          <div>
+            <h2 id="h-mc">월별 납부</h2>
+            <p id="tnChartSub"></p>
+          </div>
+          <div class="legend" aria-hidden="true">
+            <span class="lg"><i class="sw c-rent"></i>유상</span>
+            <span class="lg"><i class="sw c-mgmt"></i>렌트프리</span>
+            <span class="lg"><i class="sw c-one"></i>핏아웃</span>
+          </div>
+        </div>
+        <div class="mchart" id="tnChart"></div>
+        <p class="mc-cap" id="tnChartCap"></p>
+      </section>
+
+      <section class="panel" data-views="tn" aria-labelledby="h-tnp">
+        <div class="p-top">
+          <div>
+            <h2 id="h-tnp">임차사 협상 포인트</h2>
+            <p>임차사 입장에서 따져 볼 비용 차이와 위험입니다.</p>
+          </div>
+        </div>
+        <ul class="insights" id="tnPoints"></ul>
+      </section>
+
+      <!-- LM 전략 -->
+      <section class="summary" id="summary" data-views="lm" aria-live="polite"></section>
+      <p class="facts" id="facts" data-views="lm"></p>
+
+      <section class="panel" data-views="lm" aria-labelledby="h-map">
+        <div class="p-top">
+          <div>
+            <h2 id="h-map">협상 지도</h2>
+            <p id="mapSub"></p>
+          </div>
+          <div class="legend" aria-hidden="true">
+            <span class="lg"><i class="sw ok"></i>합의 가능</span>
+            <span class="lg"><i class="sw low"></i>임대인 하한 미달</span>
+            <span class="lg"><i class="sw high"></i>임차인 상한 초과</span>
+            <span class="lg"><i class="sw cur"></i>기준 안</span>
+            <span class="lg"><i class="sw best"></i>LM 최대</span>
+            <span class="lg"><i class="sw tbest"></i>임차인 최적</span>
+          </div>
+        </div>
+        <div class="map-scroll"><div class="map" id="map"></div></div>
+        <div class="detail" id="mapDetail" aria-live="polite"></div>
+      </section>
+
+      <section class="panel" data-views="lm" aria-labelledby="h-lev">
+        <div class="p-top">
+          <div>
+            <h2 id="h-lev">협상 카드별 효과</h2>
+            <p id="levSub"></p>
+          </div>
+        </div>
+        <div class="tw" id="levers"></div>
+        <ul class="insights" id="insights"></ul>
+      </section>
+    </div>
+
+    <div class="bottom">
+      <section class="panel">
+        <div class="tabs">
+          <div class="tabbtns" id="tabBtns" role="tablist" aria-label="상세 표"></div>
+          <span class="spacer"></span>
+          <span class="copied" id="copied" hidden>복사했습니다</span>
+          <span class="unit-note" id="unitNote"></span>
+          <button class="btn" id="copyBtn" type="button">표 복사</button>
+        </div>
+        <div id="tabBody" role="tabpanel"></div>
+      </section>
+
+      <details class="panel src">
+        <summary>기본값 출처</summary>
+        <div class="tw">
+          <table class="data">
+            <thead><tr><th class="l">항목</th><th class="l">근거</th><th class="l">이 계산기</th></tr></thead>
+            <tbody>
+              <tr><td>면적·명목·관리비·보증금</td><td>페블스톤 회신(10월 15일): 4,287평, 평당 43,000원, 관리비 평당 3,000원, 보증금 6개월분. 2차 제안에서 수용</td><td>같음</td></tr>
+              <tr><td>인상률·핏아웃·렌트프리</td><td>10월 16일 통화 최종 협의: 인상 2.5%, 3년안 핏아웃 3개월·렌트프리 6개월, 5년안 핏아웃 5개월·렌트프리 10개월</td><td>3년안·5년안 기본값</td></tr>
+              <tr><td>실질 임대료 산식</td><td>페블스톤 회신의 계산: 1년차 명목 × (계약월수 − 렌트프리) ÷ (계약월수 + 핏아웃). 인상률 미반영</td><td>같은 산식. 인상을 넣은 값은 '인상 반영 평균'으로 따로 표시</td></tr>
+              <tr><td>계약기간 총 임대료</td><td>페블스톤 회신의 계산: 연차별 명목 합계 × (계약월수 − 렌트프리) ÷ 계약월수(렌트프리를 평균 임대료로 환산)</td><td>같은 산식. 월별 흐름 탭은 렌트프리 위치대로 실제 납부액을 계산</td></tr>
+              <tr><td>LM 배수</td><td>통화: 3년 실질 2개월(200%), 5년 실질 2.5개월(250%)이 상한, 최근 5년 계약 230%, 10년이어야 300%. 페블스톤 회신은 180%·230%</td><td>3년 200%, 5년 250%, 10년 300%. 1년 이상 100%는 가정</td></tr>
+              <tr><td>명목 개월</td><td>2차 제안에서 요청한 3년 2개월, 5년 4개월</td><td>1년 1개월, 10년 6개월은 가정</td></tr>
+              <tr><td>협상 범위</td><td>회신 33,595원은 거절, 33,077원에 합의</td><td>하한 33,000원, 상한 33,500원은 가정</td></tr>
+              <tr><td>10년 검토안</td><td>협의에 없던 예시</td><td>기본은 꺼짐</td></tr>
+              <tr><td>임대인 자산·대출</td><td>한국경제(2023년 11월 30일), KED Global(2023년 12월 1일): 페블스톤자산운용·AEW가 3,100억 원에 인수, 담보대출 1,700억 원(HSBC 참여), 에쿼티 1,400억 원. 인천 서구 원창동, 연면적 약 12만 6,000㎡(38,115평), 지상 9층·지하 1층, 2023년 4월 준공, 임대율 약 80%</td><td>평가액 3,100억 원, 에쿼티 1,400억 원, 대출 잔액 1,700억 원, 건물 면적 38,115평, 인수 2023년 11월</td></tr>
+              <tr><td>시행·시공</td><td>뉴스웍스(2020년 12월 2일): 대림건설이 인천 서구 원창동 488번지 외 8필지 복합물류센터(지하 1층~지상 9층) 신축공사 1,050억 5,616만 원 도급 공시, 계약상대 페블스톤엠디피에프브이, 공기 실착공 후 22개월</td><td>시행사·시공사·도급액·준공 2023년 4월</td></tr>
+              <tr><td>임대인 가정값</td><td>공개 자료 없음</td><td>현재 임대율 80%(2023년 보도치 그대로), 기존 평균 실질 35,000원, 공실 관리비 3,000원, Cap rate 5.0%, 금리 5.0%, ICR 1.30배, LTV 65%, 채권최고액 120%, PF 상환 완료, 보유 구조 부동산펀드, 동의 3주. 대출 만기·펀드 만기·하자보수 만료는 비워 둠</td></tr>
+              <tr><td>임차사 가정값</td><td>공개 자료 없음</td><td>자본비용 5%, 가동률 90%, 화주 계약 24개월. 화주 단가·운영비·설비 투자는 0(입력 전에는 손익분기 단가만 표시)</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </details>
+    </div>
+  </div>
+</div></div>
+<div class="mbar" id="mbar" aria-hidden="true"></div>
+
+<script>
+(() => {
+'use strict';
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+const KEY = 'buksan-lm-strategy-v1';
+const PLACE = { front: '개시 직후', spread: '매년 나눠', back: '만기 전' };
+
+/* ---------- 기본값: 로지스허브-인천 4층 최종 협의(2026.10.16) ---------- */
+const DEFAULTS = {
+  deal: { name: '로지스허브-인천 4층', area: 4287, handover: '2026-11' },
+  terms: { face: 43000, esc: 2.5, round: 'floor', mgmt: 3000, mgmtEsc: false, mgmtFree: true, depMonths: 6 },
+  scen: [
+    { id: 'A', name: '3년안', on: true, T: 36, FO: 3, RF: 6, place: 'front' },
+    { id: 'B', name: '5년안', on: true, T: 60, FO: 5, RF: 10, place: 'front' },
+    { id: 'C', name: '10년 검토안', on: false, T: 120, FO: 6, RF: 22, place: 'front' }
+  ],
+  base: 'B',
+  lm: {
+    basis: 'eff',
+    ladder: [
+      { y: 1, mult: 100, months: 1 },
+      { y: 3, mult: 200, months: 2 },
+      { y: 5, mult: 250, months: 4 },
+      { y: 10, mult: 300, months: 6 }
+    ]
+  },
+  range: { floor: 33000, ceil: 33500 },
+  view: { vat: false, unit: 'won', tabs: { ll: 'llcash', lm: 'compare', tn: 'tncost' } },
+  persp: 'lm',
+  /* 임대인: 공개 보도(2023.11 인수, 2020.12 도급 공시) + 가정 */
+  ll: {
+    owner: '페블스톤자산운용 (AEW 공동 투자)', acq: '2023-11', value: 3100, equity: 1400, bldArea: 38115,
+    occ: 80, avgRent: 35000, vacMgmt: 3000, cap: 5.0, fundEnd: '',
+    loan: { lender: 'HSBC 등 대주단', amt: 1700, rate: 5.0, end: '', icr: 1.3, ltv: 65, maxPct: 120, sec: 'unknown' },
+    pf: { status: 'repaid', lender: '', amt: 0, rate: 0, end: '' },
+    dev: { developer: '페블스톤엠디피에프브이', builder: '대림건설', contract: 1050, done: '2023-04', defectEnd: '', guarantee: 'unknown', guarEnd: '', lien: false },
+    trust: { hold: 'fund', trustee: '', weeks: 3, needTrustee: true, needLender: true }
+  },
+  /* 임차사: 가정 */
+  tn: { name: '㈜이너스로지스틱스', price: 0, util: 90, opex: 0, shipT: 24, capex: 0, setup: 0, restore: 0, wacc: 5 }
+};
+const PERSP = ['ll', 'lm', 'tn'];
+const HEAD_DESC = {
+  ll: '임대인의 대출·시행·시공·신탁 상황을 넣으면 4층 임대가 자산가치·대출 약정·공실 비용에 주는 영향과 임대인이 서두를 이유를 보여 줍니다. 임대인 화면은 VAT 별도입니다.',
+  lm: '임차인이 보는 실질 임대료, 임대인이 받는 수입, 우리 LM 수수료를 한 화면에서 맞춰 봅니다. 기본값은 로지스허브-인천 4층 최종 협의 조건(2026년 10월 16일)입니다.',
+  tn: '임차사가 실제로 내는 돈을 봅니다. 렌트프리 위치, 보증금 기회비용, 설비 투자, 화주 계약 기간까지 넣어 안별 실부담과 위험을 비교합니다. 임차사 화면은 VAT 별도입니다.'
+};
+const TABS = {
+  ll: [['llcash', '안별 임대인 수지'], ['lltime', '일정'], ['years', '연차별 임대료'], ['llcheck', '확인 사항']],
+  lm: [['compare', '안별 비교'], ['years', '연차별 임대료'], ['flow', '월별 흐름'], ['lm', 'LM 산정 비교'], ['history', '협의 이력']],
+  tn: [['tncost', '안별 임차사 비용'], ['tnplace', '렌트프리 위치'], ['tnyears', '연차별 부담'], ['flow', '월별 흐름'], ['tncheck', '확인 사항']]
+};
+const REQUIRED_YM = ['deal.handover', 'll.acq'];
+const LADDER_TAG = [['가정', 'a'], ['협의', 'c'], ['협의', 'c'], ['통화', 'c']];
+
+/* 협의 이력: 같은 건의 제안·회신 */
+const HISTORY = [
+  { key: 'p1', label: '1차 제안', when: '10월 15일', by: '이너스', area: 4250, face: 38000, esc: 3, mgmt: 3500,
+    A: { T: 36, FO: 2, RF: 6 }, B: { T: 60, FO: 2, RF: 13 }, basis: 'face', lmA: 3, lmB: 6 },
+  { key: 'r1', label: '페블스톤 회신', when: '10월 15일', by: '페블스톤', area: 4287, face: 43000, esc: 2.5, mgmt: 3000,
+    A: { T: 36, FO: 2, RF: 6 }, B: { T: 60, FO: 4, RF: 10 }, basis: 'eff', lmA: 180, lmB: 230 },
+  { key: 'p2', label: '2차 수정 제안', when: '10월 16일', by: '이너스', area: 4287, face: 43000, esc: 3, mgmt: 3000,
+    A: { T: 36, FO: 2, RF: 8 }, B: { T: 60, FO: 5, RF: 13 }, basis: 'face', lmA: 2, lmB: 4 },
+  { key: 'f1', label: '최종 협의', when: '10월 16일', by: '통화', area: 4287, face: 43000, esc: 2.5, mgmt: 3000,
+    A: { T: 36, FO: 3, RF: 6 }, B: { T: 60, FO: 5, RF: 10 }, basis: 'eff', lmA: 200, lmB: 250 }
+];
+
+/* ---------- 공통 ---------- */
+const idx = ym => { const p = ym.split('-'); return (+p[0]) * 12 + (+p[1]) - 1; };
+const ymOf = i => `${Math.floor(i / 12)}-${String(i % 12 + 1).padStart(2, '0')}`;
+const addM = (ym, n) => ymOf(idx(ym) + n);
+const okYm = v => typeof v === 'string' && /^\d{4}-(0[1-9]|1[0-2])$/.test(v);
+const ymDot = ym => ym.replace('-', '.');
+const num = (v, d = 0) => { const n = parseFloat(v); return Number.isFinite(n) ? n : d; };
+const int = (v, d = 0) => { const n = Math.floor(num(v, d)); return Number.isFinite(n) ? n : d; };
+const clone = o => JSON.parse(JSON.stringify(o));
+const h = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+const MINUS = '−';
+const nf0 = new Intl.NumberFormat('ko-KR', { maximumFractionDigits: 0 });
+const nf1 = new Intl.NumberFormat('ko-KR', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+const nf2 = new Intl.NumberFormat('ko-KR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const sg = x => (x < 0 ? MINUS : '');
+const won = x => { const v = Math.round(x); return sg(v) + nf0.format(Math.abs(v)); };
+const swon = x => { const v = Math.round(x); return (v > 0 ? '+' : v < 0 ? MINUS : '±') + nf0.format(Math.abs(v)); };
+const eok = (x, d = 2) => { const v = Math.abs(x) / 1e8; return (x < 0 && v >= 0.5 * Math.pow(10, -d) ? MINUS : '') + v.toFixed(d) + '억'; };
+const man = x => {
+  const v = Math.round(Math.abs(x) / 1e4), e = Math.floor(v / 1e4), m = v % 1e4;
+  const body = e ? nf0.format(e) + '억' + (m ? ' ' + nf0.format(m) + '만' : '') : nf0.format(m) + '만';
+  return (x < 0 && v ? MINUS : '') + body + '원';
+};
+const sman = x => (Math.round(Math.abs(x) / 1e4) === 0 ? '±0원' : (x > 0 ? '+' : '') + man(x));
+const pct = (x, d = 1) => (x * 100).toFixed(d) + '%';
+
+/* ---------- 상태 ---------- */
+/* 저장값 병합: 기본값에 있는 키만, 같은 자료형일 때만 받습니다 */
+function mergeObj(d, p) {
+  if (!p || typeof p !== 'object' || Array.isArray(p)) return d;
+  const o = { ...d };
+  Object.keys(d).forEach(k => {
+    if (d[k] && typeof d[k] === 'object' && !Array.isArray(d[k])) o[k] = mergeObj(d[k], p[k]);
+    else if (p[k] !== undefined && typeof p[k] === typeof d[k]) o[k] = p[k];
+  });
+  return o;
+}
+function load() {
+  const s = clone(DEFAULTS);
+  try {
+    const raw = localStorage.getItem(KEY);
+    if (!raw) return s;
+    const p = JSON.parse(raw);
+    if (!p || typeof p !== 'object') return s;
+    ['deal', 'terms', 'range', 'view', 'll', 'tn'].forEach(k => { s[k] = mergeObj(s[k], p[k]); });
+    if (p.view && typeof p.view.tab === 'string' && !p.view.tabs) s.view.tabs.lm = p.view.tab;
+    if (PERSP.includes(p.persp)) s.persp = p.persp;
+    if (!okYm(s.ll.acq)) s.ll.acq = DEFAULTS.ll.acq;
+    if (Array.isArray(p.scen)) {
+      s.scen = s.scen.map(d => {
+        const q = p.scen.find(x => x && x.id === d.id);
+        if (!q) return d;
+        return { ...d, name: typeof q.name === 'string' ? q.name : d.name, on: !!q.on, T: num(q.T, d.T), FO: num(q.FO, d.FO), RF: num(q.RF, d.RF), place: PLACE[q.place] ? q.place : d.place };
+      });
+    }
+    if (p.lm && typeof p.lm === 'object') {
+      if (p.lm.basis === 'eff' || p.lm.basis === 'face') s.lm.basis = p.lm.basis;
+      if (Array.isArray(p.lm.ladder)) {
+        s.lm.ladder = s.lm.ladder.map(d => {
+          const q = p.lm.ladder.find(x => x && x.y === d.y);
+          return q ? { y: d.y, mult: num(q.mult, d.mult), months: num(q.months, d.months) } : d;
+        });
+      }
+    }
+    if (typeof p.base === 'string' && s.scen.some(x => x.id === p.base)) s.base = p.base;
+    if (!okYm(s.deal.handover)) s.deal.handover = DEFAULTS.deal.handover;
+    if (s.terms.round !== 'floor' && s.terms.round !== 'round') s.terms.round = 'floor';
+  } catch (e) { /* 저장값을 못 읽으면 기본값 */ }
+  return s;
+}
+let state = load();
+function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { /* 저장 불가 환경 */ } }
+/* VAT 포함 보기는 LM 화면에서만. 임대인·임차사 화면은 항상 VAT 별도 */
+const vm = () => (state.persp === 'lm' && state.view.vat ? 1.1 : 1);
+
+function params(over) {
+  const d = state.deal, t = state.terms;
+  const P = {
+    area: Math.max(0, num(d.area)), handover: okYm(d.handover) ? d.handover : DEFAULTS.deal.handover,
+    face: Math.max(0, num(t.face)), esc: Math.max(0, num(t.esc)), round: t.round, mgmt: Math.max(0, num(t.mgmt)),
+    mgmtEsc: !!t.mgmtEsc, mgmtFree: !!t.mgmtFree, depMonths: Math.max(0, num(t.depMonths)),
+    basis: state.lm.basis, ladder: state.lm.ladder.map(r => ({ y: r.y, mult: Math.max(0, num(r.mult)), months: Math.max(0, num(r.months)) }))
+  };
+  return over ? { ...P, ...over } : P;
+}
+
+/* ---------- 계산 ---------- */
+/* 연차별 단가: 직전 연차 × (1 + 인상률), 정수 연산으로 절사·반올림 */
+function ratesFor(base, escPct, years, mode) {
+  const out = [base];
+  const g = Math.round(num(escPct) * 10000);
+  for (let i = 1; i < years; i++) {
+    const v = out[i - 1] * (1000000 + g) / 1000000;
+    out.push(mode === 'floor' ? Math.floor(v + 1e-7) : Math.round(v));
+  }
+  return out;
+}
+function ladderFor(P, T) {
+  const yrs = T / 12;
+  let pick = { y: 0, mult: 0, months: 0, i: -1 };
+  P.ladder.forEach((r, i) => { if (yrs + 1e-9 >= r.y) pick = { ...r, i }; });
+  return pick;
+}
+function freeSet(T, RF, place) {
+  const set = new Set();
+  if (RF <= 0) return set;
+  if (place === 'back') { for (let m = T - RF; m < T; m++) set.add(m); return set; }
+  if (place === 'spread') {
+    const years = Math.ceil(T / 12);
+    const base = Math.floor(RF / years);
+    let rem = RF - base * years, carry = 0;
+    for (let y = 0; y < years; y++) {
+      const len = Math.min(12, T - y * 12);
+      const k = base + (rem > 0 ? 1 : 0) + carry;
+      if (rem > 0) rem--;
+      const use = Math.min(k, len);
+      carry = k - use;
+      for (let i = 0; i < use; i++) set.add(y * 12 + i);
+    }
+    for (let m = 0; m < T && carry > 0; m++) if (!set.has(m)) { set.add(m); carry--; }
+    return set;
+  }
+  for (let m = 0; m < RF; m++) set.add(m);
+  return set;
+}
+function check(s) {
+  const T = int(s.T), FO = int(s.FO), RF = int(s.RF);
+  if (T < 1) return '계약기간은 1개월 이상이어야 합니다.';
+  if (FO < 0 || RF < 0) return '핏아웃과 렌트프리는 0개월 이상으로 넣어 주세요.';
+  if (RF >= T) return '렌트프리가 계약기간보다 짧아야 합니다.';
+  return '';
+}
+function calc(P, s, opts = {}) {
+  const A = P.area, F = P.face;
+  const T = Math.max(1, int(s.T)), FO = Math.max(0, int(s.FO));
+  const RF = Math.min(Math.max(0, int(s.RF)), T - 1);
+  const years = Math.ceil(T / 12);
+  const R = ratesFor(F, P.esc, years, P.round);
+  const MR = P.mgmtEsc ? ratesFor(P.mgmt, P.esc, years, P.round) : Array(years).fill(P.mgmt);
+  let faceSum = 0;
+  for (let m = 0; m < T; m++) faceSum += R[Math.floor(m / 12)];
+  const ner = F * (T - RF) / (T + FO);
+  const totalPy = faceSum * (T - RF) / T;
+  const total = totalPy * A;
+  const real = totalPy / (T + FO);
+  const lad = ladderFor(P, T);
+  const effM = ner * A, faceM = F * A;
+  const lmEff = lad.mult / 100 * effM, lmFace = lad.months * faceM;
+  const lm = P.basis === 'eff' ? lmEff : lmFace;
+  const net = total - lm;
+  const start = addM(P.handover, FO), end = addM(start, T - 1), foEnd = FO ? addM(P.handover, FO - 1) : null;
+  const out = {
+    s, A, F, T, FO, RF, years, R, MR, faceSum, ner, totalPy, total, real, lad, effM, faceM, lmEff, lmFace, lm, net,
+    nerNet: A > 0 ? ner - lm / A / (T + FO) : 0, avgNet: A > 0 ? net / A / (T + FO) : 0, dep: P.depMonths * faceM, mgmtM: P.mgmt * A,
+    free: FO + RF, occ: T + FO, start, end, foEnd, R0: R[years - 1]
+  };
+  if (opts.lite) return out;
+  const fs = freeSet(T, RF, s.place);
+  const rows = [];
+  for (let i = 0; i < FO; i++) {
+    const mg = P.mgmtFree ? MR[0] * A : 0;
+    rows.push({ ym: addM(P.handover, i), kind: 'fo', y: 0, rate: R[0], rent: 0, waived: R[0] * A, mgmt: mg });
+  }
+  for (let m = 0; m < T; m++) {
+    const y = Math.floor(m / 12), free = fs.has(m), full = R[y] * A;
+    rows.push({ ym: addM(start, m), kind: free ? 'rf' : 'paid', y: y + 1, rate: R[y], rent: free ? 0 : full, waived: free ? full : 0, mgmt: free && !P.mgmtFree ? 0 : MR[y] * A });
+  }
+  let cum = 0, peak = 0, cRent = 0, cMgmt = 0;
+  rows.forEach(r => { r.pay = r.rent + r.mgmt; cum += r.pay; r.cum = cum; peak = Math.max(peak, r.pay); cRent += r.rent; cMgmt += r.mgmt; });
+  return { ...out, flow: rows, cashRent: cRent, cashMgmt: cMgmt, cashTotal: cRent + cMgmt, peakPay: peak };
+}
+function zoneOf(ner) {
+  const f = num(state.range.floor), c = num(state.range.ceil);
+  if (ner < f - 1e-6) return 'low';
+  if (ner > c + 1e-6) return 'high';
+  return 'ok';
+}
+const ZONE_TXT = { ok: '합의 가능', low: '임대인 하한 미달', high: '임차인 상한 초과' };
+
+/* ---------- 입력 ---------- */
+function getPath(path) { return path.split('.').reduce((o, k) => (o ? o[k] : undefined), state); }
+function setPath(path, val) { const ks = path.split('.'); const last = ks.pop(); ks.reduce((o, k) => o[k], state)[last] = val; }
+
+function buildScens() {
+  $('#scens').innerHTML = state.scen.map(s => `
+    <div class="scen" data-id="${s.id}">
+      <div class="scen-top">
+        <label class="onf" title="이 안을 계산에 넣기"><input type="checkbox" id="s-${s.id}-on" data-s="${s.id}" data-f="on" aria-label="${s.id}안 계산에 넣기"><span class="sid">${s.id}</span></label>
+        <input type="text" class="sname" id="s-${s.id}-name" data-s="${s.id}" data-f="name" aria-label="${s.id}안 이름">
+        <label class="pick"><input type="radio" name="baseScen" value="${s.id}" id="s-${s.id}-base"><span>기준</span></label>
+      </div>
+      <div class="scen-fields">
+        <label for="s-${s.id}-T">계약 개월<input type="number" id="s-${s.id}-T" min="1" step="1" data-s="${s.id}" data-f="T"></label>
+        <label for="s-${s.id}-FO">핏아웃<input type="number" id="s-${s.id}-FO" min="0" step="1" data-s="${s.id}" data-f="FO"></label>
+        <label for="s-${s.id}-RF">렌트프리<input type="number" id="s-${s.id}-RF" min="0" step="1" data-s="${s.id}" data-f="RF"></label>
+        <label class="wide" for="s-${s.id}-place"><span>렌트프리 위치</span><select id="s-${s.id}-place" data-s="${s.id}" data-f="place">${Object.keys(PLACE).map(k => `<option value="${k}">${PLACE[k]}</option>`).join('')}</select></label>
+      </div>
+      <p class="scen-meta" id="s-${s.id}-meta"></p>
+      <p class="scen-err" id="s-${s.id}-err" hidden></p>
+    </div>`).join('');
+}
+function buildLadder() {
+  $('#ladder tbody').innerHTML = state.lm.ladder.map((r, i) => `
+    <tr data-i="${i}">
+      <th scope="row">${r.y}년 이상</th>
+      <td><input type="number" id="l-${i}-mult" min="0" step="10" data-l="${i}" data-f="mult" aria-label="${r.y}년 이상 실질 배수"></td>
+      <td><input type="number" id="l-${i}-months" min="0" step="0.5" data-l="${i}" data-f="months" aria-label="${r.y}년 이상 명목 개월"></td>
+      <td class="tg"><span class="tag ${LADDER_TAG[i][1]}">${LADDER_TAG[i][0]}</span></td>
+    </tr>`).join('');
+}
+function syncInputs() {
+  $$('[data-k]').forEach(el => {
+    const v = getPath(el.dataset.k);
+    if (el.type === 'checkbox') el.checked = !!v; else el.value = v;
+  });
+  state.scen.forEach(s => {
+    ['name', 'T', 'FO', 'RF', 'place'].forEach(f => { const el = $(`#s-${s.id}-${f}`); if (el) el.value = s[f]; });
+    $(`#s-${s.id}-on`).checked = !!s.on;
+    $(`#s-${s.id}-base`).checked = state.base === s.id;
+  });
+  state.lm.ladder.forEach((r, i) => { $(`#l-${i}-mult`).value = r.mult; $(`#l-${i}-months`).value = r.months; });
+  $$('[data-r]').forEach(r => { r.checked = getPath(r.dataset.r) === r.value; });
+  $$('input[name=round]').forEach(r => { r.checked = r.value === state.terms.round; });
+  $$('input[name=basis]').forEach(r => { r.checked = r.value === state.lm.basis; });
+  $$('input[name=vat]').forEach(r => { r.checked = (r.value === 'in') === !!state.view.vat; });
+  $$('input[name=unit]').forEach(r => { r.checked = r.value === state.view.unit; });
+}
+function ensureBase() {
+  const cur = state.scen.find(s => s.id === state.base);
+  if (!cur || !cur.on) { const f = state.scen.find(s => s.on); if (f) state.base = f.id; }
+}
+
+/* ---------- 요약 ---------- */
+function renderSummary(P, X, B) {
+  const v = vm(), vat = state.view.vat ? 'VAT 포함' : 'VAT 별도';
+  if (!B) {
+    $('#summary').innerHTML = `<div class="kpi primary"><span class="k-label">계산할 안이 없습니다</span><span class="k-sub">비교할 안에서 하나 이상을 켜 주세요.</span></div>`;
+    $('#facts').textContent = '';
+    return;
+  }
+  const z = zoneOf(B.ner), fl = num(state.range.floor), ce = num(state.range.ceil);
+  const zSub = z === 'ok' ? `하한보다 ${won(B.ner - fl)}원, 상한보다 ${won(ce - B.ner)}원 여유`
+    : z === 'low' ? `하한 ${won(fl)}원보다 ${won(fl - B.ner)}원 낮음` : `상한 ${won(ce)}원보다 ${won(B.ner - ce)}원 높음`;
+  const basisTxt = P.basis === 'eff' ? `실질 월임대료 ${man(B.effM * v)} × ${B.lad.mult}%` : `명목 월임대료 ${man(B.faceM * v)} × ${B.lad.months}개월`;
+  $('#summary').innerHTML = `
+    <div class="kpi primary">
+      <span class="k-label">우리 LM 수수료 · ${h(B.s.name)}, ${vat}</span>
+      <span class="k-val">${eok(B.lm * v)}원</span>
+      <span class="k-sub">${won(B.lm * v)}원</span>
+      <span class="k-sub">${basisTxt}</span>
+      <span class="k-sub">명목 ${nf2.format(B.lm / B.faceM || 0)}개월분 · 총 임대료의 ${pct(B.lm / B.total || 0, 2)}</span>
+    </div>
+    <div class="kpi">
+      <span class="k-label">임차인 실질 임대료</span>
+      <span class="k-val">${won(B.ner)}원</span>
+      <span class="k-sub">평당·월, 인상 미반영</span>
+      <span class="k-sub">인상 반영 평균 ${won(B.real)}원</span>
+      <span class="k-sub">무상 ${B.free}/${B.occ}개월</span>
+    </div>
+    <div class="kpi">
+      <span class="k-label">임대인 순수입</span>
+      <span class="k-val">${eok(B.net * v)}원</span>
+      <span class="k-sub">총 임대료 ${eok(B.total * v)} − LM ${eok(B.lm * v)}</span>
+      <span class="k-sub">LM 차감 실질 ${won(B.nerNet)}원</span>
+      <span class="k-sub">인상 반영 평균 순수입 ${won(B.avgNet)}원</span>
+    </div>
+    <div class="kpi">
+      <span class="k-label">합의 판정</span>
+      <span class="k-val ${z === 'ok' ? 'ok' : 'no'}">${ZONE_TXT[z]}</span>
+      <span class="k-sub">${zSub}</span>
+      <span class="k-sub">하한 ${won(fl)} · 상한 ${won(ce)}원</span>
+    </div>`;
+  if (X.length > 1) {
+    const top = X.reduce((a, x) => (x.lm > a.lm ? x : a));
+    const topNet = X.reduce((a, x) => (x.nerNet > a.nerNet ? x : a));
+    const parts = X.map(x => `${h(x.s.name)} 실질 ${won(x.ner)}원·LM ${eok(x.lm * v)}`).join(', ');
+    const others = X.filter(x => x !== top);
+    const gap = others.length ? top.lm - Math.max(...others.map(x => x.lm)) : 0;
+    const nets = X.map(x => `${h(x.s.name)} ${won(x.nerNet)}원`).join(', ');
+    $('#facts').innerHTML = `${parts}. LM이 가장 큰 안은 ${h(top.s.name)}(다음 안보다 ${man(gap * v)} 많음)이고, LM을 뺀 임대인 실질은 ${nets}로 ${h(topNet.s.name)}이 가장 높습니다.`;
+  } else {
+    $('#facts').textContent = '';
+  }
+}
+
+/* ---------- 협상 지도 ---------- */
+let mapCells = [], mapS = null;
+function renderMap(P, B) {
+  const box = $('#map');
+  if (!B) { box.innerHTML = ''; $('#mapSub').textContent = ''; $('#mapDetail').innerHTML = ''; return; }
+  const s = B.s, T = B.T;
+  const foMax = Math.min(12, Math.max(8, B.FO + 3));
+  const rfMax = Math.min(T - 1, Math.max(Math.round(T * 0.25), B.RF + 6, 8));
+  mapS = s;
+  mapCells = [];
+  for (let fo = 0; fo <= foMax; fo++) for (let rf = 0; rf <= rfMax; rf++) {
+    const ner = P.face * (T - rf) / (T + fo);
+    mapCells.push({ fo, rf, ner, z: zoneOf(ner) });
+  }
+  const ok = mapCells.filter(c => c.z === 'ok');
+  const better = (a, c, hi) => (hi ? c.ner > a.ner + 1e-6 : c.ner < a.ner - 1e-6) || (Math.abs(c.ner - a.ner) <= 1e-6 && c.fo + c.rf < a.fo + a.rf);
+  const best = P.basis === 'eff' && ok.length ? ok.reduce((a, c) => (better(a, c, true) ? c : a)) : null;
+  const tbest = ok.length ? ok.reduce((a, c) => (better(a, c, false) ? c : a)) : null;
+  const n = rfMax + 1;
+  box.style.gridTemplateColumns = `86px repeat(${n}, minmax(46px, 1fr))`;
+  const o = [`<div class="mh cnr">핏아웃 ↓<br>렌트프리 →</div>`];
+  for (let rf = 0; rf <= rfMax; rf++) o.push(`<div class="mh ch${rf === B.RF ? ' curr' : ''}">${rf}</div>`);
+  for (let fo = 0; fo <= foMax; fo++) {
+    o.push(`<div class="mh rh${fo === B.FO ? ' curr' : ''}">${fo}개월</div>`);
+    for (let rf = 0; rf <= rfMax; rf++) {
+      const c = mapCells[fo * n + rf];
+      let cls = 'cell ' + c.z;
+      if (fo === B.FO && rf === B.RF) cls += ' cur';
+      if (best && best === c) cls += ' best';
+      if (tbest && tbest === c) cls += ' tbest';
+      const lab = `핏아웃 ${fo}개월, 렌트프리 ${rf}개월: 실질 ${won(c.ner)}원, ${ZONE_TXT[c.z]}. 누르면 ${s.name}에 적용합니다`;
+      o.push(`<button type="button" class="${cls}" data-fo="${fo}" data-rf="${rf}" aria-label="${h(lab)}">${nf1.format(c.ner / 1000)}</button>`);
+    }
+  }
+  box.innerHTML = o.join('');
+  const zc = ok.length;
+  $('#mapSub').innerHTML = `${h(s.name)}(계약 ${T}개월)에서 핏아웃과 렌트프리 조합별 실질 임대료입니다(천원/평). 합의 가능한 조합은 ${zc}개입니다. 칸을 누르면 ${h(s.name)}에 적용합니다.`;
+  mapDetail(P, B.FO, B.RF, best, tbest);
+}
+function mapDetail(P, fo, rf, best, tbest) {
+  if (!mapS) return;
+  const v = vm();
+  const m = calc(P, { ...mapS, FO: fo, RF: rf }, { lite: true });
+  const z = zoneOf(m.ner);
+  const isCur = fo === int(mapS.FO) && rf === int(mapS.RF);
+  const tags = [];
+  if (isCur) tags.push('<span class="pill ok" style="background:var(--surface);color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)">기준 안</span>');
+  tags.push(`<span class="pill ${z}">${ZONE_TXT[z]}</span>`);
+  const foot = [];
+  if (best) foot.push(`LM 최대는 핏아웃 ${best.fo}·렌트프리 ${best.rf}(실질 ${won(best.ner)}원)`);
+  if (tbest) foot.push(`임차인 최적은 핏아웃 ${tbest.fo}·렌트프리 ${tbest.rf}(실질 ${won(tbest.ner)}원)`);
+  if (!best && !tbest) foot.push('하한과 상한 사이에 드는 조합이 없습니다. 협상 범위를 확인하세요');
+  if (!best && tbest && P.basis === 'face') foot.push('명목 기준이라 LM은 핏아웃·렌트프리와 관계없이 같습니다');
+  $('#mapDetail').innerHTML = `
+    <div class="d-head"><b>핏아웃 ${fo}개월 · 렌트프리 ${rf}개월</b>${tags.join('')}</div>
+    <div>실질 <b>${won(m.ner)}원</b> · 인상 반영 평균 ${won(m.real)}원 · LM <b>${man(m.lm * v)}</b> · 임대인 순수입 ${eok(m.net * v)} · 무상 ${m.free}/${m.occ}개월 · 임대개시 ${ymDot(m.start)}</div>
+    <div style="margin-top:4px;color:var(--muted)">${foot.join('. ')}.</div>`;
+}
+
+/* ---------- 협상 카드 ---------- */
+function renderLevers(P, B) {
+  if (!B) { $('#levers').innerHTML = ''; $('#insights').innerHTML = ''; $('#levSub').textContent = ''; return; }
+  const v = vm(), s = B.s;
+  const L = [
+    { label: '렌트프리 +1개월', m: calc(P, { ...s, RF: B.RF + 1 }, { lite: true }), skip: B.RF + 1 >= B.T },
+    { label: '핏아웃 +1개월', m: calc(P, { ...s, FO: B.FO + 1 }, { lite: true }) },
+    { label: '명목 +1,000원/평', m: calc(params({ face: P.face + 1000 }), s, { lite: true }) },
+    { label: '인상률 +0.5%p', m: calc(params({ esc: P.esc + 0.5 }), s, { lite: true }) },
+    { label: '계약기간 +12개월', m: calc(P, { ...s, T: B.T + 12 }, { lite: true }) }
+  ];
+  const cls = x => (x > 0.5 ? 'up' : x < -0.5 ? 'dn' : 'soft');
+  const body = L.map(l => {
+    if (l.skip) return `<tr><td class="l">${l.label}</td><td class="soft" colspan="5">계약기간 안에서 더 늘릴 수 없습니다</td></tr>`;
+    const d = { ner: l.m.ner - B.ner, real: l.m.real - B.real, total: (l.m.total - B.total) * v, lm: (l.m.lm - B.lm) * v, net: (l.m.net - B.net) * v };
+    return `<tr><td class="l">${l.label}</td><td>${swon(d.ner)}</td><td>${swon(d.real)}</td><td>${sman(d.total)}</td><td>${sman(d.net)}</td><td class="strong ${cls(d.lm)}">${sman(d.lm)}</td></tr>`;
+  }).join('');
+  $('#levers').innerHTML = `<table class="data"><thead><tr><th class="l">카드</th><th>실질 (원/평)</th><th>인상 반영 평균 (원/평)</th><th>임대인 총 임대료</th><th>임대인 순수입</th><th>우리 LM</th></tr></thead><tbody>${body}</tbody></table>`;
+  $('#levSub').textContent = `${s.name}에서 조건을 하나씩 바꿨을 때 달라지는 값입니다. 나머지 조건은 그대로 두며, 우리 LM 열은 늘면 파란색, 줄면 주황색입니다.`;
+
+  const ins = [];
+  const dRF = L[0].skip ? null : L[0].m.ner - B.ner, dFO = L[1].m.ner - B.ner;
+  if (dRF !== null) {
+    const foCheaper = Math.abs(dFO) < Math.abs(dRF);
+    let t = `무상 1개월을 <b>핏아웃으로 주면 실질이 ${won(-dFO)}원</b>, 렌트프리로 주면 ${won(-dRF)}원 내려갑니다. 임대인 실질을 덜 깎는 쪽은 ${foCheaper ? '핏아웃' : '렌트프리'}입니다`;
+    if (P.basis === 'eff') t += `(LM은 각각 ${man(-(L[1].m.lm - B.lm) * v)}, ${man(-(L[0].m.lm - B.lm) * v)} 줄어듭니다)`;
+    ins.push(t + '.');
+  }
+  const dEscReal = L[3].m.real - B.real;
+  ins.push(`인상률을 0.5%p 올려도 실질과 LM은 그대로이고, 임차인 인상 반영 평균은 ${swon(dEscReal)}원, 임대인 총 임대료는 ${sman((L[3].m.total - B.total) * v)} 바뀝니다.`);
+  if (P.basis === 'eff') {
+    ins.push(`실질을 1,000원 낮추면 우리 LM은 <b>${man(B.lad.mult / 100 * 1000 * B.A * v)}</b> 줄어듭니다(배수 ${B.lad.mult}%).`);
+  } else {
+    ins.push(`명목 기준이라 실질을 바꿔도 LM은 그대로입니다. 명목 1,000원이 오르면 LM은 ${man(B.lad.months * 1000 * B.A * v)} 늘어납니다.`);
+  }
+  const tm = L[4].m;
+  if (tm.lad.i !== B.lad.i) {
+    const a = P.basis === 'eff' ? `${B.lad.mult}%에서 ${tm.lad.mult}%` : `${B.lad.months}개월에서 ${tm.lad.months}개월`;
+    ins.push(`계약기간을 ${tm.T}개월로 늘리면 LM 단계가 ${a}로 바뀌어 LM이 ${sman((tm.lm - B.lm) * v)} 바뀝니다.`);
+  } else {
+    const nxt = P.ladder.find(r => r.y * 12 > B.T);
+    if (nxt) ins.push(`다음 LM 단계(${nxt.y}년 이상, ${P.basis === 'eff' ? nxt.mult + '%' : nxt.months + '개월'})는 계약 ${nxt.y * 12}개월부터입니다.`);
+  }
+  $('#insights').innerHTML = ins.map(t => `<li>${t}</li>`).join('');
+}
+
+/* ---------- 표 ---------- */
+function tv(x) {
+  const u = state.view.unit;
+  if (u === 'k') { const r = Math.round(x / 1000); return sg(r) + nf0.format(Math.abs(r)); }
+  if (u === 'm') { const r = Math.round(x / 1e5) / 10; return (r < 0 ? MINUS : '') + nf1.format(Math.abs(r)); }
+  return won(x);
+}
+function raw(x) {
+  const u = state.view.unit;
+  if (u === 'k') return Math.round(x / 1000);
+  if (u === 'm') return Math.round(x / 1e5) / 10;
+  return Math.round(x);
+}
+const tdM = (x, cls = '') => `<td class="${cls}" data-v="${raw(x)}">${tv(x)}</td>`;
+const tdN = (x, cls = '') => `<td class="${cls}" data-v="${Math.round(x)}">${won(x)}</td>`;
+const tdT = (t, cls = '') => `<td class="${cls}" data-v="${h(String(t).replace(/<[^>]+>/g, ''))}">${t}</td>`;
+const tdE = () => '<td class="soft" data-v="">—</td>';
+const note = t => `<p class="tbl-note">${t}</p>`;
+function table(head, body, foot, cap) {
+  return `<div class="tw"><table class="data">${cap ? `<caption>${cap}</caption>` : ''}<thead><tr>${head}</tr></thead><tbody>${body}</tbody>${foot ? `<tfoot>${foot}</tfoot>` : ''}</table></div>`;
+}
+
+function tabCompare(P, X, B) {
+  if (!X.length) return '<p class="empty">켜진 안이 없습니다.</p>';
+  const v = vm();
+  const head = `<th class="l">항목</th>` + X.map(x => `<th class="${x === B ? 'base' : ''}">${h(x.s.name)}${x === B ? ' · 기준' : ''}</th>`).join('');
+  const R = [
+    ['계약기간', x => tdT(`${x.T}개월`)],
+    ['임대 기간', x => tdT(`${ymDot(x.start)}~${ymDot(x.end)}`)],
+    ['핏아웃', x => tdT(x.FO ? `${x.FO}개월 (${ymDot(P.handover)}~${ymDot(x.foEnd)})` : '없음')],
+    ['렌트프리', x => tdT(`${x.RF}개월 · ${PLACE[x.s.place]}`)],
+    ['무상 비율', x => tdT(`${x.free}/${x.occ}개월 (${pct(x.free / x.occ)})`)],
+    ['실질 임대료 (원/평)', x => tdN(x.ner, 'strong')],
+    ['인상 반영 평균 (원/평)', x => tdN(x.real)],
+    ['계약기간 총 임대료', x => tdM(x.total * v)],
+    ['LM 기준', x => tdT(P.basis === 'eff' ? `실질 × ${x.lad.mult}%` : `명목 × ${x.lad.months}개월`)],
+    ['LM 수수료', x => tdM(x.lm * v, 'strong')],
+    ['LM 환산', x => tdT(`실질 ${nf2.format(x.lm / x.effM || 0)}배 · 명목 ${nf2.format(x.lm / x.faceM || 0)}개월 · 총액 ${pct(x.lm / x.total || 0, 2)}`)],
+    ['임대인 순수입', x => tdM(x.net * v)],
+    ['LM 차감 실질 (원/평)', x => tdN(x.nerNet, 'strong')],
+    ['LM 차감 평균 순수입 (원/평, 인상 반영)', x => tdN(x.avgNet)],
+    ['보증금', x => tdM(x.dep * v)],
+    ['월 관리비 (1년차)', x => tdM(x.mgmtM * v)],
+    ['임차인 납부 합계', x => tdM(x.cashTotal * v)],
+    ['월 최대 납부', x => tdM(x.peakPay * v)],
+    ['합의 판정', x => { const z = zoneOf(x.ner); return tdT(`<span class="pill ${z}">${ZONE_TXT[z]}</span>`); }]
+  ];
+  const body = R.map(([lab, f]) => `<tr><td class="l">${lab}</td>${X.map(f).join('')}</tr>`).join('');
+  return table(head, body) + note('임차인 납부 합계는 핏아웃부터 만기까지 실제로 내는 임대료와 관리비이며, 렌트프리 위치에 따라 달라집니다. 계약기간 총 임대료는 렌트프리를 계약기간 평균 임대료로 환산한 값(페블스톤 산식)이라 위치와 관계없습니다.');
+}
+
+function tabYears(P, X) {
+  if (!X.length) return '<p class="empty">켜진 안이 없습니다.</p>';
+  const v = vm();
+  const Y = Math.max(...X.map(x => x.years));
+  const R = ratesFor(P.face, P.esc, Y, P.round);
+  const MR = P.mgmtEsc ? ratesFor(P.mgmt, P.esc, Y, P.round) : null;
+  const head = `<th class="l">연차</th><th>평당 임대료</th><th>월 임대료</th>${MR ? '<th>평당 관리비</th>' : ''}` + X.map(x => `<th class="l">${h(x.s.name)} 적용 기간</th>`).join('');
+  let body = '';
+  for (let y = 0; y < Y; y++) {
+    const cells = X.map(x => {
+      if (y >= x.years) return tdE();
+      const a = addM(x.start, y * 12), b = addM(x.start, Math.min(x.T, (y + 1) * 12) - 1);
+      return tdT(`${ymDot(a)}~${ymDot(b)}`, 'l');
+    }).join('');
+    body += `<tr><td class="l">${y + 1}년차</td>${tdN(R[y])}${tdM(R[y] * P.area * v)}${MR ? tdN(MR[y]) : ''}${cells}</tr>`;
+  }
+  const last = R[Y - 1];
+  return table(head, body) + note(`평당 단가는 VAT 별도입니다. 인상률 ${nf1.format(P.esc)}%, ${P.round === 'floor' ? '원 미만 절사' : '반올림'}. ${Y}년차 단가는 1년차보다 ${pct(last / P.face - 1)} 높습니다.`);
+}
+
+function tabFlow(P, B) {
+  if (!B) return '<p class="empty">기준 안이 없습니다.</p>';
+  const v = vm();
+  const KIND = { fo: '<span class="kind fo">핏아웃</span>', rf: '<span class="kind rf">렌트프리</span>', paid: '<span class="kind paid">유상</span>' };
+  const KTXT = { fo: '핏아웃', rf: '렌트프리', paid: '유상' };
+  const body = B.flow.map(r => `<tr><td class="l" data-v="${ymDot(r.ym)}">${ymDot(r.ym)}</td><td class="l" data-v="${KTXT[r.kind]}">${KIND[r.kind]}</td><td data-v="${r.y || ''}">${r.y ? r.y + '년차' : '—'}</td>${tdN(r.rate)}${tdM(r.rent * v)}${tdM(r.waived * v, 'soft')}${tdM(r.mgmt * v)}${tdM(r.pay * v, 'strong')}${tdM(r.cum * v)}</tr>`).join('');
+  const sum = k => B.flow.reduce((t, r) => t + r[k], 0);
+  const foot = `<tr><td class="l">합계</td><td></td><td></td><td></td>${tdM(sum('rent') * v)}${tdM(sum('waived') * v)}${tdM(sum('mgmt') * v)}${tdM(sum('pay') * v)}<td></td></tr>`;
+  const head = '<th class="l">월</th><th class="l">구분</th><th>연차</th><th>평당 명목</th><th>임대료</th><th>감면</th><th>관리비</th><th>납부</th><th>누적</th>';
+  const diff = (B.cashRent - B.total) * v;
+  return table(head, body, foot, `${h(B.s.name)} · 렌트프리 ${PLACE[B.s.place]}`) +
+    note(`실제 낸 임대료는 ${man(B.cashRent * v)}로, 페블스톤 산식의 계약기간 총 임대료 ${man(B.total * v)}와 ${man(Math.abs(diff))} ${diff >= 0 ? '많습니다' : '적습니다'}. 렌트프리를 언제 쓰는지에 따라 이 차이가 생깁니다.`);
+}
+
+function tabLM(P, X, B) {
+  if (!X.length) return '<p class="empty">켜진 안이 없습니다.</p>';
+  const v = vm();
+  const head = '<th class="l">안</th><th>계약기간</th><th class="l">적용 단계</th><th>실질 월임대료</th><th>실질 × 배수</th><th>명목 월임대료</th><th>명목 × 개월</th><th>명목 − 실질</th><th class="l">지금 쓰는 기준</th>';
+  const body = X.map(x => {
+    const d = (x.lmFace - x.lmEff) * v;
+    return `<tr><td class="l">${h(x.s.name)}</td><td>${x.T}개월</td>${tdT(x.lad.i >= 0 ? `${x.lad.y}년 이상 · ${x.lad.mult}% · ${x.lad.months}개월` : '해당 단계 없음', 'l')}${tdM(x.effM * v)}${tdM(x.lmEff * v, P.basis === 'eff' ? 'strong' : '')}${tdM(x.faceM * v)}${tdM(x.lmFace * v, P.basis === 'face' ? 'strong' : '')}${tdM(d, d > 0 ? 'up' : d < 0 ? 'dn' : '')}${tdT(P.basis === 'eff' ? '실질 × 배수' : '명목 × 개월', 'l')}</tr>`;
+  }).join('');
+  let n = '';
+  if (B) {
+    const effMonthsEq = B.lmEff / B.faceM, faceMultEq = B.lmFace / B.effM * 100;
+    n = `${h(B.s.name)}에서 실질 ${B.lad.mult}%는 명목 ${nf2.format(effMonthsEq || 0)}개월분과 같고, 명목 ${B.lad.months}개월은 실질 ${nf0.format(faceMultEq || 0)}%와 같습니다. 임대인은 실질 기준을, 2차 제안은 명목 기준을 썼습니다.`;
+  }
+  return table(head, body) + note(n);
+}
+
+function histParams(hst) {
+  const P = params();
+  const ladder = P.ladder.map(r => ({ ...r }));
+  const i3 = ladder.findIndex(r => r.y === 3), i5 = ladder.findIndex(r => r.y === 5);
+  if (hst.basis === 'eff') { ladder[i3].mult = hst.lmA; ladder[i5].mult = hst.lmB; } else { ladder[i3].months = hst.lmA; ladder[i5].months = hst.lmB; }
+  return { ...P, area: hst.area, face: hst.face, esc: hst.esc, mgmt: hst.mgmt, basis: hst.basis, ladder };
+}
+function tabHistory() {
+  const v = vm();
+  const head = '<th class="l">시점</th><th class="l">제시</th><th>면적</th><th>명목</th><th>인상</th><th class="l">3년안 핏아웃·렌트프리</th><th>3년안 실질</th><th>3년안 LM</th><th class="l">5년안 핏아웃·렌트프리</th><th>5년안 실질</th><th>5년안 LM</th><th class="l">LM 기준</th><th></th>';
+  const body = HISTORY.map(hst => {
+    const HP = histParams(hst);
+    const a = calc(HP, { ...hst.A, place: 'front' }, { lite: true }), b = calc(HP, { ...hst.B, place: 'front' }, { lite: true });
+    const basis = hst.basis === 'eff' ? `실질 ${hst.lmA}%·${hst.lmB}%` : `명목 ${hst.lmA}·${hst.lmB}개월`;
+    return `<tr><td class="l" data-v="${hst.when}">${hst.when}</td><td class="l" data-v="${hst.label}"><b>${hst.label}</b> <span style="color:var(--muted)">${hst.by}</span></td>${tdN(hst.area)}${tdN(hst.face)}${tdT(nf1.format(hst.esc) + '%')}${tdT(`${hst.A.FO} · ${hst.A.RF}개월`, 'l')}${tdN(a.ner)}${tdM(a.lm * v)}${tdT(`${hst.B.FO} · ${hst.B.RF}개월`, 'l')}${tdN(b.ner, 'strong')}${tdM(b.lm * v, 'strong')}${tdT(basis, 'l')}<td data-v=""><button type="button" class="btn sm" data-load="${hst.key}">불러오기</button></td></tr>`;
+  }).join('');
+  return table(head, body) + note('실질은 페블스톤 산식으로 다시 계산한 값입니다. 1차 제안은 4,250평·명목 38,000원 기준이라 LM이 달라 보입니다. 불러오기를 누르면 그 시점의 조건이 A·B안과 LM 단계(3년·5년)에 들어갑니다.') + `<p class="tbl-note" id="loadMsg" aria-live="polite" style="padding-top:0"></p>`;
+}
+
+function curTab() {
+  const L = TABS[state.persp], t = state.view.tabs[state.persp];
+  return L.some(x => x[0] === t) ? t : L[0][0];
+}
+/* 탭 단추는 관점이 바뀔 때만 새로 그립니다. 입력 직후 탭을 눌러도 클릭이 사라지지 않게 */
+let tabsFor = null;
+function renderTab(P, X, B) {
+  const t = curTab();
+  if (tabsFor !== state.persp) {
+    $('#tabBtns').innerHTML = TABS[state.persp].map(([k, lab]) => `<button type="button" role="tab" class="tab" data-tab="${k}">${lab}</button>`).join('');
+    tabsFor = state.persp;
+  }
+  $$('#tabBtns .tab').forEach(b => { const on = b.dataset.tab === t; b.setAttribute('aria-selected', on); b.tabIndex = on ? 0 : -1; });
+  const u = { won: '원', k: '천원', m: '백만원' }[state.view.unit];
+  $('#unitNote').textContent = `금액 단위 ${u}, ${vm() > 1 ? 'VAT 포함' : 'VAT 별도'}`;
+  const F = {
+    compare: () => tabCompare(P, X, B), years: () => tabYears(P, X), flow: () => tabFlow(P, B), lm: () => tabLM(P, X, B), history: () => tabHistory(),
+    llcash: () => tabLLCash(P, X, B), lltime: () => tabLLTime(P, X), llcheck: () => tabLLCheck(P, B),
+    tncost: () => tabTNCost(P, X, B), tnplace: () => tabTNPlace(P, X), tnyears: () => tabTNYears(P, B), tncheck: () => tabTNCheck(P, X, B)
+  };
+  $('#tabBody').innerHTML = (F[t] || F.compare)();
+}
+
+/* ---------- 임대인 관점 ---------- */
+const NOWD = new Date();
+const NOW_YM = `${NOWD.getFullYear()}-${String(NOWD.getMonth() + 1).padStart(2, '0')}`;
+const mBetween = (a, b) => idx(b) - idx(a);
+const x2 = x => (Number.isFinite(x) ? nf2.format(x) + '배' : '—');
+const nfE1 = new Intl.NumberFormat('ko-KR', { maximumFractionDigits: 1 });
+const nfE2 = new Intl.NumberFormat('ko-KR', { maximumFractionDigits: 2 });
+const eokA = x => { const v = Math.abs(x) / 1e8, s = (v >= 100 ? nfE1 : nfE2).format(v); return (x < 0 && s !== '0' ? MINUS : '') + s + '억'; };
+const LV = { hi: ['high', '높음'], mid: ['mid', '보통'], lo: ['ok', '낮음'], ask: ['ask', '확인 필요'] };
+const HOLD = { fund: '부동산펀드', reit: '리츠', spc: 'SPC·PFV 직접 보유', unknown: '보유 구조 미확인' };
+const HOLD_TR = { fund: '신탁업자 (펀드 자산 보관)', reit: '자산보관기관', spc: '수탁자 없음', unknown: '수탁자 미확인' };
+const SEC = { unknown: '담보 형태 미확인', mortgage: '근저당', trust: '담보신탁 (우선수익권)' };
+const GUAR = { unknown: '공실 보전 미확인', none: '공실 보전 없음', builder: '시공사 임대확약', master: '마스터리스' };
+const PFST = { repaid: '상환 완료', live: '남아 있음', unknown: '미확인' };
+const signDate = weeks => new Date(NOWD.getTime() + weeks * 7 * 864e5);
+const ymOfDate = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+
+function llParams() {
+  const L = state.ll, ym = v => (okYm(v) ? v : '');
+  return {
+    owner: String(L.owner || ''), acq: okYm(L.acq) ? L.acq : DEFAULTS.ll.acq,
+    value: Math.max(0, num(L.value)) * 1e8, equity: Math.max(0, num(L.equity)) * 1e8,
+    bld: Math.max(0, num(L.bldArea)), occ: Math.min(1, Math.max(0, num(L.occ) / 100)), avg: Math.max(0, num(L.avgRent)),
+    vac: Math.max(0, num(L.vacMgmt)), cap: Math.max(0.001, num(L.cap) / 100), fundEnd: ym(L.fundEnd),
+    loan: { lender: String(L.loan.lender || ''), amt: Math.max(0, num(L.loan.amt)) * 1e8, rate: Math.max(0, num(L.loan.rate)) / 100, end: ym(L.loan.end),
+      icr: Math.max(0, num(L.loan.icr)), ltv: Math.max(0, num(L.loan.ltv)) / 100, maxPct: Math.max(0, num(L.loan.maxPct)) / 100, sec: SEC[L.loan.sec] ? L.loan.sec : 'unknown' },
+    pf: { status: PFST[L.pf.status] ? L.pf.status : 'unknown', lender: String(L.pf.lender || ''), amt: Math.max(0, num(L.pf.amt)) * 1e8, rate: Math.max(0, num(L.pf.rate)) / 100, end: ym(L.pf.end) },
+    dev: { developer: String(L.dev.developer || ''), builder: String(L.dev.builder || ''), contract: Math.max(0, num(L.dev.contract)) * 1e8, done: ym(L.dev.done),
+      defectEnd: ym(L.dev.defectEnd), guarantee: GUAR[L.dev.guarantee] ? L.dev.guarantee : 'unknown', guarEnd: ym(L.dev.guarEnd), lien: !!L.dev.lien },
+    trust: { hold: HOLD[L.trust.hold] ? L.trust.hold : 'unknown', trustee: String(L.trust.trustee || ''), needT: !!L.trust.needTrustee, needL: !!L.trust.needLender, weeks: Math.max(0, num(L.trust.weeks)) }
+  };
+}
+/* 지금 건물: 4층 공실 상태의 NOI와 대출 지표 */
+function llBase(Q, P) {
+  const occA = Q.bld * Q.occ;
+  const noi0 = occA * Q.avg * 12 - Math.max(0, Q.bld - occA) * Q.vac * 12;
+  const interest = Q.loan.amt * Q.loan.rate;
+  const share = Q.bld > 0 ? Math.min(1, P.area / Q.bld) : 0;
+  return { noi0, interest, share, icr0: interest > 0 ? noi0 / interest : Infinity, ltv0: Q.value > 0 ? Q.loan.amt / Q.value : 0,
+    occ1: Math.min(1, Q.occ + share), allocInt: interest * share / 12 };
+}
+/* 안별: 4층을 채웠을 때 임대인 쪽 변화 */
+function llCalc(Q, Lb, x) {
+  const A = x.A;
+  const incStab = A * (x.ner + Q.vac) * 12;
+  const incHead = A * (x.F + Q.vac) * 12;
+  let rent12 = 0, inc12 = 0;
+  x.flow.slice(0, 12).forEach(r => { rent12 += r.rent; inc12 += r.rent + (r.mgmt > 0 ? A * Q.vac : 0); });
+  const upNer = incStab / Q.cap, upHead = incHead / Q.cap, I = Lb.interest;
+  const fp = x.flow.find(r => r.rent > 0);
+  return {
+    incStab, incHead, rent12, inc12, upNer, upHead,
+    icr12: I > 0 ? (Lb.noi0 + inc12) / I : Infinity, icrS: I > 0 ? (Lb.noi0 + incStab) / I : Infinity,
+    ltv1: Q.value + upNer > 0 ? Q.loan.amt / (Q.value + upNer) : 0,
+    firstPaid: fp ? fp.ym : null, tail: Q.loan.end ? mBetween(Q.loan.end, x.end) : null,
+    lmShare: upNer > 0 ? x.lm / upNer : 0
+  };
+}
+
+function llPressure(P, Q, Lb, B, LB) {
+  const R = [], nm = h(B.s.name);
+  if (Q.loan.end) {
+    const m = mBetween(NOW_YM, Q.loan.end);
+    const lv = m <= 12 ? 'hi' : m <= 24 ? 'mid' : 'lo';
+    let t = m < 0 ? '만기가 지났습니다. 연장·리파이낸싱 조건을 확인하세요.'
+      : m <= 12 ? '1년 안에 리파이낸싱해야 합니다. 대주는 임대율과 남은 임대기간을 보므로 4층 계약을 만기 전에 묶을 이유가 큽니다.'
+      : m <= 24 ? '2년 안에 리파이낸싱을 준비해야 합니다. 그 전에 임대율을 올려 두는 편이 유리합니다.'
+      : '만기 여유가 있어 대출 일정 때문에 서두를 이유는 크지 않습니다.';
+    if (LB.tail !== null) t += LB.tail > 0 ? ` ${nm}은 대출 만기 뒤에도 ${LB.tail}개월 임대가 남습니다.` : ` ${nm}은 대출 만기 전에 끝납니다.`;
+    R.push({ k: '담보대출 만기', lv, v: `${ymDot(Q.loan.end)} · ${m >= 0 ? m + '개월 남음' : '경과'}`, t });
+  } else {
+    R.push({ k: '담보대출 만기', lv: 'ask', v: '미확인', t: `${ymDot(Q.acq)} 인수 때 받은 대출이 3년이면 ${ymDot(addM(Q.acq, 36))}, 5년이면 ${ymDot(addM(Q.acq, 60))} 만기입니다. 3년이면 지금이 리파이낸싱 시점이라 압박이 큽니다. 만기를 알면 왼쪽에 넣으세요.` });
+  }
+  if (Lb.interest > 0 && Q.loan.icr > 0) {
+    const c = Q.loan.icr, i0 = Lb.icr0;
+    let lv, t;
+    if (i0 < c) {
+      const need = c * Lb.interest - Lb.noi0;
+      const nerNeed = P.area > 0 ? need / 12 / P.area - Q.vac : 0;
+      lv = 'hi'; t = `지금 약정에 못 미칩니다. 4층에서 연 ${eokA(need)}(실질 ${won(Math.max(0, nerNeed))}원/평 이상)을 채워야 약정을 맞춥니다.`;
+    } else if (i0 < c + 0.15) { lv = 'mid'; t = `약정 여유가 ${nf2.format(i0 - c)}배로 빠듯합니다. 4층 임대가 여유를 넓혀 줍니다.`; }
+    else { lv = 'lo'; t = `4층 없이도 약정을 넘습니다(여유 ${nf2.format(i0 - c)}배).`; }
+    t += ` ${nm} 반영 시 안정화 ${x2(LB.icrS)}, 인도 후 첫 12개월 ${x2(LB.icr12)}.`;
+    R.push({ k: 'ICR 약정', lv, v: `${x2(i0)} · 약정 ${x2(c)}`, t });
+  }
+  if (Q.value > 0 && Q.loan.ltv > 0) {
+    const l0 = Lb.ltv0, c = Q.loan.ltv, drop = 1 - Q.loan.amt / (c * Q.value);
+    const lv = l0 > c ? 'hi' : c - l0 < 0.05 ? 'mid' : 'lo';
+    const t = (l0 > c ? '지금 약정을 넘습니다. 평가액을 올릴 임대 계약이 급합니다.' : `평가액이 ${pct(Math.max(0, drop))} 떨어지면 약정을 넘습니다.`) + ` ${nm} 반영 시 ${pct(LB.ltv1)}.`;
+    R.push({ k: 'LTV 약정', lv, v: `${pct(l0)} · 약정 ${pct(c, 0)}`, t });
+  }
+  {
+    const rentM = P.area * B.ner, mg = P.area * Q.vac;
+    const shareNoi = Lb.noi0 > 0 ? rentM * 12 / Lb.noi0 : 1;
+    const lv = shareNoi >= 0.1 ? 'hi' : shareNoi >= 0.05 ? 'mid' : 'lo';
+    R.push({ k: '4층 공실 비용', lv, v: `월 ${man(rentM + mg)}`, t: `놓치는 실질 임대료 월 ${man(rentM)}에 더해 공실 관리비 ${man(mg)}도 임대인이 떠안습니다. 4층 실질 임대료는 지금 건물 NOI의 ${pct(shareNoi)}입니다.` });
+  }
+  if (Q.fundEnd) {
+    const m = mBetween(NOW_YM, Q.fundEnd);
+    const lv = m <= 18 ? 'hi' : m <= 36 ? 'mid' : 'lo';
+    R.push({ k: '펀드 만기·매각', lv, v: `${ymDot(Q.fundEnd)} · ${m >= 0 ? m + '개월 남음' : '경과'}`, t: lv === 'hi' ? `매각을 앞두고 있어 임대율과 명목 임대료가 매각가를 좌우합니다. 명목 ${won(P.face)}원을 지키고 무상기간으로 양보하려 할 가능성이 큽니다.` : '매각까지 시간이 있습니다. 그래도 매수인은 명목 임대료와 남은 임대기간을 봅니다.' });
+  } else {
+    R.push({ k: '펀드 만기·매각', lv: 'ask', v: '미확인', t: '펀드 만기(매각 시점)를 알면 넣으세요. 매각을 앞두면 명목 임대료와 임대율을 지키려는 압박이 커집니다.' });
+  }
+  if (Q.pf.status === 'live') {
+    if (Q.pf.end) {
+      const m = mBetween(NOW_YM, Q.pf.end), lv = m <= 12 ? 'hi' : m <= 24 ? 'mid' : 'lo';
+      R.push({ k: '프로젝트 대출', lv, v: `${eokA(Q.pf.amt)} · ${ymDot(Q.pf.end)} 만기`, t: '개발 PF가 남아 있으면 상환 재원(매각·리파이낸싱)이 필요해 임대 확정이 급해집니다. PF 대주 동의도 확인하세요.' });
+    } else R.push({ k: '프로젝트 대출', lv: 'ask', v: `${eokA(Q.pf.amt)} · 만기 미확인`, t: 'PF 만기를 넣으면 압박 정도를 판단합니다.' });
+  } else if (Q.pf.status === 'repaid') R.push({ k: '프로젝트 대출', lv: 'lo', v: '상환 완료', t: '개발 PF가 정리됐다면 PF 쪽 압박은 없습니다.' });
+  else R.push({ k: '프로젝트 대출', lv: 'ask', v: '미확인', t: '개발 PF가 남았는지 확인하세요. 남아 있으면 상환 압박이 임대 조건에 반영됩니다.' });
+  if (Q.dev.lien) R.push({ k: '시공·공사비', lv: 'hi', v: '유치권·미지급 이슈', t: '공사비 분쟁이 있으면 임차사 점유와 핏아웃이 막힐 수 있습니다. 계약 전에 정리 여부를 받아 두세요.' });
+  const G = Q.dev.guarantee, gEnd = Q.dev.guarEnd ? ` 보전 만료 ${ymDot(Q.dev.guarEnd)}.` : '';
+  if (G === 'builder') R.push({ k: '공실 보전', lv: 'mid', v: `${Q.dev.builder || '시공사'} 임대확약`, t: `시공사가 공실을 보전하면 시공사도 계약을 서두를 이해관계자입니다.${gEnd}` });
+  else if (G === 'master') R.push({ k: '공실 보전', lv: 'lo', v: '마스터리스', t: `마스터리스로 공실 임대료가 보전되는 동안 임대인은 덜 급합니다.${Q.dev.guarEnd ? ` 만료(${ymDot(Q.dev.guarEnd)}) 전후로 압박이 커집니다.` : ' 만료 시점을 확인하세요.'}` });
+  else if (G === 'none') R.push({ k: '공실 보전', lv: 'mid', v: '없음', t: '공실 비용을 모두 임대인이 부담합니다.' });
+  else R.push({ k: '공실 보전', lv: 'ask', v: '미확인', t: '준공 후 시공사 임대확약이나 마스터리스가 있었는지 확인하세요. 있으면 그 주체도 협상 당사자입니다.' });
+  const T = Q.trust;
+  if (T.needT || T.needL) {
+    const who = [T.needT ? '수탁자' : '', T.needL ? '대주' : ''].filter(Boolean).join('·');
+    const d = signDate(T.weeks), late = idx(ymOfDate(d)) >= idx(P.handover);
+    R.push({ k: '신탁·동의', lv: late ? 'hi' : 'mid', v: `${who} 동의 · 약 ${nf0.format(T.weeks)}주`,
+      t: `동의 절차를 넣으면 계약 가능일은 ${d.getFullYear()}년 ${d.getMonth() + 1}월 ${d.getDate()}일 무렵입니다.${late ? ` 인도 예정 ${ymDot(P.handover)}과 겹치니 동의서 요청을 바로 시작해야 합니다.` : ''}${Q.loan.sec === 'trust' ? ' 담보신탁이면 우선수익자 동의서가 임차사 보증금 보호의 전제입니다.' : ''}` });
+  } else R.push({ k: '신탁·동의', lv: 'lo', v: '별도 동의 없음', t: '수탁자·대주 동의가 필요 없다고 넣었습니다. 대출약정의 임대차 조항은 한 번 확인하세요.' });
+  return R;
+}
+
+function llLevers(P, Q, Lb, B, LB) {
+  const s = B.s;
+  const L = [
+    { label: '렌트프리 +1개월', o: { ...s, RF: B.RF + 1 }, skip: B.RF + 1 >= B.T },
+    { label: '핏아웃 +1개월', o: { ...s, FO: B.FO + 1 } },
+    { label: '명목 −1,000원/평', P: params({ face: Math.max(0, P.face - 1000) }) },
+    { label: '인상률 −0.5%p', P: params({ esc: Math.max(0, P.esc - 0.5) }), skip: P.esc <= 0 },
+    ...Object.keys(PLACE).filter(k => k !== s.place).map(k => ({ label: `렌트프리 ${PLACE[k]}`, o: { ...s, place: k }, place: k })),
+    { label: '계약기간 +12개월', o: { ...s, T: B.T + 12 } }
+  ];
+  const cls = x => (x > 0.5 ? 'up' : x < -0.5 ? 'dn' : 'soft');
+  const rows = L.map(l => {
+    if (l.skip) return `<tr><td class="l">${l.label}</td><td class="soft" colspan="7">적용할 수 없습니다</td></tr>`;
+    const m = calc(l.P || P, l.o || s), ml = llCalc(Q, Lb, m);
+    const d = { ner: m.ner - B.ner, total: m.total - B.total, cash: m.cashRent - B.cashRent, c12: ml.rent12 - LB.rent12, up: ml.upNer - LB.upNer, lm: m.lm - B.lm, net: m.net - B.net };
+    l.d = d;
+    return `<tr><td class="l">${l.label}</td><td>${swon(d.ner)}</td><td>${sman(d.total)}</td><td>${sman(d.cash)}</td><td>${sman(d.c12)}</td><td>${sman(d.up)}</td><td>${sman(d.lm)}</td><td class="strong ${cls(d.net)}">${sman(d.net)}</td></tr>`;
+  }).join('');
+  $('#llLevers').innerHTML = `<table class="data"><thead><tr><th class="l">카드</th><th>실질 (원/평)</th><th>총 임대료 (산식)</th><th>실제 받는 임대료</th><th>인도 후 12개월 현금</th><th>가치 (실질 기준)</th><th>LM 수수료</th><th>임대인 순수입</th></tr></thead><tbody>${rows}</tbody></table>`;
+  $('#llLevSub').textContent = `${s.name}에서 조건을 하나씩 바꿨을 때 임대인 쪽 숫자가 어떻게 달라지는지입니다. 순수입(총 임대료 − LM) 열만 색을 넣었습니다: 늘면 파란색, 줄면 주황색.`;
+  const ins = [];
+  ins.push(`인도가 한 달 늦어지면 임대인은 공실 관리비 ${man(P.area * Q.vac)}을 더 떠안고 수입 전체가 한 달 뒤로 밀립니다(실질 기준 월 ${man(P.area * B.ner)}).`);
+  const back = L.find(l => l.place === 'back' && l.d);
+  if (back && Math.abs(back.d.cash) > 1) ins.push(`렌트프리를 만기 전으로 옮기면 임대인 인도 후 12개월 현금은 ${sman(back.d.c12)}, 계약기간 실제 수입은 ${sman(back.d.cash)} 달라집니다. 임차사 임대료 납부는 같은 금액만큼 반대로 움직입니다. 대출 만기나 ICR 점검이 가까우면 임대인이 받을 만한 맞교환입니다.`);
+  ins.push(`평가가 명목으로 이뤄지면 명목 1,000원은 자산가치 ${eokA(P.area * 1000 * 12 / Q.cap)}에 해당합니다(Cap ${nf1.format(Q.cap * 100)}%). 임대인이 명목 ${won(P.face)}원을 지키고 무상기간으로 양보하려는 이유입니다.`);
+  if (B.lm > 0 && LB.incStab > 0) ins.push(`LM 수수료 ${eokA(B.lm)}은 ${h(s.name)} 가치 증가분의 <b>${pct(LB.lmShare, 2)}</b>, 안정화 연 NOI 증가분의 ${pct(B.lm / LB.incStab)}입니다.`);
+  $('#llIns').innerHTML = ins.map(t => `<li>${t}</li>`).join('');
+}
+
+function llRel(P, Q, Lb, B, LB) {
+  const pfLine = Q.pf.status === 'live'
+    ? `PF ${eokA(Q.pf.amt)}${Q.pf.rate ? ` · ${nf1.format(Q.pf.rate * 100)}%` : ''}${Q.pf.end ? ` · ${ymDot(Q.pf.end)} 만기` : ''}${Q.pf.lender ? ` · ${h(Q.pf.lender)}` : ''}`
+    : `개발 PF ${PFST[Q.pf.status]}`;
+  const defectOn = Q.dev.defectEnd && idx(Q.dev.defectEnd) >= idx(NOW_YM);
+  const gOn = Q.dev.guarantee === 'builder' || Q.dev.guarantee === 'master';
+  const C = [
+    { role: '임대인', name: Q.owner || '임대인', lines: [`인수 ${ymDot(Q.acq)} · 평가액 ${eokA(Q.value)} · 에쿼티 ${eokA(Q.equity)}`, `${HOLD[Q.trust.hold]} · 건물 ${nf0.format(Q.bld)}평 · 임대율 ${pct(Q.occ)}`, Q.fundEnd ? `펀드 만기 ${ymDot(Q.fundEnd)}` : '펀드 만기 미확인'],
+      imp: `4층을 채우면 가치 +${eokA(LB.upNer)}, 임대율 ${pct(Lb.occ1)}` },
+    { role: '대주단 · 담보대출', name: Q.loan.lender || '대주', lines: [`${eokA(Q.loan.amt)} · 금리 ${nf1.format(Q.loan.rate * 100)}% · 연 이자 ${eokA(Lb.interest)}`, `만기 ${Q.loan.end ? ymDot(Q.loan.end) : '미확인'} · ICR ${x2(Q.loan.icr)} 이상 · LTV ${pct(Q.loan.ltv, 0)} 이하`, `${SEC[Q.loan.sec]} · 채권최고액 ${eokA(Q.loan.amt * Q.loan.maxPct)}`],
+      imp: Q.trust.needL ? '주요 임대차 동의, 리파이낸싱 때 임대율과 남은 임대기간을 봅니다' : '리파이낸싱 때 임대율과 남은 임대기간을 봅니다' },
+    { role: '신탁', name: Q.trust.trustee || HOLD_TR[Q.trust.hold], lines: [`${HOLD[Q.trust.hold]}${Q.loan.sec === 'trust' ? ' · 담보신탁' : ''}`, Q.trust.needT ? `임대차 계약 날인·동의 필요 · 약 ${nf0.format(Q.trust.weeks)}주` : '별도 날인·동의 없음으로 입력'],
+      imp: Q.loan.sec === 'trust' ? '우선수익자 동의서가 임차사 보증금 보호의 전제입니다' : '계약서의 임대인 표시와 날인 주체를 확인합니다' },
+    { role: '시행', name: Q.dev.developer || '시행사', lines: [`준공 ${Q.dev.done ? ymDot(Q.dev.done) : '미확인'}`, pfLine],
+      imp: Q.pf.status === 'live' ? 'PF 상환 재원 때문에 임대 확정을 서두를 수 있습니다' : Q.pf.status === 'repaid' ? '개발 단계 이해관계는 정리된 것으로 봅니다' : 'PF가 남았는지에 따라 압박이 달라집니다' },
+    { role: '시공', name: Q.dev.builder || '시공사', lines: [`도급 ${eokA(Q.dev.contract)}`, `하자보수 만료 ${Q.dev.defectEnd ? ymDot(Q.dev.defectEnd) : '미확인'}`, `${GUAR[Q.dev.guarantee]}${gOn && Q.dev.guarEnd ? ` · ${ymDot(Q.dev.guarEnd)} 만료` : ''}${Q.dev.lien ? ' · 공사비·유치권 이슈' : ''}`],
+      imp: defectOn ? '하자보수 기간 중이라 임차사 핏아웃 공사 범위를 시공사와 맞춰야 합니다' : '임차사 핏아웃 공사 승인 절차를 확인합니다' },
+    { role: '임차인', name: state.tn.name || '임차인', lines: [`${nf0.format(P.area)}평 · ${h(B.s.name)} ${B.T}개월`, `실질 ${won(B.ner)}원 · 무상 ${B.free}/${B.occ}개월`, `보증금 ${eokA(B.dep)}`],
+      imp: `연 실질 임대료 ${eokA(B.ner * P.area * 12)}` },
+    { role: 'LM (우리)', name: '별도 법인 (추후 지정)', me: true, lines: [`수수료 ${eokA(B.lm)} · ${P.basis === 'eff' ? `실질 × ${B.lad.mult}%` : `명목 × ${B.lad.months}개월`}`, `가치 증가분의 ${pct(LB.lmShare, 2)}`],
+      imp: '임대인 펀드의 비용 집행 승인과 지급 시기를 확인합니다' }
+  ];
+  $('#llRel').innerHTML = C.map(c => `<div class="rc${c.me ? ' me' : ''}"><div class="rr">${h(c.role)}</div><div class="rn">${h(c.name)}</div><ul>${c.lines.map(l => `<li>${l}</li>`).join('')}</ul><div class="ri">${c.imp}</div></div>`).join('');
+}
+
+function renderLL(P, X, B) {
+  const Q = llParams(), Lb = llBase(Q, P);
+  if (!B) {
+    $('#llSummary').innerHTML = `<div class="kpi primary"><span class="k-label">계산할 안이 없습니다</span><span class="k-sub">비교할 안에서 하나 이상을 켜 주세요.</span></div>`;
+    ['#llFacts', '#llPress', '#llLevers', '#llIns', '#llRel', '#llLevSub'].forEach(sel => { $(sel).innerHTML = ''; });
+    return;
+  }
+  const LX = X.map(x => ({ x, l: llCalc(Q, Lb, x) }));
+  const LB = LX.find(o => o.x === B).l;
+  const rentM = P.area * B.ner, mgM = P.area * Q.vac;
+  const lm = Q.loan.end ? mBetween(NOW_YM, Q.loan.end) : null;
+  $('#llSummary').innerHTML = `
+    <div class="kpi primary">
+      <span class="k-label">4층 임대로 늘어나는 자산가치 · ${h(B.s.name)}</span>
+      <span class="k-val">+${eokA(LB.upNer)}원</span>
+      <span class="k-sub">연 NOI +${eokA(LB.incStab)} ÷ Cap ${nf1.format(Q.cap * 100)}% (실질 기준)</span>
+      <span class="k-sub">명목 기준으로 보면 +${eokA(LB.upHead)}</span>
+      <span class="k-sub">LM ${eokA(B.lm)}은 가치 증가분의 ${pct(LB.lmShare, 2)}</span>
+    </div>
+    <div class="kpi">
+      <span class="k-label">대출 ICR · 지금 → 안정화</span>
+      <span class="k-val ${LB.icrS < Q.loan.icr ? 'no' : ''}">${Number.isFinite(Lb.icr0) ? nf2.format(Lb.icr0) : '—'} → ${x2(LB.icrS)}</span>
+      <span class="k-sub">인도 후 첫 12개월 ${x2(LB.icr12)}</span>
+      <span class="k-sub">약정 ${x2(Q.loan.icr)} 이상 · 연 이자 ${eokA(Lb.interest)}</span>
+    </div>
+    <div class="kpi">
+      <span class="k-label">4층 공실 비용</span>
+      <span class="k-val">월 ${eokA(rentM + mgM)}원</span>
+      <span class="k-sub">실질 임대료 ${man(rentM)} + 공실 관리비 ${man(mgM)}</span>
+      <span class="k-sub">4층 면적 몫 이자 월 ${man(Lb.allocInt)}</span>
+    </div>
+    <div class="kpi">
+      <span class="k-label">담보대출 만기까지</span>
+      <span class="k-val ${lm === null ? 'no' : ''}">${lm === null ? '미확인' : lm >= 0 ? lm + '개월' : '경과'}</span>
+      <span class="k-sub">${lm === null ? `인수 ${ymDot(Q.acq)}부터 3년이면 ${ymDot(addM(Q.acq, 36))}, 5년이면 ${ymDot(addM(Q.acq, 60))}` : `만기 ${ymDot(Q.loan.end)}`}</span>
+      <span class="k-sub">${Q.fundEnd ? `펀드 만기 ${ymDot(Q.fundEnd)}` : '펀드 만기 미확인'}</span>
+    </div>`;
+  let facts = `건물 임대율 ${pct(Q.occ)} → ${pct(Lb.occ1)}, LTV ${pct(Lb.ltv0)} → ${pct(LB.ltv1)}(약정 ${pct(Q.loan.ltv, 0)} 이하).`;
+  if (LX.length > 1) {
+    const ups = LX.map(o => o.l.upNer), same = Math.max(...ups) - Math.min(...ups) < 5e7;
+    const longest = LX.reduce((a, o) => (idx(o.x.end) > idx(a.x.end) ? o : a));
+    facts += same
+      ? ` 켜진 안의 실질이 같아 가치 증가(실질 기준)는 모두 +${eokA(LB.upNer)}이고, ${h(longest.x.s.name)}이 ${ymDot(longest.x.end)}까지 그 임대료를 가장 오래 묶어 둡니다.`
+      : ` 안별 가치 증가(실질 기준): ${LX.map(o => `${h(o.x.s.name)} +${eokA(o.l.upNer)}`).join(', ')}.`;
+  }
+  $('#llFacts').innerHTML = facts;
+  $('#llPress').innerHTML = llPressure(P, Q, Lb, B, LB).map(r => `<li><span class="pk"><span class="pill ${LV[r.lv][0]}">${LV[r.lv][1]}</span>${h(r.k)}</span><span class="pval">${h(r.v)}</span><span class="pt">${r.t}</span></li>`).join('');
+  llLevers(P, Q, Lb, B, LB);
+  llRel(P, Q, Lb, B, LB);
+}
+
+function tabLLCash(P, X, B) {
+  if (!X.length) return '<p class="empty">켜진 안이 없습니다.</p>';
+  const Q = llParams(), Lb = llBase(Q, P);
+  const LX = X.map(x => ({ x, l: llCalc(Q, Lb, x) }));
+  const head = `<th class="l">항목</th>` + LX.map(o => `<th class="${o.x === B ? 'base' : ''}">${h(o.x.s.name)}${o.x === B ? ' · 기준' : ''}</th>`).join('');
+  const R = [
+    ['임대 기간', o => tdT(`${ymDot(o.x.start)}~${ymDot(o.x.end)}`)],
+    ['첫 유상 임대료', o => tdT(o.l.firstPaid ? ymDot(o.l.firstPaid) : '없음')],
+    ['실질 임대료 (원/평)', o => tdN(o.x.ner, 'strong')],
+    ['계약기간 총 임대료 (산식)', o => tdM(o.x.total)],
+    ['실제 받는 임대료', o => tdM(o.x.cashRent)],
+    ['LM 수수료', o => tdM(o.x.lm)],
+    ['순수입 (총 임대료 − LM)', o => tdM(o.x.net, 'strong')],
+    ['연 NOI 증가 (실질 기준)', o => tdM(o.l.incStab)],
+    ['연 NOI 증가 (명목 기준)', o => tdM(o.l.incHead)],
+    ['가치 증가 (실질 기준)', o => tdM(o.l.upNer, 'strong')],
+    ['가치 증가 (명목 기준)', o => tdM(o.l.upHead)],
+    ['LM ÷ 가치 증가', o => tdT(pct(o.l.lmShare, 2))],
+    ['인도 후 12개월 임대료 현금', o => tdM(o.l.rent12)],
+    ['ICR 인도 후 12개월', o => tdT(x2(o.l.icr12), o.l.icr12 < Q.loan.icr ? 'dn' : '')],
+    ['ICR 안정화', o => tdT(x2(o.l.icrS), o.l.icrS < Q.loan.icr ? 'dn' : '')],
+    ['LTV (가치 증가 반영)', o => tdT(pct(o.l.ltv1), Q.loan.ltv > 0 && o.l.ltv1 > Q.loan.ltv ? 'dn' : '')],
+    ['대출 만기 뒤 남는 임대', o => tdT(o.l.tail === null ? '만기 미확인' : o.l.tail > 0 ? `${o.l.tail}개월` : '만기 전 종료')],
+    ['보증금 (임대인 보관)', o => tdM(o.x.dep)]
+  ];
+  const body = R.map(([lab, f]) => `<tr><td class="l">${lab}</td>${LX.map(f).join('')}</tr>`).join('');
+  return table(head, body) + note(`가치 증가는 연 NOI 증가분(4층 임대료 + 공실 관리비 해소)을 Cap rate ${nf1.format(Q.cap * 100)}%로 나눈 단순 환산입니다. 지금 건물 NOI는 ${eokA(Lb.noi0)}(면적 ${nf0.format(Q.bld)}평 × 임대율 ${pct(Q.occ)} × 평균 실질 ${won(Q.avg)}원, 빈 면적 관리비 차감), 연 이자는 ${eokA(Lb.interest)}, 지금 ICR은 ${x2(Lb.icr0)}입니다. 인도 후 12개월 ICR은 실제 들어오는 임대료 기준이라 렌트프리 위치에 따라 달라집니다. 임대인 화면은 VAT 별도입니다.`);
+}
+
+function tabLLTime(P, X) {
+  const Q = llParams(), ev = [];
+  const add = (ym, what, memo, cls) => { if (okYm(ym)) ev.push({ ym, what, memo: memo || '', cls: cls || '' }); };
+  add(Q.dev.done, '준공', Q.dev.builder ? `시공 ${h(Q.dev.builder)}` : '');
+  add(Q.acq, '펀드 인수', `평가액 ${eokA(Q.value)} · 담보대출 ${eokA(Q.loan.amt)}`);
+  add(NOW_YM, '오늘', '');
+  if (Q.trust.needT || Q.trust.needL) add(ymOfDate(signDate(Q.trust.weeks)), '동의 절차 끝 (예상)', `약 ${nf0.format(Q.trust.weeks)}주`);
+  add(P.handover, '인도·핏아웃 시작', '');
+  X.forEach(x => {
+    add(x.start, `${h(x.s.name)} 임대개시`, `핏아웃 ${x.FO}개월 뒤`);
+    const fp = x.flow.find(r => r.rent > 0);
+    if (fp) add(fp.ym, `${h(x.s.name)} 첫 유상 임대료`, `렌트프리 ${x.RF}개월 · ${PLACE[x.s.place]}`);
+    add(x.end, `${h(x.s.name)} 만료`, `${x.T}개월`);
+  });
+  add(Q.loan.end, '담보대출 만기', h(Q.loan.lender), 'strong');
+  if (Q.pf.status === 'live') add(Q.pf.end, 'PF 만기', eokA(Q.pf.amt), 'strong');
+  add(Q.fundEnd, '펀드 만기', '', 'strong');
+  add(Q.dev.defectEnd, '하자보수 만료', h(Q.dev.builder));
+  if (Q.dev.guarantee === 'builder' || Q.dev.guarantee === 'master') add(Q.dev.guarEnd, '공실 보전 만료', GUAR[Q.dev.guarantee]);
+  ev.sort((a, b) => idx(a.ym) - idx(b.ym));
+  const body = ev.map(e => {
+    const m = mBetween(NOW_YM, e.ym);
+    return `<tr><td class="l" data-v="${ymDot(e.ym)}">${ymDot(e.ym)}</td><td class="l ${e.cls}">${e.what}</td><td data-v="${m}">${m === 0 ? '이번 달' : m > 0 ? `${m}개월 뒤` : `${-m}개월 전`}</td><td class="l wrap">${e.memo}</td></tr>`;
+  }).join('');
+  const miss = [!Q.loan.end && '담보대출 만기', !Q.fundEnd && '펀드 만기', !Q.dev.defectEnd && '하자보수 만료'].filter(Boolean);
+  return table('<th class="l">시점</th><th class="l">일정</th><th>오늘부터</th><th class="l">비고</th>', body) +
+    note(miss.length ? `${miss.join(', ')}은 아직 비어 있습니다. 왼쪽에 넣으면 이 표와 압박 진단에 바로 들어갑니다.` : '대출·펀드 만기와 임대 일정이 겹치는 구간을 보세요.');
+}
+
+function tabLLCheck(P, B) {
+  const Q = llParams();
+  const ask = t => `<span class="pill ask">${t}</span>`;
+  const rows = [
+    ['등기부등본', '소유자(수탁자) 명의, 근저당·담보신탁 설정과 채권최고액', Q.loan.sec === 'unknown' ? ask('담보 형태 미확인') : SEC[Q.loan.sec] + (Q.trust.trustee ? ` · ${h(Q.trust.trustee)}` : ''), '임차사 보증금 순위와 계약 당사자가 정해집니다'],
+    ['대출 만기·리파이낸싱', '담보대출 만기, 연장·리파이낸싱 일정', Q.loan.end ? ymDot(Q.loan.end) : ask('미확인'), '만기가 가까울수록 임대인은 계약을 서두릅니다'],
+    ['대출약정 임대차 조항', '주요 임대차 대주 동의, 렌트프리·최저 임대료 제한', Q.trust.needL ? '대주 동의 필요로 입력' : '동의 불필요로 입력', '동의가 필요하면 계약 일정에 넣어야 합니다'],
+    ['수탁자 날인', '신탁업자·신탁사 날인 방식과 소요 기간', Q.trust.needT ? `날인 필요 · 약 ${nf0.format(Q.trust.weeks)}주` : '불필요로 입력', '계약서의 임대인 표시와 날인 주체'],
+    ['펀드 만기·매각', '펀드 만기, 매각 추진 여부', Q.fundEnd ? ymDot(Q.fundEnd) : ask('미확인'), '매각을 앞두면 명목 임대료와 임대율을 지키려 합니다'],
+    ['개발 PF', 'PF 잔액과 만기, PF 대주 동의 필요 여부', Q.pf.status === 'unknown' ? ask('미확인') : PFST[Q.pf.status], '남아 있으면 상환 압박이 큽니다'],
+    ['하자보수·핏아웃 공사', '시공사 하자보수 범위와 임차사 공사 승인 절차', Q.dev.defectEnd ? `만료 ${ymDot(Q.dev.defectEnd)}` : ask('미확인'), '임차사 공사가 하자보증에 영향을 주지 않게 합니다'],
+    ['공실 보전 약정', '시공사 임대확약·마스터리스 유무와 만료', Q.dev.guarantee === 'unknown' ? ask('미확인') : GUAR[Q.dev.guarantee], '있으면 보전 주체도 협상 당사자입니다'],
+    ['LM 수수료 지급', '펀드 비용 집행 승인, 지급 시기·조건, 수령 법인', B ? `${eokA(B.lm)} · 수령 법인 추후 지정` : '—', '계약 체결 전에 지급 조건을 문서로 받아 둡니다']
+  ];
+  const body = rows.map(r => `<tr><td class="l">${r[0]}</td><td class="l wrap">${r[1]}</td><td class="l" data-v="${h(String(r[2]).replace(/<[^>]+>/g, ''))}">${r[2]}</td><td class="l wrap">${r[3]}</td></tr>`).join('');
+  return table('<th class="l">항목</th><th class="l">볼 것</th><th class="l">지금 입력</th><th class="l">왜</th>', body) + note('지금 입력 열은 왼쪽 값을 그대로 보여 줍니다. 가정으로 넣어 둔 값(대주 동의 필요 등)은 확인한 뒤 바꾸세요.');
+}
+
+/* ---------- 임차사 관점 ---------- */
+function tnParams() {
+  const t = state.tn;
+  return {
+    name: String(t.name || ''), price: Math.max(0, num(t.price)), util: Math.min(1, Math.max(0.01, num(t.util) / 100)), opex: Math.max(0, num(t.opex)),
+    shipT: Math.max(0, int(t.shipT)), capex: Math.max(0, num(t.capex)) * 1e8, setup: Math.max(0, num(t.setup)) * 1e8,
+    restore: Math.max(0, num(t.restore)) * 1e8, wacc: Math.max(0, num(t.wacc)) / 100
+  };
+}
+/* 임차사가 실제로 내는 돈. 매달 초 납부로 보고 자본비용으로 할인 */
+function tnCalc(P, Tq, x) {
+  const A = x.A, n = x.flow.length;
+  const r = Math.pow(1 + Tq.wacc, 1 / 12) - 1;
+  let pvRent = 0, ann = 0, first12 = 0, after = 0, opMonths = 0;
+  const shipCut = Tq.shipT > 0 ? x.FO + Tq.shipT : Infinity;
+  x.flow.forEach((row, i) => {
+    const d = Math.pow(1 + r, -i);
+    pvRent += row.rent * d; ann += d;
+    if (i < 12) first12 += row.pay;
+    if (i >= shipCut) after += row.pay;
+    if (row.kind !== 'fo') opMonths++;
+  });
+  const depCost = x.dep * Tq.wacc * n / 12;
+  const one = Tq.capex + Tq.setup + Tq.restore;
+  const toc = x.cashRent + x.cashMgmt + depCost + one;
+  const per = v => (A > 0 && n > 0 ? v / A / n : 0);
+  const be = A > 0 && opMonths > 0 ? (toc / A / opMonths + Tq.opex) / Tq.util : 0;
+  let margin = null, payback = null;
+  if (Tq.price > 0 && A > 0) {
+    const revM = Tq.price * Tq.util * A, opM = Tq.opex * A;
+    /* 투자 회수: 누적 현금이 마지막으로 0 아래였던 달의 다음 달. 끝까지 회복 못 하면 없음 */
+    let cum = -one, sum = 0, lastNeg = -1;
+    x.flow.forEach((row, i) => {
+      const mm = (row.kind === 'fo' ? 0 : revM - opM) - row.pay;
+      sum += mm; cum += mm;
+      if (cum < 0) lastNeg = i;
+    });
+    if (one > 0 && cum >= 0) payback = lastNeg + 2;
+    margin = sum - depCost - one;
+  }
+  const shipEnd = shipCut < n ? x.flow[shipCut].ym : null;
+  return {
+    n, pvRent, pvEq: A > 0 && ann > 0 ? pvRent / ann / A : 0, first12, after, afterMonths: shipEnd ? n - shipCut : 0,
+    depCost, one, toc, allIn: per(toc), rentPm: per(x.cashRent), mgmtPm: per(x.cashMgmt), depPm: per(depCost), onePm: per(one),
+    be, margin, payback, shipEnd, opMonths
+  };
+}
+
+function renderTN(P, X, B) {
+  const Tq = tnParams();
+  if (!B) {
+    $('#tnSummary').innerHTML = `<div class="kpi primary"><span class="k-label">계산할 안이 없습니다</span><span class="k-sub">비교할 안에서 하나 이상을 켜 주세요.</span></div>`;
+    ['#tnFacts', '#tnBars', '#tnChart', '#tnChartCap', '#tnChartSub', '#tnPoints'].forEach(sel => { $(sel).innerHTML = ''; });
+    return;
+  }
+  const TX = X.map(x => ({ x, t: tnCalc(P, Tq, x) }));
+  const TB = TX.find(o => o.x === B).t;
+  $('#tnSummary').innerHTML = `
+    <div class="kpi primary">
+      <span class="k-label">월 평균 실부담 · ${h(B.s.name)}</span>
+      <span class="k-val">${won(TB.allIn)}원<small style="font-size:.5em;font-weight:700;margin-left:4px">/평</small></span>
+      <span class="k-sub">임대료 ${won(TB.rentPm)} + 관리비 ${won(TB.mgmtPm)} + 보증금 비용 ${won(TB.depPm)}${TB.one > 0 ? ` + 일회성 ${won(TB.onePm)}` : ''}</span>
+      <span class="k-sub">핏아웃 포함 ${TB.n}개월 평균 · 월 ${man(TB.allIn * B.A)}</span>
+    </div>
+    <div class="kpi">
+      <span class="k-label">현재가치 균등 임대료</span>
+      <span class="k-val">${won(TB.pvEq)}원</span>
+      <span class="k-sub">자본비용 ${nf1.format(Tq.wacc * 100)}% 할인, 인상·렌트프리 위치 반영</span>
+      <span class="k-sub">페블스톤 실질 ${won(B.ner)}원보다 ${swon(TB.pvEq - B.ner)}원</span>
+    </div>
+    <div class="kpi">
+      <span class="k-label">총 점유비용</span>
+      <span class="k-val">${eokA(TB.toc)}원</span>
+      <span class="k-sub">임대료·관리비 ${eokA(B.cashTotal)} · 보증금 비용 ${eokA(TB.depCost)}${TB.one > 0 ? ` · 일회성 ${eokA(TB.one)}` : ''}</span>
+      <span class="k-sub">보증금 ${eokA(B.dep)}은 만기에 돌려받음</span>
+    </div>
+    <div class="kpi">
+      <span class="k-label">손익분기 화주 단가</span>
+      <span class="k-val">${won(TB.be)}원</span>
+      <span class="k-sub">평당·월, 가동률 ${pct(Tq.util, 0)}${Tq.opex ? ` · 운영비 ${won(Tq.opex)}원` : ''}</span>
+      <span class="k-sub">${TB.margin === null ? '화주 단가를 넣으면 손익을 계산합니다' : `점유기간 손익 ${eokA(TB.margin)}${TB.payback ? ` · 투자 회수 ${TB.payback}개월` : ''}`}</span>
+    </div>`;
+  let f = `월 실부담(평당): ${TX.map(o => `${h(o.x.s.name)} ${won(o.t.allIn)}원`).join(', ')}. 확정 납부액(임대료+관리비): ${TX.map(o => `${h(o.x.s.name)} ${eokA(o.x.cashTotal)}`).join(', ')}.`;
+  $('#tnFacts').innerHTML = f;
+  const max = Math.max(...TX.map(o => o.t.allIn), 1);
+  const w = x => `${Math.max(0, x / max * 100).toFixed(2)}%`;
+  $('#tnBars').innerHTML = TX.map(o => {
+    const t = o.t;
+    return `<div class="bar-row"><span class="bn">${h(o.x.s.name)}${o.x === B ? ' · 기준' : ''}</span><div class="stack" role="img" aria-label="${h(o.x.s.name)}: 임대료 ${won(t.rentPm)}원, 관리비 ${won(t.mgmtPm)}원, 보증금 비용 ${won(t.depPm)}원, 일회성 ${won(t.onePm)}원"><i class="c-rent" style="width:${w(t.rentPm)}"></i><i class="c-mgmt" style="width:${w(t.mgmtPm)}"></i><i class="c-dep" style="width:${w(t.depPm)}"></i><i class="c-one" style="width:${w(t.onePm)}"></i></div><span class="bt"><b>${won(t.allIn)}</b> 원/평</span></div>`;
+  }).join('');
+  const fl = B.flow, n = fl.length, pk = Math.max(...fl.map(r => r.pay), 1);
+  const bars = fl.map(r => `<i class="${r.kind === 'paid' ? '' : r.kind}" style="height:${Math.max(1.5, r.pay / pk * 100).toFixed(2)}%" title="${ymDot(r.ym)} ${man(r.pay)}"></i>`).join('');
+  let mark = '';
+  if (TB.shipEnd) {
+    const i = fl.findIndex(r => r.ym === TB.shipEnd), left = i / n * 100;
+    if (i >= 0) mark = `<span class="mc-mark" style="left:${left.toFixed(2)}%"><span style="${left > 70 ? 'right:4px' : 'left:4px'}">화주 계약 끝</span></span>`;
+  }
+  const axis = fl.map((r, i) => {
+    let lab = '';
+    if (r.kind !== 'fo' && (i === 0 || fl[i - 1].kind === 'fo')) lab = '1년차';
+    else if (i > 0 && r.y > 1 && r.y !== fl[i - 1].y) lab = r.y + '년차';
+    return `<span>${lab}</span>`;
+  }).join('');
+  $('#tnChart').innerHTML = `<div class="mc-bars" role="img" aria-label="${h(B.s.name)} 월별 납부, 최대 ${man(B.peakPay)}">${bars}${mark}</div><div class="mc-axis" aria-hidden="true">${axis}</div>`;
+  $('#tnChartSub').innerHTML = `${h(B.s.name)} · 렌트프리 ${PLACE[B.s.place]}. 막대 하나가 한 달이고 높이는 임대료+관리비입니다.${TB.shipEnd ? ` 주황 점선은 화주 계약 ${Tq.shipT}개월이 끝나는 ${ymDot(TB.shipEnd)}입니다.` : ''}`;
+  $('#tnChartCap').textContent = `월 최대 ${man(B.peakPay)} · 인도 후 12개월 ${man(TB.first12)} · ${TB.n}개월 납부 합계 ${man(B.cashTotal)}`;
+
+  const pts = [];
+  const alts = Object.keys(PLACE).map(k => ({ k, m: k === B.s.place ? B : calc(P, { ...B.s, place: k }) }));
+  const cheap = alts.reduce((a, o) => (o.m.cashRent < a.m.cashRent - 0.5 ? o : a));
+  if (cheap.k !== B.s.place) {
+    const ct = tnCalc(P, Tq, cheap.m), c12 = ct.first12 - TB.first12;
+    let t = `렌트프리를 <b>${PLACE[cheap.k]}</b>에 두면 임대료 납부가 <b>${man(B.cashRent - cheap.m.cashRent)}</b> 줄어듭니다. 대신 인도 후 12개월 납부는 ${sman(c12)} 달라집니다.`;
+    if (B.s.place === 'front') t += ' 개시 직후 렌트프리는 인상 전 1년차 단가를 감면받는 셈이라 총액으로는 가장 불리합니다.';
+    if (ct.pvEq > TB.pvEq + 0.5) t += ` 다만 돈을 늦게 내는 효과까지 넣은 현재가치 균등 임대료는 지금 배치가 평당 ${won(ct.pvEq - TB.pvEq)}원 낮습니다(자본비용 ${nf1.format(Tq.wacc * 100)}%). 자본비용이 높을수록 개시 직후가 유리합니다.`;
+    pts.push(t);
+  } else if (P.esc > 0) pts.push(`렌트프리를 ${PLACE[B.s.place]}에 둬서 이미 총 납부가 가장 적습니다.`);
+  pts.push(`페블스톤 실질 ${won(B.ner)}원은 인상을 뺀 값입니다. 실제 낸 임대료로 보면 평균 ${won(TB.rentPm)}원, 현재가치 균등으로는 ${won(TB.pvEq)}원입니다.`);
+  if (TB.shipEnd) pts.push(`화주 계약 ${Tq.shipT}개월이 끝난 뒤에도 ${TB.afterMonths}개월 동안 임대료와 관리비 <b>${man(TB.after)}</b>을 더 내야 합니다. 화주 재계약 전망이 약하면 중도해지 조건이나 전대 허용을 계약서에 넣어 두세요.`);
+  else if (Tq.shipT > 0) pts.push(`화주 계약 ${Tq.shipT}개월이 임대 기간 이상이라 화주 공백 위험은 작습니다.`);
+  const Q = llParams(), senior = Q.loan.amt * Q.loan.maxPct;
+  pts.push(`보증금 ${man(B.dep)}은 대출 채권최고액 ${eokA(senior)}(잔액의 ${pct(Q.loan.maxPct, 0)}, 임대인 화면 값) 뒤 순위로 봐야 합니다. 평가액 ${eokA(Q.value)} 기준 남는 여력은 ${eokA(Q.value - senior)}입니다.${Q.loan.sec === 'trust' ? ' 담보신탁이면 수탁자·우선수익자 동의서 없이는 보증금 보호가 약합니다.' : Q.loan.sec === 'unknown' ? ' 등기부등본으로 근저당인지 담보신탁인지 먼저 확인하세요.' : ''}`);
+  if (TX.length > 1) {
+    const so = [...TX].sort((a, b) => a.t.allIn - b.t.allIn), lo = so[0], hi = so[so.length - 1];
+    if (hi.t.allIn - lo.t.allIn >= 0.5) pts.push(`${h(lo.x.s.name)}이 ${h(hi.x.s.name)}보다 월 실부담이 평당 ${won(hi.t.allIn - lo.t.allIn)}원 낮습니다. 확정 납부액은 ${h(lo.x.s.name)} ${eokA(lo.x.cashTotal)}, ${h(hi.x.s.name)} ${eokA(hi.x.cashTotal)}입니다.`);
+  }
+  $('#tnPoints').innerHTML = pts.map(t => `<li>${t}</li>`).join('');
+}
+
+function tabTNCost(P, X, B) {
+  if (!X.length) return '<p class="empty">켜진 안이 없습니다.</p>';
+  const Tq = tnParams();
+  const TX = X.map(x => ({ x, t: tnCalc(P, Tq, x) }));
+  const head = `<th class="l">항목</th>` + TX.map(o => `<th class="${o.x === B ? 'base' : ''}">${h(o.x.s.name)}${o.x === B ? ' · 기준' : ''}</th>`).join('');
+  const R = [
+    ['점유 기간', o => tdT(`${ymDot(P.handover)}~${ymDot(o.x.end)} (${o.t.n}개월)`)],
+    ['무상 기간', o => tdT(`핏아웃 ${o.x.FO} + 렌트프리 ${o.x.RF}개월 · ${PLACE[o.x.s.place]}`)],
+    ['페블스톤 실질 (원/평)', o => tdN(o.x.ner)],
+    ['실제 낸 임대료 평균 (원/평)', o => tdN(o.t.rentPm)],
+    ['현재가치 균등 임대료 (원/평)', o => tdN(o.t.pvEq, 'strong')],
+    ['관리비 평균 (원/평)', o => tdN(o.t.mgmtPm)],
+    ['보증금 비용 (원/평)', o => tdN(o.t.depPm)],
+    ['일회성 비용 (원/평)', o => tdN(o.t.onePm)],
+    ['월 평균 실부담 (원/평)', o => tdN(o.t.allIn, 'strong')],
+    ['임대료 납부 합계', o => tdM(o.x.cashRent)],
+    ['관리비 납부 합계', o => tdM(o.x.cashMgmt)],
+    ['보증금', o => tdM(o.x.dep)],
+    ['보증금 기회비용', o => tdM(o.t.depCost)],
+    ['일회성 비용', o => tdM(o.t.one)],
+    ['총 점유비용', o => tdM(o.t.toc, 'strong')],
+    ['인도 후 12개월 납부', o => tdM(o.t.first12)],
+    ['월 최대 납부', o => tdM(o.x.peakPay)],
+    ['화주 계약 뒤 남는 납부', o => (o.t.shipEnd ? tdM(o.t.after) : tdT('없음'))],
+    ['손익분기 화주 단가 (원/평)', o => tdN(o.t.be, 'strong')],
+    ['점유기간 손익', o => (o.t.margin === null ? tdT('화주 단가 입력 필요', 'soft') : tdM(o.t.margin, o.t.margin >= 0 ? 'up' : 'dn'))],
+    ['투자 회수', o => tdT(o.t.payback ? `${o.t.payback}개월` : o.t.margin === null || o.t.one === 0 ? '—' : '점유기간 안에 못 회수')]
+  ];
+  const body = R.map(([lab, f]) => `<tr><td class="l">${lab}</td>${TX.map(f).join('')}</tr>`).join('');
+  return table(head, body) + note(`현재가치 균등 임대료는 핏아웃부터 만기까지 실제 낼 임대료를 자본비용 ${nf1.format(Tq.wacc * 100)}%로 할인해 매달 같은 금액으로 바꾼 값입니다. 보증금 비용은 보증금 × 자본비용 × 점유 개월 ÷ 12입니다. 손익분기 화주 단가는 총 점유비용을 운영 개월(핏아웃 제외)로 나누고 운영비를 더한 뒤 가동률로 나눈 값입니다. 임차사 화면은 VAT 별도입니다.`);
+}
+
+function tabTNPlace(P, X) {
+  if (!X.length) return '<p class="empty">켜진 안이 없습니다.</p>';
+  const Tq = tnParams();
+  const head = '<th class="l">안</th><th class="l">렌트프리 위치</th><th>임대료 납부 합계</th><th>지금 대비</th><th>인도 후 12개월 납부</th><th>월 최대 납부</th><th>현재가치 균등 (원/평)</th><th class="l">첫 유상 임대료</th>';
+  let body = '';
+  X.forEach(x => {
+    Object.keys(PLACE).forEach(k => {
+      const m = k === x.s.place ? x : calc(P, { ...x.s, place: k }), t = tnCalc(P, Tq, m), d = m.cashRent - x.cashRent;
+      const fp = m.flow.find(r => r.rent > 0), cur = k === x.s.place;
+      body += `<tr><td class="l">${h(x.s.name)}</td><td class="l ${cur ? 'strong' : ''}">${PLACE[k]}${cur ? ' · 지금' : ''}</td>${tdM(m.cashRent)}${tdM(d, d < -0.5 ? 'up' : d > 0.5 ? 'dn' : 'soft')}${tdM(t.first12)}${tdM(m.peakPay)}${tdN(t.pvEq)}${tdT(fp ? ymDot(fp.ym) : '없음', 'l')}</tr>`;
+    });
+  });
+  return table(head, body) + note('같은 렌트프리 개월이라도 어디에 두느냐에 따라 감면받는 단가가 달라집니다. 인상이 있으면 만기 전에 둘수록 임차사 총 납부가 줄고, 개시 직후에 둘수록 초기 현금 부담이 줄어듭니다. 현재가치로 따지면 자본비용이 높을수록 개시 직후가 유리합니다. 지금 대비 열은 줄면 파란색입니다. 페블스톤 산식의 총 임대료와 실질은 위치와 관계없이 같습니다.');
+}
+
+function tabTNYears(P, B) {
+  if (!B) return '<p class="empty">기준 안이 없습니다.</p>';
+  const Tq = tnParams(), A = B.A, showPL = Tq.price > 0;
+  const groups = [];
+  B.flow.forEach(r => { const g = groups[groups.length - 1]; if (g && g.y === r.y) g.rows.push(r); else groups.push({ y: r.y, rows: [r] }); });
+  const revM = Tq.price * Tq.util * A, opM = Tq.opex * A;
+  const tot = { n: 0, rent: 0, mgmt: 0, pay: 0, rev: 0, op: 0 };
+  const body = groups.map(g => {
+    const n = g.rows.length, rent = g.rows.reduce((s, r) => s + r.rent, 0), mgmt = g.rows.reduce((s, r) => s + r.mgmt, 0), pay = rent + mgmt;
+    const opN = g.y === 0 ? 0 : n, rev = revM * opN, op = opM * opN;
+    tot.n += n; tot.rent += rent; tot.mgmt += mgmt; tot.pay += pay; tot.rev += rev; tot.op += op;
+    const pl = showPL ? `${tdM(rev)}${tdM(op)}${tdM(rev - op - pay, rev - op - pay >= 0 ? 'up' : 'dn')}` : '';
+    return `<tr><td class="l">${g.y === 0 ? '핏아웃' : g.y + '년차'}</td>${tdT(`${ymDot(g.rows[0].ym)}~${ymDot(g.rows[n - 1].ym)}`, 'l')}${tdT(n + '개월')}${tdN(g.y === 0 ? B.R[0] : B.R[g.y - 1])}${tdM(rent)}${tdM(mgmt)}${tdM(pay, 'strong')}${tdN(A > 0 ? pay / A / n : 0)}${pl}</tr>`;
+  }).join('');
+  const plH = showPL ? '<th>화주 매출</th><th>운영비</th><th>손익</th>' : '';
+  const plF = showPL ? `${tdM(tot.rev)}${tdM(tot.op)}${tdM(tot.rev - tot.op - tot.pay)}` : '';
+  const foot = `<tr><td class="l">합계</td><td></td>${tdT(tot.n + '개월')}<td></td>${tdM(tot.rent)}${tdM(tot.mgmt)}${tdM(tot.pay)}${tdN(A > 0 && tot.n ? tot.pay / A / tot.n : 0)}${plF}</tr>`;
+  const head = `<th class="l">기간</th><th class="l">월</th><th>개월</th><th>평당 명목</th><th>임대료</th><th>관리비</th><th>납부 합계</th><th>평당 월평균 납부</th>${plH}`;
+  return table(head, body, foot, `${h(B.s.name)} · 렌트프리 ${PLACE[B.s.place]}`) + note(showPL ? '화주 매출은 화주 단가 × 가동률 × 면적, 핏아웃 기간에는 매출과 운영비가 없다고 봤습니다. 보증금 기회비용과 일회성 비용은 이 표에 넣지 않았습니다.' : '화주 단가를 넣으면 연차별 매출·운영비·손익 열이 붙습니다.');
+}
+
+function tabTNCheck(P, X, B) {
+  if (!B) return '<p class="empty">기준 안이 없습니다.</p>';
+  const Tq = tnParams(), TB = tnCalc(P, Tq, B), Q = llParams(), senior = Q.loan.amt * Q.loan.maxPct;
+  const rows = [
+    ['수탁자·대주 동의서', '임대차가 수탁자·대주에게도 효력이 있도록 계약 전에 동의서를 받습니다', [Q.trust.needT ? '수탁자 날인 필요' : '', Q.trust.needL ? '대주 동의 필요' : ''].filter(Boolean).join(' · ') || '불필요로 입력'],
+    ['보증금 보호', '선순위 채권최고액과 평가액 비교, 보증금 반환 보증(보증보험·질권) 요청', `보증금 ${man(B.dep)} · 여력 ${eokA(Q.value - senior)}`],
+    ['전대·화주 사용', '화주에게 공간을 쓰게 하는 데 필요한 전대 또는 사용 허락 조항', '계약서 특약으로 확인'],
+    ['렌트프리 위치', '개시 직후·매년 나눠·만기 전 중 어디에 둘지 (렌트프리 위치 탭)', `지금 ${PLACE[B.s.place]}`],
+    ['핏아웃 공사', '공사 범위·승인 절차, 하자보수 영향, 핏아웃 기간 관리비', `핏아웃 ${B.FO}개월 · ${P.mgmtFree ? '무상 기간 관리비 납부' : '무상 기간 관리비 면제'}`],
+    ['원상복구', '설비 투자분의 원상복구 범위와 비용 한도', Tq.restore ? eokA(Tq.restore) : '0으로 입력'],
+    ['중도해지·화주 계약', `화주 계약 ${Tq.shipT}개월과 임대 ${B.T}개월의 차이, 중도해지 위약 조건`, TB.shipEnd ? `남는 납부 ${man(TB.after)}` : '공백 없음'],
+    ['관리비 인상', '관리비 인상 여부와 기준', P.mgmtEsc ? `임대료와 같이 ${nf1.format(P.esc)}%` : '고정으로 입력'],
+    ['인상 기준일', '인상은 임대개시일부터 매 12개월', `임대개시 ${ymDot(B.start)}`]
+  ];
+  const body = rows.map(r => `<tr><td class="l">${r[0]}</td><td class="l wrap">${r[1]}</td><td class="l wrap">${r[2]}</td></tr>`).join('');
+  return table('<th class="l">항목</th><th class="l">볼 것</th><th class="l">지금 입력</th>', body) + note('보증금 여력은 임대인 화면의 평가액과 채권최고액(가정)으로 계산합니다.');
+}
+
+/* ---------- 안 메타·검증 ---------- */
+function renderScenMeta(P) {
+  state.scen.forEach(s => {
+    const el = $(`.scen[data-id="${s.id}"]`);
+    el.classList.toggle('is-off', !s.on);
+    const err = check(s), e = $(`#s-${s.id}-err`), meta = $(`#s-${s.id}-meta`);
+    e.hidden = !err; e.textContent = err;
+    if (err) { meta.textContent = ''; return; }
+    const T = int(s.T), FO = int(s.FO), RF = int(s.RF);
+    const start = addM(P.handover, FO), end = addM(start, T - 1);
+    meta.textContent = `임대개시 ${ymDot(start)} · 만료 ${ymDot(end)} · 무상 ${FO + RF}/${T + FO}개월`;
+  });
+  state.lm.ladder.forEach((r, i) => { const tr = $(`#ladder tr[data-i="${i}"]`); if (tr) tr.classList.remove('cur'); });
+  const B = state.scen.find(s => s.id === state.base && s.on);
+  if (B && !check(B)) { const l = ladderFor(P, int(B.T)); if (l.i >= 0) $(`#ladder tr[data-i="${l.i}"]`).classList.add('cur'); }
+}
+
+function renderMbar(P, B) {
+  if (!B) { $('#mbar').innerHTML = ''; return; }
+  if (state.persp === 'll') {
+    const Q = llParams(), Lb = llBase(Q, P), LB = llCalc(Q, Lb, B);
+    $('#mbar').innerHTML = `<span>가치<b>+${eokA(LB.upNer)}</b></span><span>ICR<b>${x2(LB.icrS)}</b></span><span>${Q.loan.end ? `만기 ${mBetween(NOW_YM, Q.loan.end)}개월` : '만기 미확인'}</span>`;
+  } else if (state.persp === 'tn') {
+    const t = tnCalc(P, tnParams(), B);
+    $('#mbar').innerHTML = `<span>${h(B.s.name)} 실부담<b>${won(t.allIn)}원</b></span><span>총 점유비용<b>${eokA(t.toc)}</b></span>`;
+  } else {
+    const v = vm();
+    $('#mbar').innerHTML = `<span>${h(B.s.name)} LM<b>${eok(B.lm * v)}</b></span><span>실질<b>${won(B.ner)}원</b></span><span>${ZONE_TXT[zoneOf(B.ner)]}</span>`;
+  }
+}
+
+function applyView() {
+  const p = state.persp;
+  $$('[data-views]').forEach(el => { el.hidden = !el.dataset.views.split(' ').includes(p); });
+  $$('.pv').forEach(b => { const on = b.dataset.p === p; b.setAttribute('aria-selected', on); b.tabIndex = on ? 0 : -1; });
+  $('#headDesc').textContent = HEAD_DESC[p];
+  $('.layout').classList.toggle('tall', p !== 'lm');
+  $('#pfFields').hidden = state.ll.pf.status !== 'live';
+  $('#guarEndPair').hidden = !(state.ll.dev.guarantee === 'builder' || state.ll.dev.guarantee === 'master');
+}
+
+function renderAll() {
+  ensureBase();
+  applyView();
+  const P = params();
+  renderScenMeta(P);
+  const X = state.scen.filter(s => s.on && !check(s)).map(s => calc(P, s));
+  const B = X.find(x => x.s.id === state.base) || X[0] || null;
+  if (state.persp === 'll') renderLL(P, X, B);
+  else if (state.persp === 'tn') renderTN(P, X, B);
+  else { renderSummary(P, X, B); renderMap(P, B); renderLevers(P, B); }
+  renderTab(P, X, B);
+  renderMbar(P, B);
+}
+
+/* ---------- 이벤트 ---------- */
+function onInput(e) {
+  const el = e.target;
+  if (el.dataset.k) {
+    const k = el.dataset.k;
+    let val = el.type === 'checkbox' ? el.checked : el.type === 'number' ? num(el.value) : el.value;
+    if (el.type === 'month' && !okYm(val) && (REQUIRED_YM.includes(k) || val !== '')) return;
+    setPath(k, val);
+  } else if (el.dataset.r) {
+    setPath(el.dataset.r, el.value);
+  } else if (el.dataset.s) {
+    const s = state.scen.find(x => x.id === el.dataset.s);
+    const f = el.dataset.f;
+    if (f === 'on') { s.on = el.checked; if (s.on && !state.scen.some(x => x.id === state.base && x.on)) state.base = s.id; }
+    else if (f === 'name' || f === 'place') s[f] = el.value;
+    else s[f] = Math.max(0, int(el.value));
+  } else if (el.dataset.l) {
+    state.lm.ladder[+el.dataset.l][el.dataset.f] = Math.max(0, num(el.value));
+  } else if (el.name === 'baseScen') {
+    state.base = el.value;
+    const s = state.scen.find(x => x.id === el.value);
+    if (s && !s.on) { s.on = true; $(`#s-${s.id}-on`).checked = true; }
+  } else if (el.name === 'round') state.terms.round = el.value;
+  else if (el.name === 'basis') state.lm.basis = el.value;
+  else if (el.name === 'vat') state.view.vat = el.value === 'in';
+  else if (el.name === 'unit') state.view.unit = el.value;
+  else return;
+  save();
+  renderAll();
+  if (el.name === 'baseScen' || el.dataset.f === 'on') syncInputs();
+}
+document.querySelector('.controls').addEventListener('input', onInput);
+document.querySelector('.controls').addEventListener('change', onInput);
+
+$('#map').addEventListener('click', e => {
+  const b = e.target.closest('.cell'); if (!b || !mapS) return;
+  const s = state.scen.find(x => x.id === mapS.id);
+  s.FO = +b.dataset.fo; s.RF = +b.dataset.rf;
+  save(); syncInputs(); renderAll();
+  const again = $(`#map .cell[data-fo="${s.FO}"][data-rf="${s.RF}"]`);
+  if (again) again.focus({ preventScroll: true });
+});
+const peek = e => {
+  const b = e.target.closest && e.target.closest('.cell'); if (!b) return;
+  const P = params();
+  const ok = mapCells.filter(c => c.z === 'ok');
+  const best = $('#map .cell.best'), tb = $('#map .cell.tbest');
+  const toC = el => el ? mapCells.find(c => c.fo === +el.dataset.fo && c.rf === +el.dataset.rf) : null;
+  $$('#map .cell.hl').forEach(x => x.classList.remove('hl'));
+  b.classList.add('hl');
+  mapDetail(P, +b.dataset.fo, +b.dataset.rf, ok.length ? toC(best) : null, ok.length ? toC(tb) : null);
+};
+$('#map').addEventListener('mouseover', peek);
+$('#map').addEventListener('focusin', peek);
+$('#map').addEventListener('mouseleave', () => {
+  $$('#map .cell.hl').forEach(x => x.classList.remove('hl'));
+  if (!mapS) return;
+  const P = params();
+  const best = $('#map .cell.best'), tb = $('#map .cell.tbest');
+  const toC = el => el ? mapCells.find(c => c.fo === +el.dataset.fo && c.rf === +el.dataset.rf) : null;
+  mapDetail(P, int(mapS.FO), int(mapS.RF), toC(best), toC(tb));
+});
+
+$('.tabs').addEventListener('click', e => {
+  const b = e.target.closest('.tab'); if (!b) return;
+  const k = b.dataset.tab;
+  state.view.tabs[state.persp] = k; save(); renderAll();
+  const nb = $(`.tab[data-tab="${k}"]`); if (nb) nb.focus({ preventScroll: true });
+});
+$('.tabs').addEventListener('keydown', e => {
+  if (!e.target.closest('.tab') || (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft')) return;
+  const keys = TABS[state.persp].map(x => x[0]), i = keys.indexOf(curTab());
+  const k = keys[(i + (e.key === 'ArrowRight' ? 1 : keys.length - 1)) % keys.length];
+  state.view.tabs[state.persp] = k; save(); renderAll();
+  const nb = $(`.tab[data-tab="${k}"]`); if (nb) nb.focus();
+});
+$('.persp').addEventListener('click', e => {
+  const b = e.target.closest('.pv'); if (!b || b.dataset.p === state.persp) return;
+  state.persp = b.dataset.p; save(); renderAll();
+});
+$('.persp').addEventListener('keydown', e => {
+  if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+  const i = PERSP.indexOf(state.persp);
+  state.persp = PERSP[(i + (e.key === 'ArrowRight' ? 1 : PERSP.length - 1)) % PERSP.length];
+  save(); renderAll();
+  const nb = $(`.pv[data-p="${state.persp}"]`); if (nb) nb.focus();
+});
+$('#tabBody').addEventListener('click', e => {
+  const b = e.target.closest('[data-load]'); if (!b) return;
+  const hst = HISTORY.find(x => x.key === b.dataset.load); if (!hst) return;
+  state.deal.area = hst.area; state.terms.face = hst.face; state.terms.esc = hst.esc; state.terms.mgmt = hst.mgmt;
+  const A = state.scen.find(x => x.id === 'A'), Bs = state.scen.find(x => x.id === 'B');
+  Object.assign(A, { T: hst.A.T, FO: hst.A.FO, RF: hst.A.RF, on: true });
+  Object.assign(Bs, { T: hst.B.T, FO: hst.B.FO, RF: hst.B.RF, on: true });
+  state.lm.basis = hst.basis;
+  const i3 = state.lm.ladder.findIndex(r => r.y === 3), i5 = state.lm.ladder.findIndex(r => r.y === 5);
+  if (hst.basis === 'eff') { state.lm.ladder[i3].mult = hst.lmA; state.lm.ladder[i5].mult = hst.lmB; }
+  else { state.lm.ladder[i3].months = hst.lmA; state.lm.ladder[i5].months = hst.lmB; }
+  save(); syncInputs(); renderAll();
+  const m = $('#loadMsg'); if (m) m.textContent = `${hst.label}(${hst.when}) 조건을 불러왔습니다.`;
+});
+
+$('#resetAll').addEventListener('click', () => {
+  const p = state.persp;
+  state = clone(DEFAULTS); state.persp = p; save(); syncInputs(); renderAll();
+});
+
+$('#copyBtn').addEventListener('click', () => {
+  const tbls = $$('#tabBody table');
+  if (!tbls.length) return;
+  const tsv = tbls.map(t => $$('tr', t).map(tr => $$('th,td', tr).map(c => (c.dataset.v !== undefined ? c.dataset.v : c.textContent.trim())).join('\t')).join('\n')).join('\n\n');
+  const done = () => { const c = $('#copied'); c.hidden = false; setTimeout(() => { c.hidden = true; }, 1600); };
+  const fallback = () => {
+    let ta = $('#copyBox');
+    if (!ta) { ta = document.createElement('textarea'); ta.id = 'copyBox'; ta.className = 'copybox'; ta.setAttribute('aria-label', '복사할 표 내용'); $('#tabBody').prepend(ta); }
+    ta.value = tsv; ta.focus(); ta.select();
+  };
+  try {
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(tsv).then(done, fallback);
+    else fallback();
+  } catch (e) { fallback(); }
+});
+
+let rz = 0;
+window.addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(renderAll, 150); });
+
+buildScens();
+buildLadder();
+syncInputs();
+renderAll();
+})();
+</script>
+</body>
+</html>
