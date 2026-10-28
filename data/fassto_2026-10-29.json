@@ -1,5 +1,5 @@
 {
-  "collected_at": "2026-10-29T06:12:20.781237+09:00",
+  "collected_at": "2026-10-29T06:25:42.311669+09:00",
   "date": "2026-10-29",
   "main_url": "https://fms.fassto.ai/classic/cmn/main/main.do",
   "captured_api_count": 21,
@@ -45,16 +45,6 @@
       "content_type": "application/json;charset=utf-8"
     },
     {
-      "url": "https://fms.fassto.ai/classic/cmn/main/getExpirationDateManagementStatus.json",
-      "status": 200,
-      "content_type": "application/json;charset=utf-8"
-    },
-    {
-      "url": "https://fms.fassto.ai/classic/cmn/main/mainInSch.json",
-      "status": 200,
-      "content_type": "application/json;charset=utf-8"
-    },
-    {
       "url": "https://api.channel.io/front/v8/elastic/plugins/f20a0013-e3de-4e0e-882e-3fef2e802f53?",
       "status": 200,
       "content_type": "application/json"
@@ -63,6 +53,16 @@
       "url": "https://api.channel.io/front/v8/elastic/plugins/f20a0013-e3de-4e0e-882e-3fef2e802f53/boot",
       "status": 200,
       "content_type": "application/json"
+    },
+    {
+      "url": "https://fms.fassto.ai/classic/cmn/main/mainInSch.json",
+      "status": 200,
+      "content_type": "application/json;charset=utf-8"
+    },
+    {
+      "url": "https://fms.fassto.ai/classic/cmn/main/getExpirationDateManagementStatus.json",
+      "status": 200,
+      "content_type": "application/json;charset=utf-8"
     },
     {
       "url": "https://api.channel.io/front/v8/channels/50875/operations?",
