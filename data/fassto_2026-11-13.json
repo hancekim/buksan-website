@@ -1,8 +1,8 @@
 {
-  "collected_at": "2026-11-13T11:51:14.321769+09:00",
+  "collected_at": "2026-11-13T12:07:19.330795+09:00",
   "date": "2026-11-13",
   "main_url": "https://fms.fassto.ai/classic/cmn/main/main.do",
-  "captured_api_count": 23,
+  "captured_api_count": 21,
   "captured_api_index": [
     {
       "url": "https://fms.fassto.ai/classic/cmn/popup/checkServerMaintenance.json",
@@ -71,16 +71,6 @@
     },
     {
       "url": "https://api.channel.io/front/v8/channels/50875/operations?",
-      "status": 200,
-      "content_type": "application/json"
-    },
-    {
-      "url": "https://cf.channel.io/asset/emoji/emojis.min.json",
-      "status": 200,
-      "content_type": "application/json"
-    },
-    {
-      "url": "https://api.channel.io/front/v8/channels/50875/custom-emojis?",
       "status": 200,
       "content_type": "application/json"
     },
