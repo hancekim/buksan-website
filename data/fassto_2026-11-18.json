@@ -1,8 +1,8 @@
 {
-  "collected_at": "2026-11-18T12:49:36.425290+09:00",
+  "collected_at": "2026-11-18T13:00:28.302486+09:00",
   "date": "2026-11-18",
   "main_url": "https://fms.fassto.ai/classic/cmn/main/main.do",
-  "captured_api_count": 21,
+  "captured_api_count": 23,
   "captured_api_index": [
     {
       "url": "https://fms.fassto.ai/classic/cmn/popup/checkServerMaintenance.json",
@@ -15,12 +15,12 @@
       "content_type": "application/json;charset=utf-8"
     },
     {
-      "url": "https://fms.fassto.ai/modern/cmn/login/checkFeeSheetFee.json",
+      "url": "https://fms.fassto.ai/classic/cmn/main/channelIOList.json",
       "status": 200,
       "content_type": "application/json;charset=utf-8"
     },
     {
-      "url": "https://fms.fassto.ai/classic/cmn/main/channelIOList.json",
+      "url": "https://fms.fassto.ai/modern/cmn/login/checkFeeSheetFee.json",
       "status": 200,
       "content_type": "application/json;charset=utf-8"
     },
@@ -65,17 +65,27 @@
       "content_type": "application/json"
     },
     {
-      "url": "https://api.channel.io/front/v8/managers/operators?",
-      "status": 200,
-      "content_type": "application/json"
-    },
-    {
       "url": "https://api.channel.io/front/v8/channels/50875/operations?",
       "status": 200,
       "content_type": "application/json"
     },
     {
+      "url": "https://api.channel.io/front/v8/managers/operators?",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "url": "https://api.channel.io/front/v8/channels/50875/custom-emojis?",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
       "url": "https://api.channel.io/front/v8/channels/50875/events",
+      "status": 200,
+      "content_type": "application/json"
+    },
+    {
+      "url": "https://cf.channel.io/asset/emoji/emojis.min.json",
       "status": 200,
       "content_type": "application/json"
     },
