@@ -1,5 +1,5 @@
 {
-  "collected_at": "2026-11-22T11:48:02.890414+09:00",
+  "collected_at": "2026-11-22T13:10:42.064849+09:00",
   "date": "2026-11-22",
   "main_url": "https://fms.fassto.ai/classic/cmn/main/main.do",
   "captured_api_count": 21,
@@ -15,22 +15,17 @@
       "content_type": "application/json;charset=utf-8"
     },
     {
-      "url": "https://fms.fassto.ai/classic/cmn/main/channelIOList.json",
-      "status": 200,
-      "content_type": "application/json;charset=utf-8"
-    },
-    {
       "url": "https://fms.fassto.ai/modern/cmn/login/checkFeeSheetFee.json",
       "status": 200,
       "content_type": "application/json;charset=utf-8"
     },
     {
-      "url": "https://fms.fassto.ai/classic/cmn/main/ribbonBannerInfo.json",
+      "url": "https://fms.fassto.ai/classic/cmn/main/channelIOList.json",
       "status": 200,
       "content_type": "application/json;charset=utf-8"
     },
     {
-      "url": "https://fms.fassto.ai/classic/cmn/main/getExpirationDateManagementStatus.json",
+      "url": "https://fms.fassto.ai/classic/cmn/main/ribbonBannerInfo.json",
       "status": 200,
       "content_type": "application/json;charset=utf-8"
     },
@@ -55,7 +50,7 @@
       "content_type": "application/json"
     },
     {
-      "url": "https://fms.fassto.ai/classic/cmn/main/mainInSch.json",
+      "url": "https://fms.fassto.ai/classic/cmn/main/getExpirationDateManagementStatus.json",
       "status": 200,
       "content_type": "application/json;charset=utf-8"
     },
@@ -65,12 +60,17 @@
       "content_type": "application/json"
     },
     {
-      "url": "https://api.channel.io/front/v8/channels/50875/operations?",
+      "url": "https://fms.fassto.ai/classic/cmn/main/mainInSch.json",
+      "status": 200,
+      "content_type": "application/json;charset=utf-8"
+    },
+    {
+      "url": "https://api.channel.io/front/v8/managers/operators?",
       "status": 200,
       "content_type": "application/json"
     },
     {
-      "url": "https://api.channel.io/front/v8/managers/operators?",
+      "url": "https://api.channel.io/front/v8/channels/50875/operations?",
       "status": 200,
       "content_type": "application/json"
     },
